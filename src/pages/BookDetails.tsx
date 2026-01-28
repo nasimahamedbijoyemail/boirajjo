@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useBook } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone } from 'lucide-react';
+import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const conditionLabels = {
@@ -26,16 +26,25 @@ const BookDetailsPage = () => {
   const { profile } = useAuth();
   const { data: book, isLoading, error } = useBook(id || '');
 
+  const formatPhoneNumber = (phoneNumber: string) => {
+    const phone = phoneNumber.replace(/\D/g, '');
+    // Add Bangladesh country code if not present
+    return phone.startsWith('880') ? phone : `880${phone.replace(/^0/, '')}`;
+  };
+
   const handleWhatsAppClick = () => {
     if (!book?.seller?.phone_number) return;
     
     const message = encodeURIComponent(
       `Hi, I saw your book "${book.title}" on Boi Rajjo. Is it still available?`
     );
-    const phone = book.seller.phone_number.replace(/\D/g, '');
-    // Add Bangladesh country code if not present
-    const formattedPhone = phone.startsWith('880') ? phone : `880${phone.replace(/^0/, '')}`;
+    const formattedPhone = formatPhoneNumber(book.seller.phone_number);
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
+  };
+
+  const handleCallClick = () => {
+    if (!book?.seller?.phone_number) return;
+    window.open(`tel:${book.seller.phone_number}`, '_self');
   };
 
   const isOwnBook = profile?.id === book?.seller_id;
@@ -161,15 +170,26 @@ const BookDetailsPage = () => {
 
             {/* Action Buttons */}
             {book.status === 'available' && !isOwnBook && (
-              <Button
-                variant="whatsapp"
-                size="lg"
-                className="w-full"
-                onClick={handleWhatsAppClick}
-              >
-                <MessageCircle className="h-5 w-5" />
-                Chat on WhatsApp
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  variant="whatsapp"
+                  size="lg"
+                  className="flex-1"
+                  onClick={handleWhatsAppClick}
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Chat on WhatsApp
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  onClick={handleCallClick}
+                >
+                  <PhoneCall className="h-5 w-5" />
+                  Call Seller
+                </Button>
+              </div>
             )}
 
             {isOwnBook && (
