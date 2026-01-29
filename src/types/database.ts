@@ -1,4 +1,4 @@
-export type InstitutionType = 'university' | 'college' | 'school';
+export type InstitutionType = 'university' | 'college' | 'school' | 'national_university';
 export type BookCondition = 'new' | 'good' | 'worn';
 export type BookStatus = 'available' | 'sold';
 export type AppRole = 'admin' | 'user';
@@ -17,14 +17,24 @@ export interface Department {
   created_at: string;
 }
 
+export interface AcademicDepartment {
+  id: string;
+  name: string;
+  category: string;
+  created_at: string;
+}
+
 export interface Profile {
   id: string;
   user_id: string;
   name: string;
   phone_number: string;
+  whatsapp_number: string | null;
   institution_type: InstitutionType | null;
   institution_id: string | null;
   subcategory: string | null;
+  department_id: string | null;
+  academic_department_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -36,6 +46,8 @@ export interface Book {
   institution_type: InstitutionType;
   institution_id: string;
   subcategory: string | null;
+  department_id: string | null;
+  academic_department_id: string | null;
   condition: BookCondition;
   price: number;
   seller_id: string;

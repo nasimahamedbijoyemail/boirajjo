@@ -8,7 +8,7 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
-  signUp: (email: string, password: string, name: string, phoneNumber: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, name: string, phoneNumber: string, whatsappNumber?: string | null) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
@@ -80,7 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, name: string, phoneNumber: string) => {
+  const signUp = async (email: string, password: string, name: string, phoneNumber: string, whatsappNumber?: string | null) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -101,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user_id: data.user.id,
         name,
         phone_number: phoneNumber,
+        whatsapp_number: whatsappNumber || null,
       });
 
       if (profileError) {

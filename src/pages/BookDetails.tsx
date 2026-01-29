@@ -33,12 +33,16 @@ const BookDetailsPage = () => {
   };
 
   const handleWhatsAppClick = () => {
-    if (!book?.seller?.phone_number) return;
+    if (!book?.seller) return;
+    
+    // Use whatsapp_number if available, otherwise fall back to phone_number
+    const whatsappNumber = book.seller.whatsapp_number || book.seller.phone_number;
+    if (!whatsappNumber) return;
     
     const message = encodeURIComponent(
       `Hi, I saw your book "${book.title}" on Boi Rajjo. Is it still available?`
     );
-    const formattedPhone = formatPhoneNumber(book.seller.phone_number);
+    const formattedPhone = formatPhoneNumber(whatsappNumber);
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
   };
 
@@ -48,6 +52,10 @@ const BookDetailsPage = () => {
   };
 
   const isOwnBook = profile?.id === book?.seller_id;
+
+  // Check if WhatsApp is available (either whatsapp_number or phone_number)
+  const hasWhatsApp = book?.seller?.whatsapp_number || book?.seller?.phone_number;
+  const hasCall = book?.seller?.phone_number;
 
   if (isLoading) {
     return (
@@ -158,10 +166,18 @@ const BookDetailsPage = () => {
                       <span>{book.seller.name}</span>
                     </div>
                     {isOwnBook && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Phone className="h-4 w-4" />
-                        <span>{book.seller.phone_number}</span>
-                      </div>
+                      <>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Phone className="h-4 w-4" />
+                          <span>Contact: {book.seller.phone_number}</span>
+                        </div>
+                        {book.seller.whatsapp_number && (
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <MessageCircle className="h-4 w-4" />
+                            <span>WhatsApp: {book.seller.whatsapp_number}</span>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </CardContent>
@@ -171,24 +187,28 @@ const BookDetailsPage = () => {
             {/* Action Buttons */}
             {book.status === 'available' && !isOwnBook && (
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  variant="whatsapp"
-                  size="lg"
-                  className="flex-1"
-                  onClick={handleWhatsAppClick}
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  Chat on WhatsApp
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                  onClick={handleCallClick}
-                >
-                  <PhoneCall className="h-5 w-5" />
-                  Call Seller
-                </Button>
+                {hasWhatsApp && (
+                  <Button
+                    variant="whatsapp"
+                    size="lg"
+                    className="flex-1"
+                    onClick={handleWhatsAppClick}
+                  >
+                    <MessageCircle className="h-5 w-5" />
+                    Chat on WhatsApp
+                  </Button>
+                )}
+                {hasCall && (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    onClick={handleCallClick}
+                  >
+                    <PhoneCall className="h-5 w-5" />
+                    Call Seller
+                  </Button>
+                )}
               </div>
             )}
 
