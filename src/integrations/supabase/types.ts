@@ -14,11 +14,34 @@ export type Database = {
   }
   public: {
     Tables: {
+      academic_departments: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       books: {
         Row: {
+          academic_department_id: string | null
           author: string
           condition: Database["public"]["Enums"]["book_condition"]
           created_at: string
+          department_id: string | null
           id: string
           institution_id: string
           institution_type: Database["public"]["Enums"]["institution_type"]
@@ -31,9 +54,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          academic_department_id?: string | null
           author: string
           condition?: Database["public"]["Enums"]["book_condition"]
           created_at?: string
+          department_id?: string | null
           id?: string
           institution_id: string
           institution_type: Database["public"]["Enums"]["institution_type"]
@@ -46,9 +71,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          academic_department_id?: string | null
           author?: string
           condition?: Database["public"]["Enums"]["book_condition"]
           created_at?: string
+          department_id?: string | null
           id?: string
           institution_id?: string
           institution_type?: Database["public"]["Enums"]["institution_type"]
@@ -61,6 +88,20 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "books_academic_department_id_fkey"
+            columns: ["academic_department_id"]
+            isOneToOne: false
+            referencedRelation: "academic_departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "books_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "books_institution_id_fkey"
             columns: ["institution_id"]
@@ -129,7 +170,9 @@ export type Database = {
       }
       profiles: {
         Row: {
+          academic_department_id: string | null
           created_at: string
+          department_id: string | null
           id: string
           institution_id: string | null
           institution_type:
@@ -140,9 +183,12 @@ export type Database = {
           subcategory: string | null
           updated_at: string
           user_id: string
+          whatsapp_number: string | null
         }
         Insert: {
+          academic_department_id?: string | null
           created_at?: string
+          department_id?: string | null
           id?: string
           institution_id?: string | null
           institution_type?:
@@ -153,9 +199,12 @@ export type Database = {
           subcategory?: string | null
           updated_at?: string
           user_id: string
+          whatsapp_number?: string | null
         }
         Update: {
+          academic_department_id?: string | null
           created_at?: string
+          department_id?: string | null
           id?: string
           institution_id?: string | null
           institution_type?:
@@ -166,8 +215,23 @@ export type Database = {
           subcategory?: string | null
           updated_at?: string
           user_id?: string
+          whatsapp_number?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_academic_department_id_fkey"
+            columns: ["academic_department_id"]
+            isOneToOne: false
+            referencedRelation: "academic_departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "profiles_institution_id_fkey"
             columns: ["institution_id"]
@@ -215,7 +279,11 @@ export type Database = {
       app_role: "admin" | "user"
       book_condition: "new" | "good" | "worn"
       book_status: "available" | "sold"
-      institution_type: "university" | "college" | "school"
+      institution_type:
+        | "university"
+        | "college"
+        | "school"
+        | "national_university"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -346,7 +414,12 @@ export const Constants = {
       app_role: ["admin", "user"],
       book_condition: ["new", "good", "worn"],
       book_status: ["available", "sold"],
-      institution_type: ["university", "college", "school"],
+      institution_type: [
+        "university",
+        "college",
+        "school",
+        "national_university",
+      ],
     },
   },
 } as const

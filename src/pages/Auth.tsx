@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
 
 const signUpSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   phone: z.string().min(11, 'Phone number must be at least 11 digits').max(15),
+  whatsapp: z.string().optional(),
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
@@ -22,14 +23,19 @@ const signInSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
+const forgotPasswordSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
   const isSignUp = searchParams.get('mode') === 'signup';
-  const [mode, setMode] = useState<'signin' | 'signup'>(isSignUp ? 'signup' : 'signin');
+  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>(isSignUp ? 'signup' : 'signin');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    whatsapp: '',
     email: '',
     password: '',
   });
@@ -42,6 +48,31 @@ const AuthPage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: '' }));
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors({});
+
+    const result = forgotPasswordSchema.safeParse({ email: formData.email });
+    if (!result.success) {
+      setErrors({ email: result.error.errors[0]?.message || 'Invalid email' });
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(formData.email, {
+      redirectTo: `${window.location.origin}/auth?mode=reset`,
+    });
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('Password reset link sent! Check your email.');
+      setMode('signin');
+    }
+    setLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,7 +95,13 @@ const AuthPage = () => {
           return;
         }
 
-        const { error } = await signUp(formData.email, formData.password, formData.name, formData.phone);
+        const { error } = await signUp(
+          formData.email, 
+          formData.password, 
+          formData.name, 
+          formData.phone,
+          formData.whatsapp || null
+        );
         if (error) {
           if (error.message.includes('already registered')) {
             toast.error('This email is already registered. Please sign in instead.');
@@ -109,6 +146,64 @@ const AuthPage = () => {
     setLoading(false);
   };
 
+  if (mode === 'forgot') {
+    return (
+      <div className="min-h-screen gradient-hero flex flex-col">
+        <div className="container py-4">
+          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+        </div>
+        
+        <div className="flex-1 flex items-center justify-center p-4">
+          <Card className="w-full max-w-md animate-fade-in-up shadow-card">
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-4 gradient-primary rounded-xl p-3 w-fit">
+                <BookOpen className="h-8 w-8 text-primary-foreground" />
+              </div>
+              <CardTitle className="text-2xl">Reset Password</CardTitle>
+              <CardDescription>
+                Enter your email to receive a password reset link
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={errors.email ? 'border-destructive' : ''}
+                  />
+                  {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+                </div>
+
+                <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                  {loading ? 'Sending...' : 'Send Reset Link'}
+                </Button>
+              </form>
+
+              <div className="mt-6 text-center text-sm">
+                <button
+                  type="button"
+                  onClick={() => setMode('signin')}
+                  className="text-primary hover:underline font-medium"
+                >
+                  Back to Sign In
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen gradient-hero flex flex-col">
       <div className="container py-4">
@@ -150,7 +245,7 @@ const AuthPage = () => {
                     {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone">Contact Number *</Label>
                     <Input
                       id="phone"
                       name="phone"
@@ -161,6 +256,20 @@ const AuthPage = () => {
                       className={errors.phone ? 'border-destructive' : ''}
                     />
                     {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="whatsapp">WhatsApp Number (Optional)</Label>
+                    <Input
+                      id="whatsapp"
+                      name="whatsapp"
+                      type="tel"
+                      placeholder="01XXXXXXXXX (if different from contact)"
+                      value={formData.whatsapp}
+                      onChange={handleChange}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Leave empty if same as contact number
+                    </p>
                   </div>
                 </>
               )}
@@ -178,7 +287,18 @@ const AuthPage = () => {
                 {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  {mode === 'signin' && (
+                    <button
+                      type="button"
+                      onClick={() => setMode('forgot')}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      Forgot Password?
+                    </button>
+                  )}
+                </div>
                 <Input
                   id="password"
                   name="password"

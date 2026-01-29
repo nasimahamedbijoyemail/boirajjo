@@ -1,14 +1,42 @@
+import { useState, useMemo } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { User, Phone, MapPin, Building2, Calendar } from 'lucide-react';
+import { SearchableSelect } from '@/components/ui/searchable-select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { User, Phone, MapPin, Building2, Calendar, Edit2, Save, X, MessageCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Institution } from '@/types/database';
+import { Institution, InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
+import { useInstitutions, useDepartments } from '@/hooks/useInstitutions';
+import { useAcademicDepartments } from '@/hooks/useAcademicDepartments';
+import { toast } from 'sonner';
 
 const ProfilePage = () => {
-  const { profile } = useAuth();
+  const { profile, updateProfile, refreshProfile } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  
+  // Edit form state
+  const [editData, setEditData] = useState({
+    phone_number: '',
+    whatsapp_number: '',
+    institution_type: '' as InstitutionType | '',
+    institution_id: '',
+    subcategory: '',
+    department_id: '',
+    academic_department_id: '',
+  });
 
   const { data: institution } = useQuery({
     queryKey: ['institution', profile?.institution_id],
@@ -25,16 +53,128 @@ const ProfilePage = () => {
     enabled: !!profile?.institution_id,
   });
 
-  const institutionTypeLabels = {
+  // Fetch for editing
+  const { data: institutions } = useInstitutions(editData.institution_type || undefined);
+  const { data: nuColleges } = useDepartments(
+    editData.institution_type === 'national_university' ? editData.institution_id : undefined
+  );
+  const { data: academicDepartments } = useAcademicDepartments();
+
+  const institutionTypeLabels: Record<string, string> = {
     university: 'University',
     college: 'College',
     school: 'School',
+    national_university: 'National University',
+  };
+
+  const startEditing = () => {
+    setEditData({
+      phone_number: profile?.phone_number || '',
+      whatsapp_number: profile?.whatsapp_number || '',
+      institution_type: profile?.institution_type || '',
+      institution_id: profile?.institution_id || '',
+      subcategory: profile?.subcategory || '',
+      department_id: profile?.department_id || '',
+      academic_department_id: profile?.academic_department_id || '',
+    });
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+  };
+
+  const saveChanges = async () => {
+    setSaving(true);
+    
+    const updateData: Record<string, unknown> = {
+      phone_number: editData.phone_number,
+      whatsapp_number: editData.whatsapp_number || null,
+      institution_type: editData.institution_type,
+      institution_id: editData.institution_id,
+    };
+
+    if (editData.institution_type === 'national_university') {
+      updateData.department_id = editData.department_id;
+      updateData.academic_department_id = editData.academic_department_id;
+      updateData.subcategory = academicDepartments?.find(d => d.id === editData.academic_department_id)?.name || null;
+    } else if (editData.institution_type === 'university') {
+      updateData.academic_department_id = editData.academic_department_id;
+      updateData.subcategory = academicDepartments?.find(d => d.id === editData.academic_department_id)?.name || null;
+    } else {
+      updateData.subcategory = editData.subcategory;
+      updateData.department_id = null;
+      updateData.academic_department_id = null;
+    }
+
+    const { error } = await updateProfile(updateData);
+    
+    if (error) {
+      toast.error('Failed to update profile');
+    } else {
+      toast.success('Profile updated successfully');
+      await refreshProfile();
+      setIsEditing(false);
+    }
+    setSaving(false);
+  };
+
+  // Prepare options for selects
+  const institutionOptions = useMemo(() => {
+    return institutions?.map((inst) => ({
+      value: inst.id,
+      label: inst.name,
+    })) || [];
+  }, [institutions]);
+
+  const nuCollegeOptions = useMemo(() => {
+    return nuColleges?.map((college) => ({
+      value: college.id,
+      label: college.name,
+    })) || [];
+  }, [nuColleges]);
+
+  const academicDepartmentOptions = useMemo(() => {
+    return academicDepartments?.map((dept) => ({
+      value: dept.id,
+      label: dept.name,
+      group: dept.category,
+    })) || [];
+  }, [academicDepartments]);
+
+  const getSubcategoryOptions = () => {
+    if (editData.institution_type === 'college') {
+      return COLLEGE_DIVISIONS.map((d) => ({ value: d, label: d }));
+    }
+    if (editData.institution_type === 'school') {
+      return SCHOOL_CLASSES.map((c) => ({ value: c, label: `Class ${c}` }));
+    }
+    return [];
   };
 
   return (
     <Layout>
       <div className="container py-6 max-w-2xl">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">My Profile</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">My Profile</h1>
+          {!isEditing ? (
+            <Button variant="outline" onClick={startEditing}>
+              <Edit2 className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Button>
+          ) : (
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={cancelEditing} disabled={saving}>
+                <X className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+              <Button onClick={saveChanges} disabled={saving}>
+                <Save className="h-4 w-4 mr-2" />
+                {saving ? 'Saving...' : 'Save'}
+              </Button>
+            </div>
+          )}
+        </div>
 
         <Card className="shadow-card">
           <CardHeader>
@@ -51,61 +191,196 @@ const ProfilePage = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-4">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <Phone className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Phone Number</p>
-                  <p className="font-medium">{profile?.phone_number}</p>
+            {isEditing ? (
+              // Edit Mode
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Contact Number *</Label>
+                  <Input
+                    value={editData.phone_number}
+                    onChange={(e) => setEditData(prev => ({ ...prev, phone_number: e.target.value }))}
+                    placeholder="01XXXXXXXXX"
+                  />
                 </div>
-              </div>
 
-              {institution && (
+                <div className="space-y-2">
+                  <Label>WhatsApp Number (Optional)</Label>
+                  <Input
+                    value={editData.whatsapp_number}
+                    onChange={(e) => setEditData(prev => ({ ...prev, whatsapp_number: e.target.value }))}
+                    placeholder="01XXXXXXXXX (if different)"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Leave empty if same as contact number
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Institution Type</Label>
+                  <Select
+                    value={editData.institution_type}
+                    onValueChange={(value) => setEditData(prev => ({
+                      ...prev,
+                      institution_type: value as InstitutionType,
+                      institution_id: '',
+                      subcategory: '',
+                      department_id: '',
+                      academic_department_id: '',
+                    }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="national_university">National University</SelectItem>
+                      <SelectItem value="university">University</SelectItem>
+                      <SelectItem value="college">College</SelectItem>
+                      <SelectItem value="school">School</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {editData.institution_type && (
+                  <div className="space-y-2">
+                    <Label>Institution</Label>
+                    <SearchableSelect
+                      options={institutionOptions}
+                      value={editData.institution_id}
+                      onValueChange={(value) => setEditData(prev => ({
+                        ...prev,
+                        institution_id: value,
+                        subcategory: '',
+                        department_id: '',
+                        academic_department_id: '',
+                      }))}
+                      placeholder="Search institution..."
+                    />
+                  </div>
+                )}
+
+                {editData.institution_type === 'national_university' && editData.institution_id && (
+                  <div className="space-y-2">
+                    <Label>College</Label>
+                    <SearchableSelect
+                      options={nuCollegeOptions}
+                      value={editData.department_id}
+                      onValueChange={(value) => setEditData(prev => ({
+                        ...prev,
+                        department_id: value,
+                        academic_department_id: '',
+                      }))}
+                      placeholder="Search your college..."
+                    />
+                  </div>
+                )}
+
+                {(editData.institution_type === 'national_university' && editData.department_id) ||
+                 (editData.institution_type === 'university' && editData.institution_id) ? (
+                  <div className="space-y-2">
+                    <Label>Department</Label>
+                    <SearchableSelect
+                      options={academicDepartmentOptions}
+                      value={editData.academic_department_id}
+                      onValueChange={(value) => setEditData(prev => ({
+                        ...prev,
+                        academic_department_id: value,
+                      }))}
+                      placeholder="Search your department..."
+                      grouped
+                    />
+                  </div>
+                ) : null}
+
+                {(editData.institution_type === 'college' || editData.institution_type === 'school') && 
+                 editData.institution_id && (
+                  <div className="space-y-2">
+                    <Label>{editData.institution_type === 'college' ? 'Division' : 'Class'}</Label>
+                    <Select
+                      value={editData.subcategory}
+                      onValueChange={(value) => setEditData(prev => ({ ...prev, subcategory: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={`Select ${editData.institution_type === 'college' ? 'division' : 'class'}`} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getSubcategoryOptions().map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // View Mode
+              <div className="grid gap-4">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                  <Building2 className="h-5 w-5 text-muted-foreground" />
+                  <Phone className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Institution Type</p>
+                    <p className="text-sm text-muted-foreground">Contact Number</p>
+                    <p className="font-medium">{profile?.phone_number}</p>
+                  </div>
+                </div>
+
+                {profile?.whatsapp_number && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <MessageCircle className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">WhatsApp Number</p>
+                      <p className="font-medium">{profile.whatsapp_number}</p>
+                    </div>
+                  </div>
+                )}
+
+                {institution && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <Building2 className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Institution Type</p>
+                      <p className="font-medium">
+                        {profile?.institution_type
+                          ? institutionTypeLabels[profile.institution_type]
+                          : '-'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {profile?.subcategory && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <MapPin className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {profile.institution_type === 'university' || profile.institution_type === 'national_university'
+                          ? 'Department'
+                          : profile.institution_type === 'college'
+                          ? 'Division'
+                          : 'Class'}
+                      </p>
+                      <p className="font-medium">{profile.subcategory}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                  <Calendar className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Member Since</p>
                     <p className="font-medium">
-                      {profile?.institution_type
-                        ? institutionTypeLabels[profile.institution_type]
+                      {profile?.created_at
+                        ? new Date(profile.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })
                         : '-'}
                     </p>
                   </div>
                 </div>
-              )}
-
-              {profile?.subcategory && (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                  <MapPin className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      {profile.institution_type === 'university'
-                        ? 'Department'
-                        : profile.institution_type === 'college'
-                        ? 'Division'
-                        : 'Class'}
-                    </p>
-                    <p className="font-medium">{profile.subcategory}</p>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <Calendar className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Member Since</p>
-                  <p className="font-medium">
-                    {profile?.created_at
-                      ? new Date(profile.created_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })
-                      : '-'}
-                  </p>
-                </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       </div>
