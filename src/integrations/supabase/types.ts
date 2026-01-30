@@ -35,16 +35,252 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_notifications: {
+        Row: {
+          created_at: string
+          email_sent: boolean
+          id: string
+          is_read: boolean
+          message: string
+          reference_id: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          email_sent?: boolean
+          id?: string
+          is_read?: boolean
+          message: string
+          reference_id?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          email_sent?: boolean
+          id?: string
+          is_read?: boolean
+          message?: string
+          reference_id?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      bd_districts: {
+        Row: {
+          bn_name: string | null
+          created_at: string
+          division_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          bn_name?: string | null
+          created_at?: string
+          division_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          bn_name?: string | null
+          created_at?: string
+          division_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bd_districts_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "bd_divisions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bd_divisions: {
+        Row: {
+          bn_name: string | null
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          bn_name?: string | null
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          bn_name?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      bd_thanas: {
+        Row: {
+          bn_name: string | null
+          created_at: string
+          district_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          bn_name?: string | null
+          created_at?: string
+          district_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          bn_name?: string | null
+          created_at?: string
+          district_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bd_thanas_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "bd_districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bd_wards: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          thana_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          thana_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          thana_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bd_wards_thana_id_fkey"
+            columns: ["thana_id"]
+            isOneToOne: false
+            referencedRelation: "bd_thanas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      book_demands: {
+        Row: {
+          admin_notes: string | null
+          author_name: string | null
+          book_name: string
+          created_at: string
+          detail_address: string | null
+          district_id: string | null
+          division_id: string | null
+          id: string
+          profile_id: string
+          status: Database["public"]["Enums"]["demand_status"]
+          thana_id: string | null
+          updated_at: string
+          user_id: string
+          ward_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          author_name?: string | null
+          book_name: string
+          created_at?: string
+          detail_address?: string | null
+          district_id?: string | null
+          division_id?: string | null
+          id?: string
+          profile_id: string
+          status?: Database["public"]["Enums"]["demand_status"]
+          thana_id?: string | null
+          updated_at?: string
+          user_id: string
+          ward_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          author_name?: string | null
+          book_name?: string
+          created_at?: string
+          detail_address?: string | null
+          district_id?: string | null
+          division_id?: string | null
+          id?: string
+          profile_id?: string
+          status?: Database["public"]["Enums"]["demand_status"]
+          thana_id?: string | null
+          updated_at?: string
+          user_id?: string
+          ward_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_demands_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "bd_districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_demands_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "bd_divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_demands_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_demands_thana_id_fkey"
+            columns: ["thana_id"]
+            isOneToOne: false
+            referencedRelation: "bd_thanas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_demands_ward_id_fkey"
+            columns: ["ward_id"]
+            isOneToOne: false
+            referencedRelation: "bd_wards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       books: {
         Row: {
           academic_department_id: string | null
           author: string
+          book_type: string
           condition: Database["public"]["Enums"]["book_condition"]
           created_at: string
           department_id: string | null
           id: string
           institution_id: string
           institution_type: Database["public"]["Enums"]["institution_type"]
+          is_admin_listing: boolean
           photo_url: string | null
           price: number
           seller_id: string
@@ -56,12 +292,14 @@ export type Database = {
         Insert: {
           academic_department_id?: string | null
           author: string
+          book_type?: string
           condition?: Database["public"]["Enums"]["book_condition"]
           created_at?: string
           department_id?: string | null
           id?: string
           institution_id: string
           institution_type: Database["public"]["Enums"]["institution_type"]
+          is_admin_listing?: boolean
           photo_url?: string | null
           price: number
           seller_id: string
@@ -73,12 +311,14 @@ export type Database = {
         Update: {
           academic_department_id?: string | null
           author?: string
+          book_type?: string
           condition?: Database["public"]["Enums"]["book_condition"]
           created_at?: string
           department_id?: string | null
           id?: string
           institution_id?: string
           institution_type?: Database["public"]["Enums"]["institution_type"]
+          is_admin_listing?: boolean
           photo_url?: string | null
           price?: number
           seller_id?: string
@@ -167,6 +407,103 @@ export type Database = {
           type?: Database["public"]["Enums"]["institution_type"]
         }
         Relationships: []
+      }
+      orders: {
+        Row: {
+          admin_notes: string | null
+          book_id: string
+          created_at: string
+          detail_address: string | null
+          district_id: string | null
+          division_id: string | null
+          id: string
+          profile_id: string
+          quantity: number
+          status: Database["public"]["Enums"]["order_status"]
+          thana_id: string | null
+          total_price: number
+          updated_at: string
+          user_id: string
+          ward_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          book_id: string
+          created_at?: string
+          detail_address?: string | null
+          district_id?: string | null
+          division_id?: string | null
+          id?: string
+          profile_id: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          thana_id?: string | null
+          total_price: number
+          updated_at?: string
+          user_id: string
+          ward_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          book_id?: string
+          created_at?: string
+          detail_address?: string | null
+          district_id?: string | null
+          division_id?: string | null
+          id?: string
+          profile_id?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          thana_id?: string | null
+          total_price?: number
+          updated_at?: string
+          user_id?: string
+          ward_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "bd_districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "bd_divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_thana_id_fkey"
+            columns: ["thana_id"]
+            isOneToOne: false
+            referencedRelation: "bd_thanas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_ward_id_fkey"
+            columns: ["ward_id"]
+            isOneToOne: false
+            referencedRelation: "bd_wards"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -279,11 +616,24 @@ export type Database = {
       app_role: "admin" | "user"
       book_condition: "new" | "good" | "worn"
       book_status: "available" | "sold"
+      demand_status:
+        | "requested"
+        | "processing"
+        | "out_for_delivery"
+        | "delivered"
+        | "cancelled"
       institution_type:
         | "university"
         | "college"
         | "school"
         | "national_university"
+      order_status:
+        | "pending"
+        | "confirmed"
+        | "processing"
+        | "out_for_delivery"
+        | "delivered"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -414,11 +764,26 @@ export const Constants = {
       app_role: ["admin", "user"],
       book_condition: ["new", "good", "worn"],
       book_status: ["available", "sold"],
+      demand_status: [
+        "requested",
+        "processing",
+        "out_for_delivery",
+        "delivered",
+        "cancelled",
+      ],
       institution_type: [
         "university",
         "college",
         "school",
         "national_university",
+      ],
+      order_status: [
+        "pending",
+        "confirmed",
+        "processing",
+        "out_for_delivery",
+        "delivered",
+        "cancelled",
       ],
     },
   },
