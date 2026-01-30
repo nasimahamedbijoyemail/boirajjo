@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { BookOpen, Plus, User, LogOut, Menu, X } from 'lucide-react';
+import { useIsAdmin } from '@/hooks/useAdmin';
+import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings } from 'lucide-react';
 import { useState } from 'react';
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import {
 
 export const Header = () => {
   const { user, profile, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -24,7 +26,7 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/home" className="flex items-center gap-2">
           <div className="gradient-primary rounded-lg p-2">
             <BookOpen className="h-5 w-5 text-primary-foreground" />
           </div>
@@ -36,10 +38,19 @@ export const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
               <Button variant="ghost" asChild>
-                <Link to="/browse">Browse Books</Link>
+                <Link to="/home">
+                  <Home className="h-4 w-4" />
+                  Home
+                </Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link to="/my-listings">My Listings</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/my-orders">
+                  <ShoppingBag className="h-4 w-4" />
+                  Orders
+                </Link>
               </Button>
               <Button variant="accent" size="sm" asChild>
                 <Link to="/add-book">
@@ -60,6 +71,14 @@ export const Header = () => {
                       Profile
                     </Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="w-full cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Admin Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -98,14 +117,31 @@ export const Header = () => {
         <div className="md:hidden border-t bg-card animate-fade-in">
           <nav className="container py-4 flex flex-col gap-2">
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-              <Link to="/browse">Browse Books</Link>
+              <Link to="/home">
+                <Home className="h-4 w-4" />
+                Home
+              </Link>
             </Button>
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
               <Link to="/my-listings">My Listings</Link>
             </Button>
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/my-orders">
+                <ShoppingBag className="h-4 w-4" />
+                My Orders
+              </Link>
+            </Button>
+            <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
               <Link to="/profile">Profile</Link>
             </Button>
+            {isAdmin && (
+              <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/admin">
+                  <Settings className="h-4 w-4" />
+                  Admin
+                </Link>
+              </Button>
+            )}
             <Button variant="accent" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
               <Link to="/add-book">
                 <Plus className="h-4 w-4" />

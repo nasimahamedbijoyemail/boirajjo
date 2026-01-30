@@ -6,6 +6,7 @@ import { BookOpen, MapPin } from 'lucide-react';
 
 interface BookCardProps {
   book: BookWithSeller;
+  isNilkhet?: boolean;
 }
 
 const conditionLabels = {
@@ -20,9 +21,11 @@ const conditionColors = {
   worn: 'warning',
 } as const;
 
-export const BookCard = ({ book }: BookCardProps) => {
+export const BookCard = ({ book, isNilkhet = false }: BookCardProps) => {
+  const linkPath = isNilkhet ? `/nilkhet/${book.id}` : `/book/${book.id}`;
+  
   return (
-    <Link to={`/book/${book.id}`}>
+    <Link to={linkPath}>
       <Card className="group overflow-hidden transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 animate-fade-in">
         <div className="aspect-[4/3] overflow-hidden bg-muted relative">
           {book.photo_url ? (

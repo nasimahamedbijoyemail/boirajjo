@@ -26,6 +26,7 @@ interface SearchBarProps {
   onSearchChange: (value: string) => void;
   subcategory: string;
   onSubcategoryChange: (value: string) => void;
+  hideFilters?: boolean;
 }
 
 export const SearchBar = ({
@@ -33,6 +34,7 @@ export const SearchBar = ({
   onSearchChange,
   subcategory,
   onSubcategoryChange,
+  hideFilters = false,
 }: SearchBarProps) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const { profile } = useAuth();
@@ -76,15 +78,16 @@ export const SearchBar = ({
         )}
       </div>
 
-      <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="h-12 w-12 relative">
-            <SlidersHorizontal className="h-5 w-5" />
-            {hasActiveFilters && (
-              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-accent" />
-            )}
-          </Button>
-        </SheetTrigger>
+      {!hideFilters && (
+        <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="h-12 w-12 relative">
+              <SlidersHorizontal className="h-5 w-5" />
+              {hasActiveFilters && (
+                <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-accent" />
+              )}
+            </Button>
+          </SheetTrigger>
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Filters</SheetTitle>
@@ -133,6 +136,7 @@ export const SearchBar = ({
           </div>
         </SheetContent>
       </Sheet>
+      )}
     </div>
   );
 };

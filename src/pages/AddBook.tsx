@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, Upload, X } from 'lucide-react';
 import { useCreateBook } from '@/hooks/useBooks';
-import { BookCondition } from '@/types/database';
+import { BookCondition, BookType } from '@/types/database';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -23,12 +23,18 @@ const bookSchema = z.object({
   author: z.string().min(1, 'Author is required').max(100),
   price: z.number().min(1, 'Price must be at least ৳1').max(100000),
   condition: z.enum(['new', 'good', 'worn']),
+  book_type: z.enum(['academic', 'non_academic']),
 });
 
 const conditionOptions = [
   { value: 'new', label: 'New - Like new condition' },
   { value: 'good', label: 'Good - Minor wear' },
   { value: 'worn', label: 'Worn - Visible wear but usable' },
+];
+
+const bookTypeOptions = [
+  { value: 'academic', label: 'Academic - Course books, textbooks' },
+  { value: 'non_academic', label: 'Non-Academic - Novels, general books' },
 ];
 
 const AddBookPage = () => {
@@ -40,6 +46,7 @@ const AddBookPage = () => {
     author: '',
     price: '',
     condition: 'good' as BookCondition,
+    book_type: 'academic' as BookType,
   });
   const [photoUrl, setPhotoUrl] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -75,6 +82,7 @@ const AddBookPage = () => {
         author: formData.author.trim(),
         price: parseFloat(formData.price),
         condition: formData.condition,
+        book_type: formData.book_type,
         photo_url: photoUrl || null,
       });
       toast.success('Book listed successfully!');
@@ -134,6 +142,31 @@ const AddBookPage = () => {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              {/* Book Type */}
+              <div className="space-y-2">
+                <Label>Book Type *</Label>
+                <Select
+                  value={formData.book_type}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, book_type: value as BookType }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {bookTypeOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Academic books are visible only to your campus. Non-academic books are visible to everyone.
+                </p>
               </div>
 
               {/* Title */}

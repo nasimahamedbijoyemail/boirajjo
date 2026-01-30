@@ -3,19 +3,8 @@ import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { useMyBooks, useUpdateBook, useDeleteBook } from '@/hooks/useBooks';
-import { BookOpen, Plus, Edit, Trash2, CheckCircle } from 'lucide-react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import { useMyBooks, useUpdateBook } from '@/hooks/useBooks';
+import { BookOpen, Plus, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 const conditionLabels = {
@@ -27,7 +16,6 @@ const conditionLabels = {
 const MyListingsPage = () => {
   const { data: books = [], isLoading } = useMyBooks();
   const updateBook = useUpdateBook();
-  const deleteBook = useDeleteBook();
 
   const handleMarkAsSold = async (bookId: string) => {
     try {
@@ -35,15 +23,6 @@ const MyListingsPage = () => {
       toast.success('Book marked as sold!');
     } catch {
       toast.error('Failed to update book');
-    }
-  };
-
-  const handleDelete = async (bookId: string) => {
-    try {
-      await deleteBook.mutateAsync(bookId);
-      toast.success('Listing deleted');
-    } catch {
-      toast.error('Failed to delete listing');
     }
   };
 
@@ -138,6 +117,9 @@ const MyListingsPage = () => {
                                 ৳{book.price.toLocaleString()}
                               </span>
                               <Badge variant="secondary">{conditionLabels[book.condition]}</Badge>
+                              {book.book_type === 'non_academic' && (
+                                <Badge variant="outline">Non-Academic</Badge>
+                              )}
                             </div>
                           </div>
                           <div className="flex flex-col gap-2 shrink-0">
@@ -147,39 +129,8 @@ const MyListingsPage = () => {
                               onClick={() => handleMarkAsSold(book.id)}
                             >
                               <CheckCircle className="h-4 w-4" />
-                              <span className="hidden sm:inline">Sold</span>
+                              <span className="hidden sm:inline">Mark Sold</span>
                             </Button>
-                            <Button variant="ghost" size="sm" asChild>
-                              <Link to={`/edit-book/${book.id}`}>
-                                <Edit className="h-4 w-4" />
-                                <span className="hidden sm:inline">Edit</span>
-                              </Link>
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                                  <Trash2 className="h-4 w-4" />
-                                  <span className="hidden sm:inline">Delete</span>
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete Listing?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This will permanently remove "{book.title}" from your listings.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDelete(book.id)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
                           </div>
                         </div>
                       </CardContent>

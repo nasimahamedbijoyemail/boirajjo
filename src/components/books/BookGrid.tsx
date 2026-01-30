@@ -6,9 +6,10 @@ interface BookGridProps {
   books: BookWithSeller[];
   loading?: boolean;
   emptyMessage?: string;
+  isNilkhet?: boolean;
 }
 
-export const BookGrid = ({ books, loading, emptyMessage = 'No books found' }: BookGridProps) => {
+export const BookGrid = ({ books, loading, emptyMessage = 'No books found', isNilkhet = false }: BookGridProps) => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -46,7 +47,7 @@ export const BookGrid = ({ books, loading, emptyMessage = 'No books found' }: Bo
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {books.map((book) => (
-        <BookCard key={book.id} book={book} />
+        <BookCard key={book.id} book={book} isNilkhet={isNilkhet} />
       ))}
     </div>
   );
