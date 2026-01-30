@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 import { InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
 
 const institutionTypes = [
-  { value: 'national_university', label: 'National University', icon: University },
+  { value: 'national_university', label: 'National University Bangladesh', icon: University },
   { value: 'university', label: 'University', icon: GraduationCap },
   { value: 'college', label: 'College', icon: Building2 },
   { value: 'school', label: 'School', icon: School },
@@ -177,7 +177,7 @@ const OnboardingPage = () => {
     }
 
     toast.success('Profile complete! Start browsing books.');
-    navigate('/browse');
+    navigate('/home');
   };
 
   const getSubcategoryOptions = () => {

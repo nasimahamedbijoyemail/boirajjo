@@ -8,12 +8,17 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/Auth";
 import OnboardingPage from "./pages/Onboarding";
-import BrowsePage from "./pages/Browse";
+import HomePage from "./pages/Home";
+import BrowseCategoryPage from "./pages/BrowseCategory";
 import BookDetailsPage from "./pages/BookDetails";
 import AddBookPage from "./pages/AddBook";
-import EditBookPage from "./pages/EditBook";
 import MyListingsPage from "./pages/MyListings";
 import ProfilePage from "./pages/Profile";
+import NilkhetPage from "./pages/Nilkhet";
+import NilkhetBookDetailsPage from "./pages/NilkhetBookDetails";
+import BookDemandPage from "./pages/BookDemand";
+import MyOrdersPage from "./pages/MyOrders";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -57,7 +62,7 @@ const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (profile?.institution_id) {
-    return <Navigate to="/browse" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   return <>{children}</>;
@@ -77,10 +82,18 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="/browse"
+        path="/home"
         element={
           <ProtectedRoute>
-            <BrowsePage />
+            <HomePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/browse/:category"
+        element={
+          <ProtectedRoute>
+            <BrowseCategoryPage />
           </ProtectedRoute>
         }
       />
@@ -101,14 +114,6 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="/edit-book/:id"
-        element={
-          <ProtectedRoute>
-            <EditBookPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
         path="/my-listings"
         element={
           <ProtectedRoute>
@@ -124,6 +129,48 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/nilkhet"
+        element={
+          <ProtectedRoute>
+            <NilkhetPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/nilkhet/:id"
+        element={
+          <ProtectedRoute>
+            <NilkhetBookDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/book-demand"
+        element={
+          <ProtectedRoute>
+            <BookDemandPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-orders"
+        element={
+          <ProtectedRoute>
+            <MyOrdersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      {/* Redirect old /browse to /home */}
+      <Route path="/browse" element={<Navigate to="/home" replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

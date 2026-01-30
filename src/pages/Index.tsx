@@ -13,7 +13,7 @@ const Index = () => {
   useEffect(() => {
     if (!loading && user) {
       if (profile?.institution_id) {
-        navigate('/browse');
+        navigate('/home');
       } else {
         navigate('/onboarding');
       }
