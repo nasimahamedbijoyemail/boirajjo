@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsAdmin } from '@/hooks/useAdmin';
-import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings } from 'lucide-react';
+import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings, List } from 'lucide-react';
 import { useState } from 'react';
 import {
   DropdownMenu,
@@ -44,7 +44,10 @@ export const Header = () => {
                 </Link>
               </Button>
               <Button variant="ghost" asChild>
-                <Link to="/my-listings">My Listings</Link>
+                <Link to="/my-listings">
+                  <List className="h-4 w-4" />
+                  My Listings
+                </Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link to="/my-orders">
@@ -60,15 +63,16 @@ export const Header = () => {
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <User className="h-5 w-5" />
+                  <Button variant="ghost" size="sm" className="gap-1">
+                    <User className="h-4 w-4" />
+                    Profile
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="w-full cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
-                      Profile
+                      View Profile
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
@@ -123,7 +127,10 @@ export const Header = () => {
               </Link>
             </Button>
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-              <Link to="/my-listings">My Listings</Link>
+              <Link to="/my-listings">
+                <List className="h-4 w-4" />
+                My Listings
+              </Link>
             </Button>
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
               <Link to="/my-orders">
@@ -132,7 +139,10 @@ export const Header = () => {
               </Link>
             </Button>
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-              <Link to="/profile">Profile</Link>
+              <Link to="/profile">
+                <User className="h-4 w-4" />
+                Profile
+              </Link>
             </Button>
             {isAdmin && (
               <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>

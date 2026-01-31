@@ -19,6 +19,7 @@ import NilkhetBookDetailsPage from "./pages/NilkhetBookDetails";
 import BookDemandPage from "./pages/BookDemand";
 import MyOrdersPage from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
+import DepartmentRequestsPage from "./pages/DepartmentRequests";
 
 const queryClient = new QueryClient();
 
@@ -166,6 +167,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/department-requests"
+        element={
+          <ProtectedRoute>
+            <DepartmentRequestsPage />
           </ProtectedRoute>
         }
       />

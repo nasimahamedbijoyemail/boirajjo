@@ -4,12 +4,10 @@ import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { AddressSelector } from '@/components/address/AddressSelector';
+import { OrderStatusTracker } from '@/components/orders/OrderStatusTracker';
 import { useCreateDemand, useMyDemands } from '@/hooks/useBookDemands';
-import { DEMAND_STATUS_LABELS } from '@/types/database';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { BookMarked, Plus, Clock } from 'lucide-react';
@@ -74,16 +72,6 @@ const BookDemandPage = () => {
       setAddress({ division_id: '', district_id: '', thana_id: '', ward_id: '', detail_address: '' });
     } catch (error) {
       toast.error('Failed to submit demand. Please try again.');
-    }
-  };
-
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case 'delivered': return 'default';
-      case 'out_for_delivery': return 'secondary';
-      case 'processing': return 'outline';
-      case 'cancelled': return 'destructive';
-      default: return 'outline';
     }
   };
 
@@ -190,23 +178,23 @@ const BookDemandPage = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {myDemands.map((demand) => (
                 <Card key={demand.id}>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-semibold text-foreground">{demand.book_name}</h3>
-                        {demand.author_name && (
-                          <p className="text-sm text-muted-foreground">by {demand.author_name}</p>
-                        )}
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {new Date(demand.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <Badge variant={getStatusVariant(demand.status)}>
-                        {DEMAND_STATUS_LABELS[demand.status]}
-                      </Badge>
+                  <CardContent className="p-4 space-y-4">
+                    <div>
+                      <h3 className="font-semibold text-foreground">{demand.book_name}</h3>
+                      {demand.author_name && (
+                        <p className="text-sm text-muted-foreground">by {demand.author_name}</p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {new Date(demand.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    
+                    {/* Visual Status Tracker */}
+                    <div className="pt-2">
+                      <OrderStatusTracker status={demand.status} type="demand" />
                     </div>
                   </CardContent>
                 </Card>

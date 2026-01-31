@@ -1,23 +1,11 @@
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { useMyOrders } from '@/hooks/useOrders';
-import { ORDER_STATUS_LABELS } from '@/types/database';
+import { OrderStatusTracker } from '@/components/orders/OrderStatusTracker';
 import { ShoppingBag, Package } from 'lucide-react';
 
 const MyOrdersPage = () => {
   const { data: orders = [], isLoading } = useMyOrders();
-
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case 'delivered': return 'default';
-      case 'out_for_delivery': return 'secondary';
-      case 'processing': 
-      case 'confirmed': return 'outline';
-      case 'cancelled': return 'destructive';
-      default: return 'outline';
-    }
-  };
 
   return (
     <Layout>
@@ -50,40 +38,40 @@ const MyOrdersPage = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {orders.map((order) => (
               <Card key={order.id}>
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex gap-4">
-                      <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                        {order.book?.photo_url ? (
-                          <img
-                            src={order.book.photo_url}
-                            alt={order.book.title}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center">
-                            <Package className="h-6 w-6 text-muted-foreground/50" />
-                          </div>
-                        )}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground">
-                          {order.book?.title || 'Unknown Book'}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          ৳{order.total_price.toLocaleString()}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Ordered on {new Date(order.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
+                <CardContent className="p-4 space-y-4">
+                  <div className="flex items-start gap-4">
+                    <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                      {order.book?.photo_url ? (
+                        <img
+                          src={order.book.photo_url}
+                          alt={order.book.title}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <Package className="h-6 w-6 text-muted-foreground/50" />
+                        </div>
+                      )}
                     </div>
-                    <Badge variant={getStatusVariant(order.status)}>
-                      {ORDER_STATUS_LABELS[order.status]}
-                    </Badge>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground">
+                        {order.book?.title || 'Unknown Book'}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        ৳{order.total_price.toLocaleString()}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Ordered on {new Date(order.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Visual Status Tracker */}
+                  <div className="pt-2">
+                    <OrderStatusTracker status={order.status} type="order" />
                   </div>
                 </CardContent>
               </Card>
