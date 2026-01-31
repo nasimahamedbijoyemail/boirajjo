@@ -358,6 +358,77 @@ export type Database = {
           },
         ]
       }
+      department_book_requests: {
+        Row: {
+          academic_department_id: string | null
+          author_name: string | null
+          created_at: string
+          department_id: string | null
+          id: string
+          institution_id: string
+          profile_id: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          academic_department_id?: string | null
+          author_name?: string | null
+          created_at?: string
+          department_id?: string | null
+          id?: string
+          institution_id: string
+          profile_id: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          academic_department_id?: string | null
+          author_name?: string | null
+          created_at?: string
+          department_id?: string | null
+          id?: string
+          institution_id?: string
+          profile_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "department_book_requests_academic_department_id_fkey"
+            columns: ["academic_department_id"]
+            isOneToOne: false
+            referencedRelation: "academic_departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "department_book_requests_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "department_book_requests_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "department_book_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments: {
         Row: {
           created_at: string

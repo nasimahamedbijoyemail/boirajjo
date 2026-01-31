@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
-import { BookOpen, ShoppingBag, BookMarked, Store } from 'lucide-react';
+import { GraduationCap, Globe, BookMarked, Store } from 'lucide-react';
 
 const categories = [
   {
-    title: 'Academic',
-    description: 'Books from your campus',
-    icon: BookOpen,
+    title: 'In Your Campus',
+    description: 'Books from your department',
+    icon: GraduationCap,
     href: '/browse/academic',
     color: 'bg-blue-500/10 text-blue-600',
   },
   {
-    title: 'Non Academic',
+    title: 'Outside Campus',
     description: 'General books from everyone',
-    icon: ShoppingBag,
+    icon: Globe,
     href: '/browse/non-academic',
     color: 'bg-green-500/10 text-green-600',
   },
