@@ -23,8 +23,8 @@ const Index = () => {
   const features = [
     {
       icon: Users,
-      title: 'Campus Only',
-      description: 'Trade books exclusively with students from your institution',
+      title: 'Campus Friendly',
+      description: 'Trade books easily with students from your institution',
     },
     {
       icon: Shield,

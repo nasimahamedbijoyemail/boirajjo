@@ -23,6 +23,8 @@ export const useBooks = (filters?: {
   bookType?: 'academic' | 'non_academic' | 'nilkhet';
   departmentId?: string;
   academicDepartmentId?: string;
+  nilkhetCondition?: 'old' | 'new';
+  nilkhetSubcategory?: string;
 }) => {
   const { profile } = useAuth();
 
@@ -43,12 +45,22 @@ export const useBooks = (filters?: {
           .eq('status', 'available')
           .order('created_at', { ascending: false });
 
+        // Filter by nilkhet condition (old/new)
+        if (filters?.nilkhetCondition) {
+          query = query.eq('condition', filters.nilkhetCondition === 'new' ? 'new' : 'good');
+        }
+
+        // Filter by nilkhet subcategory
+        if (filters?.nilkhetSubcategory) {
+          query = query.eq('subcategory', filters.nilkhetSubcategory);
+        }
+
         const { data, error } = await query;
         if (error) throw error;
         return data as BookWithSeller[];
       }
 
-      // For non-academic books, show all
+      // For non-academic books, show ALL non-academic books globally (from any user)
       if (filters?.bookType === 'non_academic') {
         let query = supabase
           .from('books')
@@ -70,11 +82,10 @@ export const useBooks = (filters?: {
         return data as BookWithSeller[];
       }
 
-      // For academic books, require institution and filter by department
+      // For academic books (In Your Campus), require institution and filter by department
+      // Only show ACADEMIC books from the same institution/department
       if (!profile?.institution_id) return [];
 
-      // Build query to fetch academic books from the same department
-      // Also include non-academic books that match the department filter
       let query = supabase
         .from('books')
         .select(`
@@ -83,6 +94,7 @@ export const useBooks = (filters?: {
           institution:institutions(*)
         `)
         .eq('institution_id', profile.institution_id)
+        .eq('book_type', 'academic') // Only academic books in "In Your Campus"
         .eq('status', 'available')
         .order('created_at', { ascending: false });
 
@@ -92,9 +104,6 @@ export const useBooks = (filters?: {
       } else if (filters?.academicDepartmentId) {
         query = query.eq('academic_department_id', filters.academicDepartmentId);
       }
-
-      // For "In Your Campus", show academic books (and also non-academic from same dept)
-      query = query.in('book_type', ['academic', 'non_academic']);
 
       if (filters?.search) {
         query = query.or(`title.ilike.%${filters.search}%,author.ilike.%${filters.search}%`);
