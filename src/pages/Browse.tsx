@@ -10,13 +10,17 @@ const BrowsePage = () => {
   const { profile } = useAuth();
   const [search, setSearch] = useState('');
   const [subcategory, setSubcategory] = useState('');
+  const [departmentId, setDepartmentId] = useState('');
+  const [academicDepartmentId, setAcademicDepartmentId] = useState('');
   
   const debouncedSearch = useDebounce(search, 300);
 
   const filters = useMemo(() => ({
     search: debouncedSearch,
-    subcategory: subcategory === 'all' ? '' : subcategory,
-  }), [debouncedSearch, subcategory]);
+    subcategory: subcategory || undefined,
+    departmentId: departmentId || profile?.department_id || undefined,
+    academicDepartmentId: academicDepartmentId || profile?.academic_department_id || undefined,
+  }), [debouncedSearch, subcategory, departmentId, academicDepartmentId, profile?.department_id, profile?.academic_department_id]);
 
   const { data: books = [], isLoading } = useBooks(filters);
 
@@ -39,6 +43,10 @@ const BrowsePage = () => {
           onSearchChange={setSearch}
           subcategory={subcategory}
           onSubcategoryChange={setSubcategory}
+          departmentId={departmentId}
+          onDepartmentIdChange={setDepartmentId}
+          academicDepartmentId={academicDepartmentId}
+          onAcademicDepartmentIdChange={setAcademicDepartmentId}
         />
 
         <BookGrid

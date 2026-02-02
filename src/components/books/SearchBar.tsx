@@ -20,12 +20,17 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
 import { useDepartments } from '@/hooks/useInstitutions';
+import { useAcademicDepartments } from '@/hooks/useAcademicDepartments';
 
 interface SearchBarProps {
   search: string;
   onSearchChange: (value: string) => void;
   subcategory: string;
   onSubcategoryChange: (value: string) => void;
+  departmentId?: string;
+  onDepartmentIdChange?: (value: string) => void;
+  academicDepartmentId?: string;
+  onAcademicDepartmentIdChange?: (value: string) => void;
   hideFilters?: boolean;
 }
 
@@ -34,27 +39,84 @@ export const SearchBar = ({
   onSearchChange,
   subcategory,
   onSubcategoryChange,
+  departmentId,
+  onDepartmentIdChange,
+  academicDepartmentId,
+  onAcademicDepartmentIdChange,
   hideFilters = false,
 }: SearchBarProps) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const { profile } = useAuth();
   const { data: departments } = useDepartments(profile?.institution_id || undefined);
+  const { data: academicDepartments } = useAcademicDepartments();
 
-  const getSubcategoryOptions = () => {
+  // For university: show academic departments (linked via academic_department_id)
+  // For national_university: show departments (college) linked via department_id
+  // For college: show divisions
+  // For school: show classes
+  const getFilterOptions = () => {
     if (profile?.institution_type === 'university') {
-      return departments?.map((d) => ({ value: d.name, label: d.name })) || [];
+      // Universities use academic_department_id
+      return {
+        type: 'academic_department',
+        label: 'Department',
+        options: academicDepartments?.map((d) => ({ value: d.id, label: d.name })) || [],
+      };
+    }
+    if (profile?.institution_type === 'national_university') {
+      // National University uses department_id (college)
+      return {
+        type: 'department',
+        label: 'College',
+        options: departments?.map((d) => ({ value: d.id, label: d.name })) || [],
+      };
     }
     if (profile?.institution_type === 'college') {
-      return COLLEGE_DIVISIONS.map((d) => ({ value: d, label: d }));
+      return {
+        type: 'subcategory',
+        label: 'Division',
+        options: COLLEGE_DIVISIONS.map((d) => ({ value: d, label: d })),
+      };
     }
     if (profile?.institution_type === 'school') {
-      return SCHOOL_CLASSES.map((c) => ({ value: c, label: `Class ${c}` }));
+      return {
+        type: 'subcategory',
+        label: 'Class',
+        options: SCHOOL_CLASSES.map((c) => ({ value: c, label: `Class ${c}` })),
+      };
     }
-    return [];
+    return { type: 'none', label: '', options: [] };
   };
 
-  const subcategoryOptions = getSubcategoryOptions();
-  const hasActiveFilters = !!subcategory;
+  const filterConfig = getFilterOptions();
+  const hasActiveFilters = !!subcategory || !!departmentId || !!academicDepartmentId;
+
+  const handleFilterChange = (value: string) => {
+    if (filterConfig.type === 'academic_department' && onAcademicDepartmentIdChange) {
+      onAcademicDepartmentIdChange(value === 'all' ? '' : value);
+    } else if (filterConfig.type === 'department' && onDepartmentIdChange) {
+      onDepartmentIdChange(value === 'all' ? '' : value);
+    } else {
+      onSubcategoryChange(value === 'all' ? '' : value);
+    }
+  };
+
+  const getCurrentFilterValue = () => {
+    if (filterConfig.type === 'academic_department') {
+      return academicDepartmentId || 'all';
+    }
+    if (filterConfig.type === 'department') {
+      return departmentId || 'all';
+    }
+    return subcategory || 'all';
+  };
+
+  const clearFilters = () => {
+    onSubcategoryChange('');
+    if (onDepartmentIdChange) onDepartmentIdChange('');
+    if (onAcademicDepartmentIdChange) onAcademicDepartmentIdChange('');
+    setFilterOpen(false);
+  };
 
   return (
     <div className="flex gap-2">
@@ -78,7 +140,7 @@ export const SearchBar = ({
         )}
       </div>
 
-      {!hideFilters && (
+      {!hideFilters && filterConfig.options.length > 0 && (
         <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="h-12 w-12 relative">
@@ -88,30 +150,23 @@ export const SearchBar = ({
               )}
             </Button>
           </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Filters</SheetTitle>
-            <SheetDescription>
-              Narrow down your search results
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-6 space-y-6">
-            {subcategoryOptions.length > 0 && (
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Filters</SheetTitle>
+              <SheetDescription>
+                Narrow down your search results
+              </SheetDescription>
+            </SheetHeader>
+            <div className="mt-6 space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium">
-                  {profile?.institution_type === 'university'
-                    ? 'Department'
-                    : profile?.institution_type === 'college'
-                    ? 'Division'
-                    : 'Class'}
-                </label>
-                <Select value={subcategory} onValueChange={onSubcategoryChange}>
+                <label className="text-sm font-medium">{filterConfig.label}</label>
+                <Select value={getCurrentFilterValue()} onValueChange={handleFilterChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="All" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All</SelectItem>
-                    {subcategoryOptions.map((option) => (
+                    {filterConfig.options.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -119,23 +174,19 @@ export const SearchBar = ({
                   </SelectContent>
                 </Select>
               </div>
-            )}
 
-            {hasActiveFilters && (
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => {
-                  onSubcategoryChange('');
-                  setFilterOpen(false);
-                }}
-              >
-                Clear Filters
-              </Button>
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
+              {hasActiveFilters && (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={clearFilters}
+                >
+                  Clear Filters
+                </Button>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       )}
     </div>
   );

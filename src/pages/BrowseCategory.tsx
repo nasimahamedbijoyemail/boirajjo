@@ -14,6 +14,8 @@ const BrowseCategoryPage = () => {
   const { profile } = useAuth();
   const [search, setSearch] = useState('');
   const [subcategory, setSubcategory] = useState('');
+  const [departmentId, setDepartmentId] = useState('');
+  const [academicDepartmentId, setAcademicDepartmentId] = useState('');
   
   const debouncedSearch = useDebounce(search, 300);
 
@@ -22,12 +24,12 @@ const BrowseCategoryPage = () => {
 
   const filters = useMemo(() => ({
     search: debouncedSearch,
-    subcategory: subcategory === 'all' ? '' : subcategory,
+    subcategory: subcategory || undefined,
     bookType: bookType as 'academic' | 'non_academic',
-    // For academic, filter by department; for non-academic, show all
-    departmentId: isAcademic ? (profile?.department_id || undefined) : undefined,
-    academicDepartmentId: isAcademic ? (profile?.academic_department_id || undefined) : undefined,
-  }), [debouncedSearch, subcategory, bookType, isAcademic, profile?.department_id, profile?.academic_department_id]);
+    // For academic, filter by department if selected, otherwise show user's department
+    departmentId: isAcademic ? (departmentId || profile?.department_id || undefined) : undefined,
+    academicDepartmentId: isAcademic ? (academicDepartmentId || profile?.academic_department_id || undefined) : undefined,
+  }), [debouncedSearch, subcategory, bookType, isAcademic, departmentId, academicDepartmentId, profile?.department_id, profile?.academic_department_id]);
 
   const { data: books = [], isLoading } = useBooks(filters);
 
@@ -93,6 +95,10 @@ const BrowseCategoryPage = () => {
           onSearchChange={setSearch}
           subcategory={subcategory}
           onSubcategoryChange={setSubcategory}
+          departmentId={departmentId}
+          onDepartmentIdChange={setDepartmentId}
+          academicDepartmentId={academicDepartmentId}
+          onAcademicDepartmentIdChange={setAcademicDepartmentId}
           hideFilters={!isAcademic}
         />
 

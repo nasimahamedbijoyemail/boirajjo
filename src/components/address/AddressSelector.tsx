@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import { useDivisions, useDistricts, useThanas, useWards } from '@/hooks/useBDLocations';
+import { useDivisions, useDistricts, useThanas } from '@/hooks/useBDLocations';
 
 interface AddressValue {
   division_id: string;
@@ -21,7 +21,6 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
   const { data: divisions = [], isLoading: divisionsLoading } = useDivisions();
   const { data: districts = [], isLoading: districtsLoading } = useDistricts(value.division_id);
   const { data: thanas = [], isLoading: thanasLoading } = useThanas(value.district_id);
-  const { data: wards = [], isLoading: wardsLoading } = useWards(value.thana_id);
 
   const divisionOptions = useMemo(() => 
     divisions.map((d) => ({ value: d.id, label: d.name })),
@@ -36,11 +35,6 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
   const thanaOptions = useMemo(() => 
     thanas.map((t) => ({ value: t.id, label: t.name })),
     [thanas]
-  );
-
-  const wardOptions = useMemo(() => 
-    wards.map((w) => ({ value: w.id, label: w.name })),
-    [wards]
   );
 
   const handleDivisionChange = (divisionId: string) => {
@@ -99,32 +93,17 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Thana (Optional)</Label>
-          <SearchableSelect
-            options={thanaOptions}
-            value={value.thana_id}
-            onValueChange={handleThanaChange}
-            placeholder={thanasLoading ? 'Loading...' : 'Select thana'}
-            searchPlaceholder="Search thanas..."
-            emptyText={value.district_id ? 'No thanas found' : 'Select district first'}
-            disabled={!value.district_id}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Ward (Optional)</Label>
-          <SearchableSelect
-            options={wardOptions}
-            value={value.ward_id}
-            onValueChange={(wardId) => onChange({ ...value, ward_id: wardId })}
-            placeholder={wardsLoading ? 'Loading...' : 'Select ward'}
-            searchPlaceholder="Search wards..."
-            emptyText={value.thana_id ? 'No wards found' : 'Select thana first'}
-            disabled={!value.thana_id}
-          />
-        </div>
+      <div className="space-y-2">
+        <Label>Thana (Optional)</Label>
+        <SearchableSelect
+          options={thanaOptions}
+          value={value.thana_id}
+          onValueChange={handleThanaChange}
+          placeholder={thanasLoading ? 'Loading...' : 'Select thana'}
+          searchPlaceholder="Search thanas..."
+          emptyText={value.district_id ? 'No thanas found' : 'Select district first'}
+          disabled={!value.district_id}
+        />
       </div>
 
       <div className="space-y-2">

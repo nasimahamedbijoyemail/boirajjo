@@ -11,6 +11,8 @@ interface CreateBookData {
   photo_url?: string | null;
   book_type?: BookType;
   is_admin_listing?: boolean;
+  nilkhet_condition?: 'old' | 'new';
+  nilkhet_subcategory?: string;
 }
 
 interface UpdateBookData extends Partial<CreateBookData> {
@@ -184,10 +186,27 @@ export const useCreateBook = () => {
         seller_id: profile.id,
         institution_id: profile.institution_id!,
         institution_type: profile.institution_type!,
-        subcategory: profile.subcategory,
         book_type: data.book_type || 'academic',
         is_admin_listing: data.is_admin_listing || false,
       };
+
+      // For academic books, inherit the seller's department from their profile
+      if (data.book_type === 'academic' || !data.book_type) {
+        insertData.department_id = profile.department_id;
+        insertData.academic_department_id = profile.academic_department_id;
+        insertData.subcategory = profile.subcategory;
+      }
+
+      // For nilkhet books, use provided subcategory and nilkhet_condition
+      if (data.book_type === 'nilkhet') {
+        insertData.subcategory = data.nilkhet_subcategory || null;
+        // Map nilkhet_condition to book condition field
+        if (data.nilkhet_condition === 'old') {
+          insertData.condition = 'good'; // Old books stored as 'good' condition
+        } else if (data.nilkhet_condition === 'new') {
+          insertData.condition = 'new';
+        }
+      }
 
       const { data: book, error } = await supabase
         .from('books')
