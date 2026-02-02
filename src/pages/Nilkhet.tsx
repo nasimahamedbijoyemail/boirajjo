@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 const NilkhetPage = () => {
   const [search, setSearch] = useState('');
   const [bookCondition, setBookCondition] = useState<NilkhetBookConditionType>('old');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   
   const debouncedSearch = useDebounce(search, 300);
@@ -35,26 +35,28 @@ const NilkhetPage = () => {
     );
   }, [books, debouncedSearch]);
 
-  const handleCategoryClick = (categoryKey: string) => {
-    if (selectedCategory === categoryKey) {
-      setSelectedCategory(null);
+  const selectedCategory = NILKHET_CATEGORIES.find(c => c.id === selectedCategoryId);
+
+  const handleCategoryClick = (categoryId: string) => {
+    if (selectedCategoryId === categoryId) {
+      setSelectedCategoryId(null);
       setSelectedSubcategory(null);
     } else {
-      setSelectedCategory(categoryKey);
+      setSelectedCategoryId(categoryId);
       setSelectedSubcategory(null);
     }
   };
 
-  const handleSubcategoryClick = (subcategoryValue: string) => {
-    if (selectedSubcategory === subcategoryValue) {
+  const handleSubcategoryClick = (subcategoryId: string) => {
+    if (selectedSubcategory === subcategoryId) {
       setSelectedSubcategory(null);
     } else {
-      setSelectedSubcategory(subcategoryValue);
+      setSelectedSubcategory(subcategoryId);
     }
   };
 
   const clearFilters = () => {
-    setSelectedCategory(null);
+    setSelectedCategoryId(null);
     setSelectedSubcategory(null);
   };
 
@@ -89,20 +91,20 @@ const NilkhetPage = () => {
           <TabsContent value={bookCondition} className="mt-4 space-y-4">
             {/* Category Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {Object.entries(NILKHET_CATEGORIES).map(([key, category]) => (
+              {NILKHET_CATEGORIES.map((category) => (
                 <Card 
-                  key={key}
+                  key={category.id}
                   className={cn(
                     "cursor-pointer transition-all hover:shadow-md",
-                    selectedCategory === key && "ring-2 ring-primary bg-primary/5"
+                    selectedCategoryId === category.id && "ring-2 ring-primary bg-primary/5"
                   )}
-                  onClick={() => handleCategoryClick(key)}
+                  onClick={() => handleCategoryClick(category.id)}
                 >
                   <CardContent className="p-4 flex items-center justify-between">
-                    <span className="text-sm font-medium">{category.label}</span>
+                    <span className="text-sm font-medium">{category.icon} {category.name}</span>
                     <ChevronRight className={cn(
                       "h-4 w-4 text-muted-foreground transition-transform",
-                      selectedCategory === key && "rotate-90"
+                      selectedCategoryId === category.id && "rotate-90"
                     )} />
                   </CardContent>
                 </Card>
@@ -114,7 +116,7 @@ const NilkhetPage = () => {
               <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium text-sm">
-                    {NILKHET_CATEGORIES[selectedCategory as keyof typeof NILKHET_CATEGORIES].label}
+                    {selectedCategory.icon} {selectedCategory.name}
                   </h3>
                   <button 
                     onClick={clearFilters}
@@ -124,14 +126,14 @@ const NilkhetPage = () => {
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {NILKHET_CATEGORIES[selectedCategory as keyof typeof NILKHET_CATEGORIES].items.map((item) => (
+                  {selectedCategory.subcategories.map((item) => (
                     <Badge
-                      key={item.value}
-                      variant={selectedSubcategory === item.value ? "default" : "outline"}
+                      key={item.id}
+                      variant={selectedSubcategory === item.id ? "default" : "outline"}
                       className="cursor-pointer hover:bg-primary/10"
-                      onClick={() => handleSubcategoryClick(item.value)}
+                      onClick={() => handleSubcategoryClick(item.id)}
                     >
-                      {item.label}
+                      {item.name}
                     </Badge>
                   ))}
                 </div>
@@ -139,13 +141,13 @@ const NilkhetPage = () => {
             )}
 
             {/* Active Filter Display */}
-            {selectedSubcategory && (
+            {selectedSubcategory && selectedCategory && (
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">Showing:</span>
                 <Badge variant="secondary" className="gap-1">
-                  {NILKHET_CATEGORIES[selectedCategory as keyof typeof NILKHET_CATEGORIES]?.items.find(
-                    (i) => i.value === selectedSubcategory
-                  )?.label}
+                  {selectedCategory.subcategories.find(
+                    (i) => i.id === selectedSubcategory
+                  )?.name}
                   <button 
                     onClick={() => setSelectedSubcategory(null)}
                     className="ml-1 hover:text-destructive"

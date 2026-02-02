@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -25,13 +25,12 @@ import { useIsAdmin, useAdminStats, useAdminNotifications } from '@/hooks/useAdm
 import { useAllOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
 import { useAllDemands, useUpdateDemandStatus } from '@/hooks/useBookDemands';
 import { useCreateBook } from '@/hooks/useBooks';
-import { useAuth } from '@/contexts/AuthContext';
 import { ORDER_STATUS_LABELS, DEMAND_STATUS_LABELS, OrderStatus, DemandStatus, BookCondition } from '@/types/database';
+import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { toast } from 'sonner';
 import { 
   Package, 
   BookMarked, 
-  BookOpen, 
   Users, 
   Plus,
   Bell,
@@ -47,8 +46,6 @@ const AdminDashboard = () => {
   const updateOrderStatus = useUpdateOrderStatus();
   const updateDemandStatus = useUpdateDemandStatus();
   const createBook = useCreateBook();
-  const { profile } = useAuth();
-
   const [newBookOpen, setNewBookOpen] = useState(false);
   const [newBook, setNewBook] = useState({
     title: '',
@@ -56,7 +53,16 @@ const AdminDashboard = () => {
     price: '',
     condition: 'good' as BookCondition,
     photo_url: '',
+    nilkhet_condition: 'old' as 'old' | 'new',
+    nilkhet_category: '',
+    nilkhet_subcategory: '',
   });
+
+  // Get subcategories based on selected category
+  const getSubcategories = () => {
+    const category = NILKHET_CATEGORIES.find(c => c.id === newBook.nilkhet_category);
+    return category?.subcategories || [];
+  };
 
   if (adminLoading) {
     return (
@@ -96,19 +102,35 @@ const AdminDashboard = () => {
       return;
     }
 
+    if (!newBook.nilkhet_category || !newBook.nilkhet_subcategory) {
+      toast.error('Please select category and subcategory');
+      return;
+    }
+
     try {
       await createBook.mutateAsync({
         title: newBook.title,
         author: newBook.author,
         price: parseFloat(newBook.price),
-        condition: newBook.condition,
+        condition: newBook.nilkhet_condition === 'new' ? 'new' : 'good',
         photo_url: newBook.photo_url || null,
         book_type: 'nilkhet',
         is_admin_listing: true,
+        nilkhet_condition: newBook.nilkhet_condition,
+        nilkhet_subcategory: newBook.nilkhet_subcategory,
       });
       toast.success('Nilkhet book added!');
       setNewBookOpen(false);
-      setNewBook({ title: '', author: '', price: '', condition: 'good', photo_url: '' });
+      setNewBook({ 
+        title: '', 
+        author: '', 
+        price: '', 
+        condition: 'good', 
+        photo_url: '',
+        nilkhet_condition: 'old',
+        nilkhet_category: '',
+        nilkhet_subcategory: '',
+      });
     } catch {
       toast.error('Failed to add book');
     }
@@ -140,11 +162,70 @@ const AdminDashboard = () => {
                 Add Nilkhet Book
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add Nilkhet Book</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 mt-4">
+                {/* Old/New Book Selection */}
+                <div className="space-y-2">
+                  <Label>Book Condition *</Label>
+                  <Select
+                    value={newBook.nilkhet_condition}
+                    onValueChange={(v) => setNewBook({ ...newBook, nilkhet_condition: v as 'old' | 'new' })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="old">Old Books</SelectItem>
+                      <SelectItem value="new">New Books</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Category Selection */}
+                <div className="space-y-2">
+                  <Label>Category *</Label>
+                  <Select
+                    value={newBook.nilkhet_category}
+                    onValueChange={(v) => setNewBook({ ...newBook, nilkhet_category: v, nilkhet_subcategory: '' })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {NILKHET_CATEGORIES.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.icon} {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Subcategory Selection */}
+                {newBook.nilkhet_category && (
+                  <div className="space-y-2">
+                    <Label>Subcategory *</Label>
+                    <Select
+                      value={newBook.nilkhet_subcategory}
+                      onValueChange={(v) => setNewBook({ ...newBook, nilkhet_subcategory: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select subcategory" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getSubcategories().map((sub) => (
+                          <SelectItem key={sub.id} value={sub.id}>
+                            {sub.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
                 <Input
                   placeholder="Book Title *"
                   value={newBook.title}
@@ -161,26 +242,13 @@ const AdminDashboard = () => {
                   value={newBook.price}
                   onChange={(e) => setNewBook({ ...newBook, price: e.target.value })}
                 />
-                <Select
-                  value={newBook.condition}
-                  onValueChange={(v) => setNewBook({ ...newBook, condition: v as BookCondition })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="new">New</SelectItem>
-                    <SelectItem value="good">Good</SelectItem>
-                    <SelectItem value="worn">Worn</SelectItem>
-                  </SelectContent>
-                </Select>
                 <Input
                   placeholder="Photo URL (optional)"
                   value={newBook.photo_url}
                   onChange={(e) => setNewBook({ ...newBook, photo_url: e.target.value })}
                 />
-                <Button onClick={handleAddNilkhetBook} className="w-full">
-                  Add Book
+                <Button onClick={handleAddNilkhetBook} className="w-full" disabled={createBook.isPending}>
+                  {createBook.isPending ? 'Adding...' : 'Add Book'}
                 </Button>
               </div>
             </DialogContent>
