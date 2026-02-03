@@ -188,6 +188,7 @@ export type Database = {
           author_name: string | null
           book_name: string
           created_at: string
+          demand_number: string | null
           detail_address: string | null
           district_id: string | null
           division_id: string | null
@@ -204,6 +205,7 @@ export type Database = {
           author_name?: string | null
           book_name: string
           created_at?: string
+          demand_number?: string | null
           detail_address?: string | null
           district_id?: string | null
           division_id?: string | null
@@ -220,6 +222,7 @@ export type Database = {
           author_name?: string | null
           book_name?: string
           created_at?: string
+          demand_number?: string | null
           detail_address?: string | null
           district_id?: string | null
           division_id?: string | null
@@ -274,6 +277,7 @@ export type Database = {
           academic_department_id: string | null
           author: string
           book_type: string
+          category: string | null
           condition: Database["public"]["Enums"]["book_condition"]
           created_at: string
           department_id: string | null
@@ -286,6 +290,7 @@ export type Database = {
           seller_id: string
           status: Database["public"]["Enums"]["book_status"]
           subcategory: string | null
+          subcategory_detail: string | null
           title: string
           updated_at: string
         }
@@ -293,6 +298,7 @@ export type Database = {
           academic_department_id?: string | null
           author: string
           book_type?: string
+          category?: string | null
           condition?: Database["public"]["Enums"]["book_condition"]
           created_at?: string
           department_id?: string | null
@@ -305,6 +311,7 @@ export type Database = {
           seller_id: string
           status?: Database["public"]["Enums"]["book_status"]
           subcategory?: string | null
+          subcategory_detail?: string | null
           title: string
           updated_at?: string
         }
@@ -312,6 +319,7 @@ export type Database = {
           academic_department_id?: string | null
           author?: string
           book_type?: string
+          category?: string | null
           condition?: Database["public"]["Enums"]["book_condition"]
           created_at?: string
           department_id?: string | null
@@ -324,6 +332,7 @@ export type Database = {
           seller_id?: string
           status?: Database["public"]["Enums"]["book_status"]
           subcategory?: string | null
+          subcategory_detail?: string | null
           title?: string
           updated_at?: string
         }
@@ -352,6 +361,63 @@ export type Database = {
           {
             foreignKeyName: "books_seller_id_fkey"
             columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_unlock_payments: {
+        Row: {
+          admin_notes: string | null
+          amount: number
+          bkash_number: string
+          book_id: string
+          created_at: string
+          id: string
+          profile_id: string
+          status: string
+          transaction_number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount: number
+          bkash_number: string
+          book_id: string
+          created_at?: string
+          id?: string
+          profile_id: string
+          status?: string
+          transaction_number: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount?: number
+          bkash_number?: string
+          book_id?: string
+          created_at?: string
+          id?: string
+          profile_id?: string
+          status?: string
+          transaction_number?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_unlock_payments_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_unlock_payments_profile_id_fkey"
+            columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -488,6 +554,7 @@ export type Database = {
           district_id: string | null
           division_id: string | null
           id: string
+          order_number: string | null
           profile_id: string
           quantity: number
           status: Database["public"]["Enums"]["order_status"]
@@ -505,6 +572,7 @@ export type Database = {
           district_id?: string | null
           division_id?: string | null
           id?: string
+          order_number?: string | null
           profile_id: string
           quantity?: number
           status?: Database["public"]["Enums"]["order_status"]
@@ -522,6 +590,7 @@ export type Database = {
           district_id?: string | null
           division_id?: string | null
           id?: string
+          order_number?: string | null
           profile_id?: string
           quantity?: number
           status?: Database["public"]["Enums"]["order_status"]
@@ -648,6 +717,277 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      shop_books: {
+        Row: {
+          author: string
+          book_condition_type: string
+          category: string
+          condition: Database["public"]["Enums"]["book_condition"]
+          created_at: string
+          id: string
+          is_available: boolean | null
+          photo_url: string | null
+          price: number
+          shop_id: string
+          stock: number | null
+          subcategory: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          book_condition_type: string
+          category: string
+          condition?: Database["public"]["Enums"]["book_condition"]
+          created_at?: string
+          id?: string
+          is_available?: boolean | null
+          photo_url?: string | null
+          price: number
+          shop_id: string
+          stock?: number | null
+          subcategory: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          book_condition_type?: string
+          category?: string
+          condition?: Database["public"]["Enums"]["book_condition"]
+          created_at?: string
+          id?: string
+          is_available?: boolean | null
+          photo_url?: string | null
+          price?: number
+          shop_id?: string
+          stock?: number | null
+          subcategory?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_books_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_orders: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          customer_notes: string | null
+          detail_address: string | null
+          district_id: string | null
+          division_id: string | null
+          id: string
+          order_number: string | null
+          profile_id: string
+          quantity: number | null
+          shop_book_id: string
+          shop_id: string
+          shop_notes: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          thana_id: string | null
+          total_price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          customer_notes?: string | null
+          detail_address?: string | null
+          district_id?: string | null
+          division_id?: string | null
+          id?: string
+          order_number?: string | null
+          profile_id: string
+          quantity?: number | null
+          shop_book_id: string
+          shop_id: string
+          shop_notes?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          thana_id?: string | null
+          total_price: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          customer_notes?: string | null
+          detail_address?: string | null
+          district_id?: string | null
+          division_id?: string | null
+          id?: string
+          order_number?: string | null
+          profile_id?: string
+          quantity?: number | null
+          shop_book_id?: string
+          shop_id?: string
+          shop_notes?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          thana_id?: string | null
+          total_price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_orders_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "bd_districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_orders_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "bd_divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_orders_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_orders_shop_book_id_fkey"
+            columns: ["shop_book_id"]
+            isOneToOne: false
+            referencedRelation: "shop_books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_orders_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_orders_thana_id_fkey"
+            columns: ["thana_id"]
+            isOneToOne: false
+            referencedRelation: "bd_thanas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          profile_id: string
+          rating: number
+          review: string | null
+          shop_id: string
+          shop_order_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          profile_id: string
+          rating: number
+          review?: string | null
+          shop_id: string
+          shop_order_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          profile_id?: string
+          rating?: number
+          review?: string | null
+          shop_id?: string
+          shop_order_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_ratings_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_ratings_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_ratings_shop_order_id_fkey"
+            columns: ["shop_order_id"]
+            isOneToOne: false
+            referencedRelation: "shop_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shops: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          logo_url: string | null
+          name: string
+          phone_number: string
+          rating_average: number | null
+          rating_count: number | null
+          updated_at: string
+          user_id: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name: string
+          phone_number: string
+          rating_average?: number | null
+          rating_count?: number | null
+          updated_at?: string
+          user_id: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name?: string
+          phone_number?: string
+          rating_average?: number | null
+          rating_count?: number | null
+          updated_at?: string
+          user_id?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

@@ -13,6 +13,8 @@ interface CreateBookData {
   is_admin_listing?: boolean;
   nilkhet_condition?: 'old' | 'new';
   nilkhet_subcategory?: string;
+  category?: string;
+  subcategory_detail?: string;
 }
 
 interface UpdateBookData extends Partial<CreateBookData> {

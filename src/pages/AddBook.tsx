@@ -15,6 +15,7 @@ import {
 import { ArrowLeft, Upload, X } from 'lucide-react';
 import { useCreateBook } from '@/hooks/useBooks';
 import { BookCondition, BookType } from '@/types/database';
+import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -50,6 +51,12 @@ const AddBookPage = () => {
   });
   const [photoUrl, setPhotoUrl] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  // Non-academic category selection
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+
+  const categoryObj = NILKHET_CATEGORIES.find((c) => c.id === selectedCategory);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,6 +83,12 @@ const AddBookPage = () => {
       return;
     }
 
+    // Validate category for non-academic books
+    if (formData.book_type === 'non_academic' && (!selectedCategory || !selectedSubcategory)) {
+      toast.error('Please select a category and subcategory for non-academic books');
+      return;
+    }
+
     try {
       await createBook.mutateAsync({
         title: formData.title.trim(),
@@ -84,10 +97,12 @@ const AddBookPage = () => {
         condition: formData.condition,
         book_type: formData.book_type,
         photo_url: photoUrl || null,
+        category: formData.book_type === 'non_academic' ? selectedCategory : undefined,
+        subcategory_detail: formData.book_type === 'non_academic' ? selectedSubcategory : undefined,
       });
       toast.success('Book listed successfully!');
       navigate('/my-listings');
-    } catch (error) {
+    } catch {
       toast.error('Failed to list book. Please try again.');
     }
   };
@@ -149,9 +164,11 @@ const AddBookPage = () => {
                 <Label>Book Type *</Label>
                 <Select
                   value={formData.book_type}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, book_type: value as BookType }))
-                  }
+                  onValueChange={(value) => {
+                    setFormData((prev) => ({ ...prev, book_type: value as BookType }));
+                    setSelectedCategory('');
+                    setSelectedSubcategory('');
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select type" />
@@ -168,6 +185,56 @@ const AddBookPage = () => {
                   Academic books are visible only to your campus. Non-academic books are visible to everyone.
                 </p>
               </div>
+
+              {/* Category selection for non-academic books */}
+              {formData.book_type === 'non_academic' && (
+                <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+                  <h3 className="font-medium">Book Category</h3>
+                  
+                  <div className="space-y-2">
+                    <Label>Category *</Label>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={(value) => {
+                        setSelectedCategory(value);
+                        setSelectedSubcategory('');
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {NILKHET_CATEGORIES.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.icon} {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {categoryObj && (
+                    <div className="space-y-2">
+                      <Label>Subcategory *</Label>
+                      <Select
+                        value={selectedSubcategory}
+                        onValueChange={setSelectedSubcategory}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select subcategory" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categoryObj.subcategories.map((sub) => (
+                            <SelectItem key={sub.id} value={sub.id}>
+                              {sub.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Title */}
               <div className="space-y-2">

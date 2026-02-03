@@ -1,183 +1,298 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
-import { BookGrid } from '@/components/books/BookGrid';
-import { SearchBar } from '@/components/books/SearchBar';
-import { useBooks } from '@/hooks/useBooks';
-import { useDebounce } from '@/hooks/useDebounce';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, BookOpen, Sparkles } from 'lucide-react';
-import { NILKHET_CATEGORIES, NilkhetBookConditionType } from '@/constants/nilkhetCategories';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Store, Star, MapPin, Phone, Search, BookOpen, ExternalLink } from 'lucide-react';
+import { useShops, useShopBooks } from '@/hooks/useShops';
+import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 
 const NilkhetPage = () => {
-  const [search, setSearch] = useState('');
-  const [bookCondition, setBookCondition] = useState<NilkhetBookConditionType>('old');
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
-  
-  const debouncedSearch = useDebounce(search, 300);
+  const [conditionType, setConditionType] = useState<'old' | 'new'>('old');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'shops' | 'books'>('shops');
 
-  const { data: books = [], isLoading } = useBooks({ 
-    bookType: 'nilkhet',
-    nilkhetCondition: bookCondition,
-    nilkhetSubcategory: selectedSubcategory || undefined,
+  const { data: shops = [], isLoading: shopsLoading } = useShops();
+  const { data: books = [], isLoading: booksLoading } = useShopBooks(undefined, {
+    condition_type: conditionType,
+    category: selectedCategory || undefined,
+    subcategory: selectedSubcategory || undefined,
   });
 
-  const filteredBooks = useMemo(() => {
-    if (!debouncedSearch) return books;
-    const searchLower = debouncedSearch.toLowerCase();
-    return books.filter(
-      (book) =>
-        book.title.toLowerCase().includes(searchLower) ||
-        book.author.toLowerCase().includes(searchLower)
-    );
-  }, [books, debouncedSearch]);
+  const categoryObj = NILKHET_CATEGORIES.find((c) => c.id === selectedCategory);
 
-  const selectedCategory = NILKHET_CATEGORIES.find(c => c.id === selectedCategoryId);
+  const filteredShops = shops.filter((shop) =>
+    shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    shop.address?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const handleCategoryClick = (categoryId: string) => {
-    if (selectedCategoryId === categoryId) {
-      setSelectedCategoryId(null);
-      setSelectedSubcategory(null);
-    } else {
-      setSelectedCategoryId(categoryId);
-      setSelectedSubcategory(null);
-    }
-  };
-
-  const handleSubcategoryClick = (subcategoryId: string) => {
-    if (selectedSubcategory === subcategoryId) {
-      setSelectedSubcategory(null);
-    } else {
-      setSelectedSubcategory(subcategoryId);
-    }
-  };
-
-  const clearFilters = () => {
-    setSelectedCategoryId(null);
-    setSelectedSubcategory(null);
-  };
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            Nilkhet Books
-          </h1>
-          <p className="text-muted-foreground">
-            Order books with cash on delivery
-          </p>
+      <div className="container py-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              Nilkhet Book Market
+            </h1>
+            <p className="text-muted-foreground">
+              Browse shops and books from Nilkhet
+            </p>
+          </div>
+          <Link to="/shop">
+            <Button variant="outline">
+              <Store className="h-4 w-4 mr-2" />
+              Shop Login
+            </Button>
+          </Link>
         </div>
 
-        {/* Book Condition Tabs */}
-        <Tabs value={bookCondition} onValueChange={(v) => {
-          setBookCondition(v as NilkhetBookConditionType);
-          clearFilters();
-        }}>
-          <TabsList className="grid w-full grid-cols-2 max-w-md">
-            <TabsTrigger value="old" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Old Books
-            </TabsTrigger>
-            <TabsTrigger value="new" className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4" />
-              New Books
-            </TabsTrigger>
-          </TabsList>
+        {/* Search */}
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={viewMode === 'shops' ? 'Search shops...' : 'Search books...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
 
-          <TabsContent value={bookCondition} className="mt-4 space-y-4">
-            {/* Category Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {NILKHET_CATEGORIES.map((category) => (
-                <Card 
-                  key={category.id}
-                  className={cn(
-                    "cursor-pointer transition-all hover:shadow-md",
-                    selectedCategoryId === category.id && "ring-2 ring-primary bg-primary/5"
-                  )}
-                  onClick={() => handleCategoryClick(category.id)}
+        {/* View Mode Toggle */}
+        <div className="flex gap-2 mb-6">
+          <Button
+            variant={viewMode === 'shops' ? 'default' : 'outline'}
+            onClick={() => setViewMode('shops')}
+          >
+            <Store className="h-4 w-4 mr-2" />
+            Shops
+          </Button>
+          <Button
+            variant={viewMode === 'books' ? 'default' : 'outline'}
+            onClick={() => setViewMode('books')}
+          >
+            <BookOpen className="h-4 w-4 mr-2" />
+            Books
+          </Button>
+        </div>
+
+        {viewMode === 'books' && (
+          <>
+            {/* Condition Type Tabs */}
+            <Tabs value={conditionType} onValueChange={(v) => setConditionType(v as 'old' | 'new')} className="mb-6">
+              <TabsList className="grid w-full max-w-xs grid-cols-2">
+                <TabsTrigger value="old">Old Books</TabsTrigger>
+                <TabsTrigger value="new">New Books</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {/* Category Filters */}
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Categories</h3>
+              <div className="flex flex-wrap gap-2">
+                <Badge
+                  variant={selectedCategory === '' ? 'default' : 'outline'}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setSelectedCategory('');
+                    setSelectedSubcategory('');
+                  }}
                 >
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <span className="text-sm font-medium">{category.icon} {category.name}</span>
-                    <ChevronRight className={cn(
-                      "h-4 w-4 text-muted-foreground transition-transform",
-                      selectedCategoryId === category.id && "rotate-90"
-                    )} />
-                  </CardContent>
-                </Card>
-              ))}
+                  All
+                </Badge>
+                {NILKHET_CATEGORIES.map((cat) => (
+                  <Badge
+                    key={cat.id}
+                    variant={selectedCategory === cat.id ? 'default' : 'outline'}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSelectedCategory(cat.id);
+                      setSelectedSubcategory('');
+                    }}
+                  >
+                    {cat.icon} {cat.name}
+                  </Badge>
+                ))}
+              </div>
             </div>
 
-            {/* Subcategory Pills */}
-            {selectedCategory && (
-              <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-sm">
-                    {selectedCategory.icon} {selectedCategory.name}
-                  </h3>
-                  <button 
-                    onClick={clearFilters}
-                    className="text-xs text-muted-foreground hover:text-foreground"
-                  >
-                    Clear
-                  </button>
-                </div>
+            {/* Subcategory Filters */}
+            {categoryObj && (
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                  {categoryObj.name} - Subcategories
+                </h3>
                 <div className="flex flex-wrap gap-2">
-                  {selectedCategory.subcategories.map((item) => (
+                  <Badge
+                    variant={selectedSubcategory === '' ? 'secondary' : 'outline'}
+                    className="cursor-pointer"
+                    onClick={() => setSelectedSubcategory('')}
+                  >
+                    All
+                  </Badge>
+                  {categoryObj.subcategories.map((sub) => (
                     <Badge
-                      key={item.id}
-                      variant={selectedSubcategory === item.id ? "default" : "outline"}
-                      className="cursor-pointer hover:bg-primary/10"
-                      onClick={() => handleSubcategoryClick(item.id)}
+                      key={sub.id}
+                      variant={selectedSubcategory === sub.id ? 'secondary' : 'outline'}
+                      className="cursor-pointer"
+                      onClick={() => setSelectedSubcategory(sub.id)}
                     >
-                      {item.name}
+                      {sub.name}
                     </Badge>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Active Filter Display */}
-            {selectedSubcategory && selectedCategory && (
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-muted-foreground">Showing:</span>
-                <Badge variant="secondary" className="gap-1">
-                  {selectedCategory.subcategories.find(
-                    (i) => i.id === selectedSubcategory
-                  )?.name}
-                  <button 
-                    onClick={() => setSelectedSubcategory(null)}
-                    className="ml-1 hover:text-destructive"
-                  >
-                    ×
-                  </button>
-                </Badge>
+            {/* Books Grid */}
+            {booksLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {[...Array(8)].map((_, i) => (
+                  <Card key={i} className="animate-pulse">
+                    <div className="aspect-[3/4] bg-muted" />
+                    <CardContent className="p-3">
+                      <div className="h-4 bg-muted rounded mb-2" />
+                      <div className="h-3 bg-muted rounded w-2/3" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : filteredBooks.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No books found</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {filteredBooks.map((book) => (
+                  <Link key={book.id} to={`/nilkhet/book/${book.id}`}>
+                    <Card className="group overflow-hidden hover:shadow-card-hover transition-all">
+                      <div className="aspect-[3/4] bg-muted overflow-hidden">
+                        {book.photo_url ? (
+                          <img
+                            src={book.photo_url}
+                            alt={book.title}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center">
+                            <BookOpen className="h-12 w-12 text-muted-foreground/50" />
+                          </div>
+                        )}
+                      </div>
+                      <CardContent className="p-3">
+                        <h3 className="font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                          {book.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground line-clamp-1">
+                          by {book.author}
+                        </p>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-lg font-bold text-primary">
+                            ৳{book.price.toLocaleString()}
+                          </span>
+                          <Badge variant="outline" className="text-xs">
+                            {book.book_condition_type === 'new' ? 'New' : 'Old'}
+                          </Badge>
+                        </div>
+                        {book.shop && (
+                          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                            <Store className="h-3 w-3" />
+                            {book.shop.name}
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
               </div>
             )}
-          </TabsContent>
-        </Tabs>
+          </>
+        )}
 
-        <SearchBar
-          search={search}
-          onSearchChange={setSearch}
-          subcategory=""
-          onSubcategoryChange={() => {}}
-          hideFilters
-        />
-
-        <BookGrid
-          books={filteredBooks}
-          loading={isLoading}
-          emptyMessage={
-            selectedSubcategory 
-              ? "No books in this category yet"
-              : "No Nilkhet books available yet"
-          }
-          isNilkhet
-        />
+        {viewMode === 'shops' && (
+          <>
+            {/* Shops Grid */}
+            {shopsLoading ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="animate-pulse">
+                    <CardContent className="p-4">
+                      <div className="h-6 bg-muted rounded mb-2" />
+                      <div className="h-4 bg-muted rounded w-2/3" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : filteredShops.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <Store className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No shops found</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredShops.map((shop) => (
+                  <Link key={shop.id} to={`/nilkhet/shop/${shop.id}`}>
+                    <Card className="group hover:shadow-card-hover transition-all h-full">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="bg-primary/10 rounded-lg p-3 flex-shrink-0">
+                            <Store className="h-6 w-6 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {shop.name}
+                            </h3>
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+                              <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                              <span>{shop.rating_average.toFixed(1)}</span>
+                              <span>({shop.rating_count} reviews)</span>
+                            </div>
+                            {shop.address && (
+                              <p className="text-sm text-muted-foreground mt-2 flex items-center gap-1">
+                                <MapPin className="h-3 w-3 flex-shrink-0" />
+                                <span className="truncate">{shop.address}</span>
+                              </p>
+                            )}
+                            <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                              <Phone className="h-3 w-3 flex-shrink-0" />
+                              {shop.phone_number}
+                            </p>
+                          </div>
+                          <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                        </div>
+                        {shop.description && (
+                          <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
+                            {shop.description}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 mt-3">
+                          {shop.is_verified && (
+                            <Badge variant="success" className="text-xs">Verified</Badge>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </Layout>
   );
