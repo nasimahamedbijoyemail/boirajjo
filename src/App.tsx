@@ -20,6 +20,10 @@ import BookDemandPage from "./pages/BookDemand";
 import MyOrdersPage from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import DepartmentRequestsPage from "./pages/DepartmentRequests";
+import ShopAuthPage from "./pages/ShopAuth";
+import ShopDashboard from "./pages/ShopDashboard";
+import ShopDetailsPage from "./pages/ShopDetails";
+import ShopBookDetailsPage from "./pages/ShopBookDetails";
 
 const queryClient = new QueryClient();
 
@@ -175,6 +179,26 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <DepartmentRequestsPage />
+          </ProtectedRoute>
+        }
+      />
+      {/* Shop routes - no protection, separate auth */}
+      <Route path="/shop" element={<ShopAuthPage />} />
+      <Route path="/shop/dashboard" element={<ShopDashboard />} />
+      {/* Shop public pages */}
+      <Route
+        path="/nilkhet/shop/:id"
+        element={
+          <ProtectedRoute>
+            <ShopDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/nilkhet/book/:id"
+        element={
+          <ProtectedRoute>
+            <ShopBookDetailsPage />
           </ProtectedRoute>
         }
       />

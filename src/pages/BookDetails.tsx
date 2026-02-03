@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useBook } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall } from 'lucide-react';
+import { useContactUnlockForBook } from '@/hooks/useContactUnlock';
+import { ContactUnlockDialog } from '@/components/books/ContactUnlockDialog';
+import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall, Lock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const conditionLabels = {
@@ -25,17 +28,24 @@ const BookDetailsPage = () => {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { data: book, isLoading, error } = useBook(id || '');
+  const { data: unlockPayment } = useContactUnlockForBook(id || '');
+
+  const [showUnlockDialog, setShowUnlockDialog] = useState(false);
+
+  const isOwnBook = profile?.id === book?.seller_id;
+  const isContactUnlocked = unlockPayment?.status === 'approved';
+
+  // Calculate unlock fee based on book price
+  const unlockFee = book ? (book.price >= 500 ? 20 : 10) : 10;
 
   const formatPhoneNumber = (phoneNumber: string) => {
     const phone = phoneNumber.replace(/\D/g, '');
-    // Add Bangladesh country code if not present
     return phone.startsWith('880') ? phone : `880${phone.replace(/^0/, '')}`;
   };
 
   const handleWhatsAppClick = () => {
     if (!book?.seller) return;
     
-    // Use whatsapp_number if available, otherwise fall back to phone_number
     const whatsappNumber = book.seller.whatsapp_number || book.seller.phone_number;
     if (!whatsappNumber) return;
     
@@ -51,9 +61,6 @@ const BookDetailsPage = () => {
     window.open(`tel:${book.seller.phone_number}`, '_self');
   };
 
-  const isOwnBook = profile?.id === book?.seller_id;
-
-  // Check if WhatsApp is available (either whatsapp_number or phone_number)
   const hasWhatsApp = book?.seller?.whatsapp_number || book?.seller?.phone_number;
   const hasCall = book?.seller?.phone_number;
 
@@ -165,7 +172,9 @@ const BookDetailsPage = () => {
                       <User className="h-4 w-4" />
                       <span>{book.seller.name}</span>
                     </div>
-                    {isOwnBook && (
+                    
+                    {/* Show contact only if own book or contact is unlocked */}
+                    {(isOwnBook || isContactUnlocked) ? (
                       <>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Phone className="h-4 w-4" />
@@ -178,6 +187,11 @@ const BookDetailsPage = () => {
                           </div>
                         )}
                       </>
+                    ) : (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Lock className="h-4 w-4" />
+                        <span>Contact hidden - Pay ৳{unlockFee} to unlock</span>
+                      </div>
                     )}
                   </div>
                 </CardContent>
@@ -186,30 +200,48 @@ const BookDetailsPage = () => {
 
             {/* Action Buttons */}
             {book.status === 'available' && !isOwnBook && (
-              <div className="flex flex-col sm:flex-row gap-3">
-                {hasWhatsApp && (
-                  <Button
-                    variant="whatsapp"
-                    size="lg"
-                    className="flex-1"
-                    onClick={handleWhatsAppClick}
-                  >
-                    <MessageCircle className="h-5 w-5" />
-                    Chat on WhatsApp
-                  </Button>
+              <>
+                {isContactUnlocked ? (
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {hasWhatsApp && (
+                      <Button
+                        variant="whatsapp"
+                        size="lg"
+                        className="flex-1"
+                        onClick={handleWhatsAppClick}
+                      >
+                        <MessageCircle className="h-5 w-5" />
+                        Chat on WhatsApp
+                      </Button>
+                    )}
+                    {hasCall && (
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                        onClick={handleCallClick}
+                      >
+                        <PhoneCall className="h-5 w-5" />
+                        Call Seller
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <Button
+                      size="lg"
+                      className="w-full"
+                      onClick={() => setShowUnlockDialog(true)}
+                    >
+                      <Lock className="h-5 w-5 mr-2" />
+                      Unlock Contact (৳{unlockFee})
+                    </Button>
+                    <p className="text-sm text-muted-foreground text-center">
+                      Pay via bKash to view seller's contact details
+                    </p>
+                  </div>
                 )}
-                {hasCall && (
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                    onClick={handleCallClick}
-                  >
-                    <PhoneCall className="h-5 w-5" />
-                    Call Seller
-                  </Button>
-                )}
-              </div>
+              </>
             )}
 
             {isOwnBook && (
@@ -225,6 +257,20 @@ const BookDetailsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Unlock Dialog */}
+      {book && (
+        <ContactUnlockDialog
+          open={showUnlockDialog}
+          onOpenChange={setShowUnlockDialog}
+          bookId={book.id}
+          bookTitle={book.title}
+          bookPrice={book.price}
+          sellerPhone={book.seller?.phone_number}
+          sellerWhatsapp={book.seller?.whatsapp_number || undefined}
+          sellerName={book.seller?.name}
+        />
+      )}
     </Layout>
   );
 };
