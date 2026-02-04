@@ -125,3 +125,54 @@ export const useUpdateContactUnlockStatus = () => {
     },
   });
 };
+
+export const useRequestRefund = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (paymentId: string) => {
+      const { data, error } = await supabase
+        .from('contact_unlock_payments')
+        .update({ 
+          refund_requested: true, 
+          refund_requested_at: new Date().toISOString() 
+        })
+        .eq('id', paymentId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as ContactUnlockPayment;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-contact-unlocks'] });
+      queryClient.invalidateQueries({ queryKey: ['all-contact-unlocks'] });
+    },
+  });
+};
+
+export const useApproveRefund = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, approved, notes }: { id: string; approved: boolean; notes?: string }) => {
+      const { data, error } = await supabase
+        .from('contact_unlock_payments')
+        .update({ 
+          refund_approved: approved,
+          refund_approved_at: new Date().toISOString(),
+          refund_notes: notes || null
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as ContactUnlockPayment;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['all-contact-unlocks'] });
+      queryClient.invalidateQueries({ queryKey: ['my-contact-unlocks'] });
+    },
+  });
+};

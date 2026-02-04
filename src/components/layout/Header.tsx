@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsAdmin } from '@/hooks/useAdmin';
-import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings, List } from 'lucide-react';
+import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings, List, History } from 'lucide-react';
 import { useState } from 'react';
 import {
   DropdownMenu,
@@ -53,6 +53,12 @@ export const Header = () => {
                 <Link to="/my-orders">
                   <ShoppingBag className="h-4 w-4" />
                   Orders
+                </Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/transaction-history">
+                  <History className="h-4 w-4" />
+                  History
                 </Link>
               </Button>
               <Button variant="accent" size="sm" asChild>
@@ -136,6 +142,12 @@ export const Header = () => {
               <Link to="/my-orders">
                 <ShoppingBag className="h-4 w-4" />
                 My Orders
+              </Link>
+            </Button>
+            <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/transaction-history">
+                <History className="h-4 w-4" />
+                Transaction History
               </Link>
             </Button>
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>

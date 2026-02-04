@@ -24,6 +24,7 @@ import ShopAuthPage from "./pages/ShopAuth";
 import ShopDashboard from "./pages/ShopDashboard";
 import ShopDetailsPage from "./pages/ShopDetails";
 import ShopBookDetailsPage from "./pages/ShopBookDetails";
+import TransactionHistory from "./pages/TransactionHistory";
 
 const queryClient = new QueryClient();
 
@@ -163,6 +164,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <MyOrdersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/transaction-history"
+        element={
+          <ProtectedRoute>
+            <TransactionHistory />
           </ProtectedRoute>
         }
       />
