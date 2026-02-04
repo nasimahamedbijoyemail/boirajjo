@@ -29,6 +29,8 @@ export const useBooks = (filters?: {
   academicDepartmentId?: string;
   nilkhetCondition?: 'old' | 'new';
   nilkhetSubcategory?: string;
+  nonAcademicCategory?: string;
+  nonAcademicSubcategory?: string;
 }) => {
   const { profile } = useAuth();
 
@@ -79,6 +81,16 @@ export const useBooks = (filters?: {
 
         if (filters?.search) {
           query = query.or(`title.ilike.%${filters.search}%,author.ilike.%${filters.search}%`);
+        }
+
+        // Filter by category (uses non_academic_category column)
+        if (filters?.nonAcademicCategory) {
+          query = query.eq('category', filters.nonAcademicCategory);
+        }
+
+        // Filter by subcategory (uses non_academic_subcategory column)
+        if (filters?.nonAcademicSubcategory) {
+          query = query.eq('subcategory', filters.nonAcademicSubcategory);
         }
 
         const { data, error } = await query;
@@ -197,6 +209,12 @@ export const useCreateBook = () => {
         insertData.department_id = profile.department_id;
         insertData.academic_department_id = profile.academic_department_id;
         insertData.subcategory = profile.subcategory;
+      }
+
+      // For non-academic books, use the selected category and subcategory
+      if (data.book_type === 'non_academic') {
+        insertData.category = data.category || null;
+        insertData.subcategory = data.subcategory_detail || null;
       }
 
       // For nilkhet books, use provided subcategory and nilkhet_condition

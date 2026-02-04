@@ -118,6 +118,7 @@ export interface BookDemand {
   detail_address: string | null;
   status: DemandStatus;
   admin_notes: string | null;
+  demand_number: string | null;
   created_at: string;
   updated_at: string;
   profile?: Profile;
@@ -141,6 +142,7 @@ export interface Order {
   detail_address: string | null;
   status: OrderStatus;
   admin_notes: string | null;
+  order_number: string | null;
   created_at: string;
   updated_at: string;
   profile?: Profile;

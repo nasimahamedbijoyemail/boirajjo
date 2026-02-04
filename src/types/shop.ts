@@ -57,6 +57,9 @@ export interface ShopOrder {
   shop?: Shop;
   shop_book?: ShopBook;
   profile?: Profile;
+  division?: { id: string; name: string };
+  district?: { id: string; name: string };
+  thana?: { id: string; name: string };
 }
 
 export interface ShopRating {
@@ -81,6 +84,11 @@ export interface ContactUnlockPayment {
   bkash_number: string;
   status: 'pending' | 'approved' | 'rejected';
   admin_notes: string | null;
+  refund_requested: boolean;
+  refund_requested_at: string | null;
+  refund_approved: boolean | null;
+  refund_approved_at: string | null;
+  refund_notes: string | null;
   created_at: string;
   updated_at: string;
   profile?: Profile;

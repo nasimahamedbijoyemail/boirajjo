@@ -285,6 +285,8 @@ export type Database = {
           institution_id: string
           institution_type: Database["public"]["Enums"]["institution_type"]
           is_admin_listing: boolean
+          non_academic_category: string | null
+          non_academic_subcategory: string | null
           photo_url: string | null
           price: number
           seller_id: string
@@ -306,6 +308,8 @@ export type Database = {
           institution_id: string
           institution_type: Database["public"]["Enums"]["institution_type"]
           is_admin_listing?: boolean
+          non_academic_category?: string | null
+          non_academic_subcategory?: string | null
           photo_url?: string | null
           price: number
           seller_id: string
@@ -327,6 +331,8 @@ export type Database = {
           institution_id?: string
           institution_type?: Database["public"]["Enums"]["institution_type"]
           is_admin_listing?: boolean
+          non_academic_category?: string | null
+          non_academic_subcategory?: string | null
           photo_url?: string | null
           price?: number
           seller_id?: string
@@ -376,6 +382,11 @@ export type Database = {
           created_at: string
           id: string
           profile_id: string
+          refund_approved: boolean | null
+          refund_approved_at: string | null
+          refund_notes: string | null
+          refund_requested: boolean | null
+          refund_requested_at: string | null
           status: string
           transaction_number: string
           updated_at: string
@@ -389,6 +400,11 @@ export type Database = {
           created_at?: string
           id?: string
           profile_id: string
+          refund_approved?: boolean | null
+          refund_approved_at?: string | null
+          refund_notes?: string | null
+          refund_requested?: boolean | null
+          refund_requested_at?: string | null
           status?: string
           transaction_number: string
           updated_at?: string
@@ -402,6 +418,11 @@ export type Database = {
           created_at?: string
           id?: string
           profile_id?: string
+          refund_approved?: boolean | null
+          refund_approved_at?: string | null
+          refund_notes?: string | null
+          refund_requested?: boolean | null
+          refund_requested_at?: string | null
           status?: string
           transaction_number?: string
           updated_at?: string
