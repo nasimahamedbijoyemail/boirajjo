@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Phone, MessageCircle, BookOpen, Send, Trash2 } from 'lucide-react';
+ import { PhotoUpload } from '@/components/ui/photo-upload';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   useDepartmentRequests, 
@@ -20,6 +21,7 @@ const DepartmentRequestsPage = () => {
   const { profile, user } = useAuth();
   const [title, setTitle] = useState('');
   const [authorName, setAuthorName] = useState('');
+   const [photoUrl, setPhotoUrl] = useState('');
   
   const { data: requests = [], isLoading: loadingRequests } = useDepartmentRequests();
   const { data: myRequests = [], isLoading: loadingMyRequests } = useMyDepartmentRequests();
@@ -41,6 +43,7 @@ const DepartmentRequestsPage = () => {
       toast.success('Request submitted successfully!');
       setTitle('');
       setAuthorName('');
+       setPhotoUrl('');
     } catch (error) {
       toast.error('Failed to submit request');
     }
@@ -111,6 +114,10 @@ const DepartmentRequestsPage = () => {
                       onChange={(e) => setAuthorName(e.target.value)}
                     />
                   </div>
+                   <div className="space-y-2">
+                     <Label>Book Photo (Optional)</Label>
+                     <PhotoUpload value={photoUrl} onChange={setPhotoUrl} />
+                   </div>
                   <Button type="submit" className="w-full" disabled={createRequest.isPending}>
                     {createRequest.isPending ? 'Submitting...' : 'Submit Request'}
                   </Button>

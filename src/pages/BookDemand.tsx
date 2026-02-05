@@ -11,6 +11,7 @@ import { useCreateDemand, useMyDemands } from '@/hooks/useBookDemands';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { BookMarked, Plus, Clock } from 'lucide-react';
+ import { PhotoUpload } from '@/components/ui/photo-upload';
 
 const demandSchema = z.object({
   book_name: z.string().min(1, 'Book name is required').max(200),
@@ -23,10 +24,11 @@ const BookDemandPage = () => {
   const { data: myDemands = [], isLoading } = useMyDemands();
 
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    book_name: '',
-    author_name: '',
-  });
+   const [formData, setFormData] = useState({
+     book_name: '',
+     author_name: '',
+     photo_url: '',
+   });
   const [address, setAddress] = useState({
     division_id: '',
     district_id: '',
@@ -68,7 +70,7 @@ const BookDemandPage = () => {
       });
       toast.success('Book demand submitted successfully!');
       setShowForm(false);
-      setFormData({ book_name: '', author_name: '' });
+       setFormData({ book_name: '', author_name: '', photo_url: '' });
       setAddress({ division_id: '', district_id: '', thana_id: '', ward_id: '', detail_address: '' });
     } catch (error) {
       toast.error('Failed to submit demand. Please try again.');
@@ -133,6 +135,14 @@ const BookDemandPage = () => {
                       onChange={(e) => setFormData((prev) => ({ ...prev, author_name: e.target.value }))}
                     />
                   </div>
+                   
+                   <div className="space-y-2">
+                     <Label>Book Photo (Optional)</Label>
+                     <PhotoUpload 
+                       value={formData.photo_url} 
+                       onChange={(url) => setFormData((prev) => ({ ...prev, photo_url: url }))} 
+                     />
+                   </div>
                 </div>
 
                 <div className="space-y-2">

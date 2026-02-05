@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Store, Package, ShoppingCart, Star, LogOut, Plus, Trash2 } from 'lucide-react';
+ import { PhotoUpload } from '@/components/ui/photo-upload';
 import { useMyShop, useMyShopBooks, useShopOrders, useCreateShopBook, useDeleteShopBook, useUpdateShopOrderStatus } from '@/hooks/useShops';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { ORDER_STATUS_LABELS } from '@/types/database';
@@ -229,29 +230,29 @@ const ShopDashboard = () => {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Book Type *</Label>
-                        <Select
-                          value={bookForm.book_condition_type}
-                          onValueChange={(v) => setBookForm((p) => ({ ...p, book_condition_type: v as 'old' | 'new' }))}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="old">Old Books</SelectItem>
-                            <SelectItem value="new">New Books</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Photo URL (optional)</Label>
-                        <Input
-                          placeholder="https://..."
-                          value={bookForm.photo_url}
-                          onChange={(e) => setBookForm((p) => ({ ...p, photo_url: e.target.value }))}
-                        />
-                      </div>
+                       <div className="space-y-2">
+                         <Label>Book Type *</Label>
+                         <Select
+                           value={bookForm.book_condition_type}
+                           onValueChange={(v) => setBookForm((p) => ({ ...p, book_condition_type: v as 'old' | 'new' }))}
+                         >
+                           <SelectTrigger>
+                             <SelectValue />
+                           </SelectTrigger>
+                           <SelectContent>
+                             <SelectItem value="old">Old Books</SelectItem>
+                             <SelectItem value="new">New Books</SelectItem>
+                           </SelectContent>
+                         </Select>
+                       </div>
+                     </div>
+ 
+                     <div className="space-y-2">
+                       <Label>Book Photo (Optional)</Label>
+                       <PhotoUpload 
+                         value={bookForm.photo_url} 
+                         onChange={(url) => setBookForm((p) => ({ ...p, photo_url: url }))} 
+                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
