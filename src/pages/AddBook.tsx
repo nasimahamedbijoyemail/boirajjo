@@ -12,7 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Upload, X } from 'lucide-react';
+ import { ArrowLeft } from 'lucide-react';
+ import { PhotoUpload } from '@/components/ui/photo-upload';
 import { useCreateBook } from '@/hooks/useBooks';
 import { BookCondition, BookType } from '@/types/database';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
@@ -124,39 +125,7 @@ const AddBookPage = () => {
               {/* Photo Upload */}
               <div className="space-y-2">
                 <Label>Book Photo (Optional)</Label>
-                <div className="flex items-center gap-4">
-                  {photoUrl ? (
-                    <div className="relative">
-                      <img
-                        src={photoUrl}
-                        alt="Book preview"
-                        className="h-24 w-24 object-cover rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setPhotoUrl('')}
-                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center h-24 w-24 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary transition-colors">
-                      <Upload className="h-6 w-6 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground mt-1">Upload</span>
-                    </label>
-                  )}
-                  <div className="flex-1">
-                    <Input
-                      placeholder="Or paste image URL"
-                      value={photoUrl}
-                      onChange={(e) => setPhotoUrl(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Paste a URL to an image of your book
-                    </p>
-                  </div>
-                </div>
+                 <PhotoUpload value={photoUrl} onChange={setPhotoUrl} />
               </div>
 
               {/* Book Type */}

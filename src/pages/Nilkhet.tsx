@@ -179,7 +179,7 @@ const NilkhetPage = () => {
                 {filteredBooks.map((book) => (
                   <Link key={book.id} to={`/nilkhet/book/${book.id}`}>
                     <Card className="group overflow-hidden hover:shadow-card-hover transition-all">
-                      <div className="aspect-[3/4] bg-muted overflow-hidden">
+                       <div className="aspect-[4/3] bg-muted overflow-hidden">
                         {book.photo_url ? (
                           <img
                             src={book.photo_url}
