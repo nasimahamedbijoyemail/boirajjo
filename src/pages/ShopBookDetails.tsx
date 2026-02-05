@@ -207,13 +207,8 @@ const ShopBookDetailsPage = () => {
                   <div className="space-y-2">
                     <Label>Delivery Address</Label>
                     <AddressSelector 
-                      value={address} 
-                      onChange={(val) => setAddress({ ...val, detail_address: address.detail_address })} 
-                    />
-                    <Textarea
-                      placeholder="Detailed address (House no, Road, etc.)"
-                      value={address.detail_address}
-                      onChange={(e) => setAddress({ ...address, detail_address: e.target.value })}
+                      value={address}
+                      onChange={setAddress}
                     />
                   </div>
 
