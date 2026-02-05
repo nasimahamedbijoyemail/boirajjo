@@ -5,13 +5,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Store, Star, MapPin, Phone, Search, BookOpen, ExternalLink } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Store, Star, MapPin, Phone, Search, BookOpen } from 'lucide-react';
 import { useShops, useShopBooks } from '@/hooks/useShops';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 
 const NilkhetPage = () => {
-  const [conditionType, setConditionType] = useState<'old' | 'new'>('old');
+  const [conditionType, setConditionType] = useState<'old' | 'new'>('new');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,8 +91,8 @@ const NilkhetPage = () => {
             {/* Condition Type Tabs */}
             <Tabs value={conditionType} onValueChange={(v) => setConditionType(v as 'old' | 'new')} className="mb-6">
               <TabsList className="grid w-full max-w-xs grid-cols-2">
-                <TabsTrigger value="old">Old Books</TabsTrigger>
                 <TabsTrigger value="new">New Books</TabsTrigger>
+                <TabsTrigger value="old">Old Books</TabsTrigger>
               </TabsList>
             </Tabs>
 
@@ -273,7 +273,6 @@ const NilkhetPage = () => {
                               {shop.phone_number}
                             </p>
                           </div>
-                          <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                         </div>
                         {shop.description && (
                           <p className="text-sm text-muted-foreground mt-3 line-clamp-2">

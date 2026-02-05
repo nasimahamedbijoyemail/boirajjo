@@ -51,7 +51,7 @@ const NilkhetBookDetailsPage = () => {
       });
       toast.success('Order placed successfully!');
       navigate('/my-orders');
-    } catch (error) {
+    } catch {
       toast.error('Failed to place order. Please try again.');
     }
   };
@@ -128,7 +128,7 @@ const NilkhetBookDetailsPage = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <AddressSelector value={address} onChange={setAddress} />
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 pt-2">
                     <Button variant="outline" onClick={() => setShowOrderForm(false)}>
                       Cancel
                     </Button>

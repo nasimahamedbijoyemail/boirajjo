@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import { useDivisions, useDistricts, useThanas } from '@/hooks/useBDLocations';
+import { useDivisions, useDistricts } from '@/hooks/useBDLocations';
 
 interface AddressValue {
   division_id: string;
@@ -18,9 +19,9 @@ interface AddressSelectorProps {
 }
 
 export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
+  const [thanaInput, setThanaInput] = useState(value.thana_id || '');
   const { data: divisions = [], isLoading: divisionsLoading } = useDivisions();
   const { data: districts = [], isLoading: districtsLoading } = useDistricts(value.division_id);
-  const { data: thanas = [], isLoading: thanasLoading } = useThanas(value.district_id);
 
   const divisionOptions = useMemo(() => 
     divisions.map((d) => ({ value: d.id, label: d.name })),
@@ -32,11 +33,6 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
     [districts]
   );
 
-  const thanaOptions = useMemo(() => 
-    thanas.map((t) => ({ value: t.id, label: t.name })),
-    [thanas]
-  );
-
   const handleDivisionChange = (divisionId: string) => {
     onChange({
       ...value,
@@ -45,6 +41,7 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
       thana_id: '',
       ward_id: '',
     });
+    setThanaInput('');
   };
 
   const handleDistrictChange = (districtId: string) => {
@@ -54,12 +51,14 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
       thana_id: '',
       ward_id: '',
     });
+    setThanaInput('');
   };
 
-  const handleThanaChange = (thanaId: string) => {
+  const handleThanaChange = (thanaText: string) => {
+    setThanaInput(thanaText);
     onChange({
       ...value,
-      thana_id: thanaId,
+      thana_id: thanaText,
       ward_id: '',
     });
   };
@@ -94,14 +93,11 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label>Thana (Optional)</Label>
-        <SearchableSelect
-          options={thanaOptions}
-          value={value.thana_id}
-          onValueChange={handleThanaChange}
-          placeholder={thanasLoading ? 'Loading...' : 'Select thana'}
-          searchPlaceholder="Search thanas..."
-          emptyText={value.district_id ? 'No thanas found' : 'Select district first'}
+        <Label>Thana</Label>
+        <Input
+          placeholder="Enter thana name..."
+          value={thanaInput}
+          onChange={(e) => handleThanaChange(e.target.value)}
           disabled={!value.district_id}
         />
       </div>
