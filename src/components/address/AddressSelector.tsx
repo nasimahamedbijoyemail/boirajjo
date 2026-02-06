@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,8 +8,7 @@ import { useDivisions, useDistricts } from '@/hooks/useBDLocations';
 interface AddressValue {
   division_id: string;
   district_id: string;
-  thana_id: string;
-  ward_id: string;
+  thana: string;
   detail_address: string;
 }
 
@@ -19,7 +18,6 @@ interface AddressSelectorProps {
 }
 
 export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
-  const [thanaInput, setThanaInput] = useState(value.thana_id || '');
   const { data: divisions = [], isLoading: divisionsLoading } = useDivisions();
   const { data: districts = [], isLoading: districtsLoading } = useDistricts(value.division_id);
 
@@ -38,28 +36,22 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
       ...value,
       division_id: divisionId,
       district_id: '',
-      thana_id: '',
-      ward_id: '',
+      thana: '',
     });
-    setThanaInput('');
   };
 
   const handleDistrictChange = (districtId: string) => {
     onChange({
       ...value,
       district_id: districtId,
-      thana_id: '',
-      ward_id: '',
+      thana: '',
     });
-    setThanaInput('');
   };
 
   const handleThanaChange = (thanaText: string) => {
-    setThanaInput(thanaText);
     onChange({
       ...value,
-      thana_id: thanaText,
-      ward_id: '',
+      thana: thanaText,
     });
   };
 
@@ -93,10 +85,10 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label>Thana</Label>
+        <Label>Thana *</Label>
         <Input
           placeholder="Enter thana name..."
-          value={thanaInput}
+          value={value.thana || ''}
           onChange={(e) => handleThanaChange(e.target.value)}
           disabled={!value.district_id}
         />
@@ -106,7 +98,7 @@ export const AddressSelector = ({ value, onChange }: AddressSelectorProps) => {
         <Label>Detail Address</Label>
         <Textarea
           placeholder="House/Road/Area details..."
-          value={value.detail_address}
+          value={value.detail_address || ''}
           onChange={(e) => onChange({ ...value, detail_address: e.target.value })}
           rows={2}
         />
