@@ -26,18 +26,22 @@ const NilkhetBookDetailsPage = () => {
   const [address, setAddress] = useState({
     division_id: '',
     district_id: '',
-    thana_id: '',
-    ward_id: '',
+    thana: '',
     detail_address: '',
   });
 
   const handleOrder = async () => {
     if (!book) return;
 
-    if (!address.division_id || !address.district_id) {
-      toast.error('Please select at least Division and District');
+    if (!address.division_id || !address.district_id || !address.thana) {
+      toast.error('Please fill Division, District and Thana');
       return;
     }
+
+    // Combine thana and detail_address
+    const fullAddress = address.thana 
+      ? (address.detail_address ? `Thana: ${address.thana}, ${address.detail_address}` : `Thana: ${address.thana}`)
+      : address.detail_address;
 
     try {
       await createOrder.mutateAsync({
@@ -45,9 +49,7 @@ const NilkhetBookDetailsPage = () => {
         total_price: book.price,
         division_id: address.division_id || undefined,
         district_id: address.district_id || undefined,
-        thana_id: address.thana_id || undefined,
-        ward_id: address.ward_id || undefined,
-        detail_address: address.detail_address || undefined,
+        detail_address: fullAddress || undefined,
       });
       toast.success('Order placed successfully!');
       navigate('/my-orders');
