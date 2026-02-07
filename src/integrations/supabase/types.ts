@@ -35,6 +35,80 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_broadcasts: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          sent_by: string
+          sent_count: number | null
+          target_academic_department_id: string | null
+          target_department_id: string | null
+          target_institution_id: string | null
+          target_shop_id: string | null
+          target_type: string
+          target_user_id: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          sent_by: string
+          sent_count?: number | null
+          target_academic_department_id?: string | null
+          target_department_id?: string | null
+          target_institution_id?: string | null
+          target_shop_id?: string | null
+          target_type: string
+          target_user_id?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          sent_by?: string
+          sent_count?: number | null
+          target_academic_department_id?: string | null
+          target_department_id?: string | null
+          target_institution_id?: string | null
+          target_shop_id?: string | null
+          target_type?: string
+          target_user_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_broadcasts_target_academic_department_id_fkey"
+            columns: ["target_academic_department_id"]
+            isOneToOne: false
+            referencedRelation: "academic_departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_broadcasts_target_department_id_fkey"
+            columns: ["target_department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_broadcasts_target_institution_id_fkey"
+            columns: ["target_institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_broadcasts_target_shop_id_fkey"
+            columns: ["target_shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_notifications: {
         Row: {
           created_at: string
@@ -1009,6 +1083,53 @@ export type Database = {
           whatsapp_number?: string | null
         }
         Relationships: []
+      }
+      user_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          profile_id: string | null
+          reference_id: string | null
+          reference_type: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          profile_id?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          profile_id?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notifications_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

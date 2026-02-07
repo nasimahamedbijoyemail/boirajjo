@@ -114,6 +114,21 @@ export const useUpdateDemandStatus = () => {
         .single();
 
       if (error) throw error;
+
+      // Send notification to user
+      try {
+        await supabase.functions.invoke('notify-status-change', {
+          body: {
+            type: 'demand',
+            reference_id: id,
+            user_id: data.user_id,
+            new_status: status,
+          },
+        });
+      } catch (notifyError) {
+        console.error('Failed to send notification:', notifyError);
+      }
+
       return data;
     },
     onSuccess: () => {
