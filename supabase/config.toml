@@ -1,1 +1,10 @@
 project_id = "mnutgeonsezibafrefin"
+
+[functions.send-notification]
+verify_jwt = false
+
+[functions.send-broadcast]
+verify_jwt = false
+
+[functions.notify-status-change]
+verify_jwt = false

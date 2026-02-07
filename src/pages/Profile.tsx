@@ -14,13 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { User, Phone, MapPin, Building2, Calendar, Edit2, Save, X, MessageCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { User, Phone, MapPin, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Institution, InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
 import { useInstitutions, useDepartments } from '@/hooks/useInstitutions';
 import { useAcademicDepartments } from '@/hooks/useAcademicDepartments';
 import { toast } from 'sonner';
+import UserNotifications from '@/components/notifications/UserNotifications';
+import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 
 const ProfilePage = () => {
   const { profile, updateProfile, refreshProfile } = useAuth();
@@ -152,31 +155,49 @@ const ProfilePage = () => {
     return [];
   };
 
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount();
+
   return (
     <Layout>
       <div className="container py-6 max-w-2xl">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">My Profile</h1>
-          {!isEditing ? (
-            <Button variant="outline" onClick={startEditing}>
-              <Edit2 className="h-4 w-4 mr-2" />
-              Edit Profile
-            </Button>
-          ) : (
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={cancelEditing} disabled={saving}>
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </Button>
-              <Button onClick={saveChanges} disabled={saving}>
-                <Save className="h-4 w-4 mr-2" />
-                {saving ? 'Saving...' : 'Save'}
-              </Button>
-            </div>
-          )}
-        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">My Profile</h1>
 
-        <Card className="shadow-card">
+        <Tabs defaultValue="profile" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="notifications" className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              Notifications
+              {unreadCount > 0 && (
+                <Badge variant="destructive" className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="profile">
+            <div className="flex items-center justify-end mb-4">
+              {!isEditing ? (
+                <Button variant="outline" onClick={startEditing}>
+                  <Edit2 className="h-4 w-4 mr-2" />
+                  Edit Profile
+                </Button>
+              ) : (
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={cancelEditing} disabled={saving}>
+                    <X className="h-4 w-4 mr-2" />
+                    Cancel
+                  </Button>
+                  <Button onClick={saveChanges} disabled={saving}>
+                    <Save className="h-4 w-4 mr-2" />
+                    {saving ? 'Saving...' : 'Save'}
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <Card className="shadow-card">
           <CardHeader>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -383,6 +404,12 @@ const ProfilePage = () => {
             )}
           </CardContent>
         </Card>
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <UserNotifications />
+          </TabsContent>
+        </Tabs>
       </div>
     </Layout>
   );

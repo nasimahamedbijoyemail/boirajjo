@@ -116,6 +116,21 @@ export const useUpdateContactUnlockStatus = () => {
         .single();
 
       if (error) throw error;
+
+      // Send notification to user
+      try {
+        await supabase.functions.invoke('notify-status-change', {
+          body: {
+            type: 'payment',
+            reference_id: id,
+            user_id: data.user_id,
+            new_status: status,
+          },
+        });
+      } catch (notifyError) {
+        console.error('Failed to send notification:', notifyError);
+      }
+
       return data as ContactUnlockPayment;
     },
     onSuccess: () => {
@@ -168,6 +183,25 @@ export const useApproveRefund = () => {
         .single();
 
       if (error) throw error;
+
+      // Send notification to user about refund decision
+      try {
+        await supabase.functions.invoke('notify-status-change', {
+          body: {
+            type: 'payment',
+            reference_id: id,
+            user_id: data.user_id,
+            new_status: approved ? 'refund_approved' : 'refund_rejected',
+            title: approved ? 'Refund Approved' : 'Refund Request Declined',
+            message: approved 
+              ? 'Your refund request has been approved. The amount will be credited to your account soon.'
+              : `Your refund request was declined. ${notes ? `Reason: ${notes}` : ''}`,
+          },
+        });
+      } catch (notifyError) {
+        console.error('Failed to send notification:', notifyError);
+      }
+
       return data as ContactUnlockPayment;
     },
     onSuccess: () => {
