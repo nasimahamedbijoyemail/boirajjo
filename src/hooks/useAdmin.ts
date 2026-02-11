@@ -54,7 +54,7 @@ export const useAdminStats = () => {
         shopsRes, 
         shopOrdersRes, 
         paymentsRes,
-        deletionRequestsRes // Added this
+        deletionRequestsRes
       ] = await Promise.all([
         supabase.from('orders').select('id, status', { count: 'exact' }),
         supabase.from('book_demands').select('id, status', { count: 'exact' }),
@@ -63,8 +63,10 @@ export const useAdminStats = () => {
         supabase.from('shops').select('id', { count: 'exact' }),
         supabase.from('shop_orders').select('id, status', { count: 'exact' }),
         supabase.from('contact_unlock_payments').select('id, status', { count: 'exact' }),
-        // Specifically count rows where deletion_requested is true
-        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('deletion_requested', true),
+        // Fixed: Querying the exact column you kept in your database
+        supabase.from('profiles')
+          .select('id', { count: 'exact', head: true })
+          .eq('deletion_requested', true),
       ]);
 
       const pendingOrders = ordersRes.data?.filter(o => o.status === 'pending').length || 0;
@@ -72,7 +74,7 @@ export const useAdminStats = () => {
       const nilkhetBooks = booksRes.data?.filter(b => b.book_type === 'nilkhet').length || 0;
       const pendingShopOrders = shopOrdersRes.data?.filter(o => o.status === 'pending').length || 0;
       const pendingPayments = paymentsRes.data?.filter(p => p.status === 'pending').length || 0;
-      const pendingDeletions = deletionRequestsRes.count || 0; // Capture the count
+      const pendingDeletions = deletionRequestsRes.count || 0;
 
       return {
         totalOrders: ordersRes.count || 0,
@@ -86,7 +88,7 @@ export const useAdminStats = () => {
         totalShopOrders: shopOrdersRes.count || 0,
         pendingShopOrders,
         pendingPayments,
-        pendingDeletions, // Return this so the UI can see it
+        pendingDeletions,
       };
     },
   });
@@ -126,7 +128,6 @@ export const useUserBooks = (userId: string) => {
     queryFn: async () => {
       if (!userId) return [];
 
-      // First get the profile id
       const { data: profile } = await supabase
         .from('profiles')
         .select('id')
@@ -148,7 +149,7 @@ export const useUserBooks = (userId: string) => {
   });
 };
 
-// Update book status (for unpublishing)
+// Update book status
 export const useUpdateBookStatus = () => {
   const queryClient = useQueryClient();
 
@@ -171,7 +172,7 @@ export const useUpdateBookStatus = () => {
   });
 };
 
-// All Shops (including inactive)
+// All Shops
 export const useAllShops = () => {
   return useQuery({
     queryKey: ['all-shops-admin'],
@@ -187,7 +188,7 @@ export const useAllShops = () => {
   });
 };
 
-// Shop books by shop_id (admin - including unavailable)
+// Shop books by shop_id
 export const useShopBooksAdmin = (shopId: string) => {
   return useQuery({
     queryKey: ['shop-books-admin', shopId],
@@ -207,7 +208,7 @@ export const useShopBooksAdmin = (shopId: string) => {
   });
 };
 
-// Update shop (activate/deactivate/verify)
+// Update shop
 export const useUpdateShop = () => {
   const queryClient = useQueryClient();
 
@@ -277,7 +278,7 @@ export const useAllShopOrders = () => {
   });
 };
 
-// Update shop order status (admin)
+// Update shop order status
 export const useUpdateShopOrderStatusAdmin = () => {
   const queryClient = useQueryClient();
 
@@ -292,7 +293,6 @@ export const useUpdateShopOrderStatusAdmin = () => {
 
       if (error) throw error;
 
-      // Send notification to user
       try {
         await supabase.functions.invoke('notify-status-change', {
           body: {
