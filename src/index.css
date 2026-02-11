@@ -117,9 +117,24 @@
     @apply border-border;
   }
 
-  body {
+  html, body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    
+    /* MOBILE APP OPTIMIZATIONS */
+    /* Prevents the 'pull-to-refresh' chrome behavior and elastic bounce */
+    overscroll-behavior-y: contain;
+    /* Removes the 300ms delay for click events */
+    touch-action: manipulation;
+    /* Disables the blue/gray tap highlight box on Android/iOS */
+    -webkit-tap-highlight-color: transparent;
+    /* Prevents users from accidentally highlighting text while tapping buttons */
+    -webkit-touch-callout: none;
+  }
+
+  /* Make sure inputs are easy to tap on mobile */
+  input, textarea, button {
+    @apply text-base; /* Minimum 16px to prevent iOS auto-zoom */
   }
 
   h1, h2, h3, h4, h5, h6 {
