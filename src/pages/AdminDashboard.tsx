@@ -8,7 +8,8 @@ import {
   Bell,
   Store,
   CreditCard,
-  Send
+  Send,
+  UserX
 } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
 import { useIsAdmin, useAdminStats, useAdminNotifications } from '@/hooks/useAdmin';
@@ -18,6 +19,7 @@ import AdminOrdersTab from '@/components/admin/AdminOrdersTab';
 import AdminDemandsTab from '@/components/admin/AdminDemandsTab';
 import AdminPaymentsTab from '@/components/admin/AdminPaymentsTab';
 import AdminBroadcastTab from '@/components/admin/AdminBroadcastTab';
+import AdminDeletionRequestsTab from '@/components/admin/AdminDeletionRequestsTab'; // We will create this component
 
 const AdminDashboard = () => {
   const { data: isAdmin, isLoading: adminLoading } = useIsAdmin();
@@ -49,7 +51,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -105,6 +107,20 @@ const AdminDashboard = () => {
               </div>
             </CardContent>
           </Card>
+          
+          {/* Added Deletion Requests Stat Card */}
+          <Card className={stats?.pendingDeletions > 0 ? "border-red-200 bg-red-50" : ""}>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <UserX className={`h-8 w-8 ${stats?.pendingDeletions > 0 ? "text-red-600 animate-pulse" : "text-gray-400"}`} />
+                <div>
+                  <p className="text-2xl font-bold">{stats?.pendingDeletions || 0}</p>
+                  <p className="text-xs text-muted-foreground">Delete Requests</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -124,6 +140,9 @@ const AdminDashboard = () => {
             <TabsTrigger value="demands">Demands</TabsTrigger>
             <TabsTrigger value="payments">Payments</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
+            <TabsTrigger value="deletion-requests" className="text-red-600 data-[state=active]:bg-red-600 data-[state=active]:text-white">
+              Requests
+            </TabsTrigger>
             <TabsTrigger value="shops">Shops</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="broadcast">
@@ -146,6 +165,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="users">
             <AdminUsersTab />
+          </TabsContent>
+
+          <TabsContent value="deletion-requests">
+            <AdminDeletionRequestsTab />
           </TabsContent>
 
           <TabsContent value="shops">
