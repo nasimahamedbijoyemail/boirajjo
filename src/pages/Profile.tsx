@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Phone, MapPin, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell } from 'lucide-react';
+import { User, Phone, MapPin, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Institution, InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
@@ -122,6 +122,30 @@ const ProfilePage = () => {
     setSaving(false);
   };
 
+  // Logic for Account Deletion Request
+  const handleRequestDeletion = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to request account deletion? This action cannot be undone and an admin will process it."
+    );
+
+    if (confirmDelete && profile?.id) {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          deletion_requested: true, 
+          deletion_requested_at: new Date().toISOString() 
+        })
+        .eq('id', profile.id);
+
+      if (error) {
+        toast.error("Error: " + error.message);
+      } else {
+        toast.success("Deletion request sent to Admin.");
+        await refreshProfile();
+      }
+    }
+  };
+
   // Prepare options for selects
   const institutionOptions = useMemo(() => {
     return institutions?.map((inst) => ({
@@ -198,212 +222,145 @@ const ProfilePage = () => {
             </div>
 
             <Card className="shadow-card">
-          <CardHeader>
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <CardTitle className="text-xl">{profile?.name}</CardTitle>
-                <Badge variant="institution" className="mt-1">
-                  {institution?.name || 'No institution selected'}
-                </Badge>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {isEditing ? (
-              // Edit Mode
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Contact Number *</Label>
-                  <Input
-                    value={editData.phone_number}
-                    onChange={(e) => setEditData(prev => ({ ...prev, phone_number: e.target.value }))}
-                    placeholder="01XXXXXXXXX"
-                  />
+              <CardHeader>
+                <div className="flex items-center gap-4">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-8 w-8 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl">{profile?.name}</CardTitle>
+                    <Badge variant="institution" className="mt-1">
+                      {institution?.name || 'No institution selected'}
+                    </Badge>
+                  </div>
                 </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {isEditing ? (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Contact Number *</Label>
+                      <Input
+                        value={editData.phone_number}
+                        onChange={(e) => setEditData(prev => ({ ...prev, phone_number: e.target.value }))}
+                        placeholder="01XXXXXXXXX"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>WhatsApp Number (Optional)</Label>
+                      <Input
+                        value={editData.whatsapp_number}
+                        onChange={(e) => setEditData(prev => ({ ...prev, whatsapp_number: e.target.value }))}
+                        placeholder="01XXXXXXXXX (if different)"
+                      />
+                      <p className="text-xs text-muted-foreground">Leave empty if same as contact number</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Institution Type</Label>
+                      <Select
+                        value={editData.institution_type}
+                        onValueChange={(value) => setEditData(prev => ({
+                          ...prev,
+                          institution_type: value as InstitutionType,
+                          institution_id: '',
+                          subcategory: '',
+                          department_id: '',
+                          academic_department_id: '',
+                        }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="national_university">National University</SelectItem>
+                          <SelectItem value="university">University</SelectItem>
+                          <SelectItem value="college">College</SelectItem>
+                          <SelectItem value="school">School</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {editData.institution_type && (
+                      <div className="space-y-2">
+                        <Label>Institution</Label>
+                        <SearchableSelect
+                          options={institutionOptions}
+                          value={editData.institution_id}
+                          onValueChange={(value) => setEditData(prev => ({
+                            ...prev,
+                            institution_id: value,
+                            subcategory: '',
+                            department_id: '',
+                            academic_department_id: '',
+                          }))}
+                          placeholder="Search institution..."
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="grid gap-4">
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <Phone className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Contact Number</p>
+                        <p className="font-medium">{profile?.phone_number}</p>
+                      </div>
+                    </div>
+                    {profile?.whatsapp_number && (
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                        <MessageCircle className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">WhatsApp Number</p>
+                          <p className="font-medium">{profile.whatsapp_number}</p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <Building2 className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Institution Type</p>
+                        <p className="font-medium">{profile?.institution_type ? institutionTypeLabels[profile.institution_type] : '-'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <Calendar className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Member Since</p>
+                        <p className="font-medium">
+                          {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '-'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-                <div className="space-y-2">
-                  <Label>WhatsApp Number (Optional)</Label>
-                  <Input
-                    value={editData.whatsapp_number}
-                    onChange={(e) => setEditData(prev => ({ ...prev, whatsapp_number: e.target.value }))}
-                    placeholder="01XXXXXXXXX (if different)"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Leave empty if same as contact number
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Institution Type</Label>
-                  <Select
-                    value={editData.institution_type}
-                    onValueChange={(value) => setEditData(prev => ({
-                      ...prev,
-                      institution_type: value as InstitutionType,
-                      institution_id: '',
-                      subcategory: '',
-                      department_id: '',
-                      academic_department_id: '',
-                    }))}
+            {/* Danger Zone */}
+            <Card className="mt-6 border-red-100 bg-red-50/50">
+              <CardHeader>
+                <CardTitle className="text-red-700 flex items-center gap-2 text-lg">
+                  <Settings className="h-5 w-5" /> Danger Zone
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-red-900 text-sm md:text-base">Delete Account</p>
+                    <p className="text-xs text-red-600">This will notify the admin to permanently remove your data.</p>
+                  </div>
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    onClick={handleRequestDeletion}
+                    disabled={profile?.deletion_requested}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="national_university">National University</SelectItem>
-                      <SelectItem value="university">University</SelectItem>
-                      <SelectItem value="college">College</SelectItem>
-                      <SelectItem value="school">School</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    {profile?.deletion_requested ? 'Request Sent' : 'Delete Request'}
+                  </Button>
                 </div>
-
-                {editData.institution_type && (
-                  <div className="space-y-2">
-                    <Label>Institution</Label>
-                    <SearchableSelect
-                      options={institutionOptions}
-                      value={editData.institution_id}
-                      onValueChange={(value) => setEditData(prev => ({
-                        ...prev,
-                        institution_id: value,
-                        subcategory: '',
-                        department_id: '',
-                        academic_department_id: '',
-                      }))}
-                      placeholder="Search institution..."
-                    />
-                  </div>
-                )}
-
-                {editData.institution_type === 'national_university' && editData.institution_id && (
-                  <div className="space-y-2">
-                    <Label>College</Label>
-                    <SearchableSelect
-                      options={nuCollegeOptions}
-                      value={editData.department_id}
-                      onValueChange={(value) => setEditData(prev => ({
-                        ...prev,
-                        department_id: value,
-                        academic_department_id: '',
-                      }))}
-                      placeholder="Search your college..."
-                    />
-                  </div>
-                )}
-
-                {(editData.institution_type === 'national_university' && editData.department_id) ||
-                 (editData.institution_type === 'university' && editData.institution_id) ? (
-                  <div className="space-y-2">
-                    <Label>Department</Label>
-                    <SearchableSelect
-                      options={academicDepartmentOptions}
-                      value={editData.academic_department_id}
-                      onValueChange={(value) => setEditData(prev => ({
-                        ...prev,
-                        academic_department_id: value,
-                      }))}
-                      placeholder="Search your department..."
-                      grouped
-                    />
-                  </div>
-                ) : null}
-
-                {(editData.institution_type === 'college' || editData.institution_type === 'school') && 
-                 editData.institution_id && (
-                  <div className="space-y-2">
-                    <Label>{editData.institution_type === 'college' ? 'Division' : 'Class'}</Label>
-                    <Select
-                      value={editData.subcategory}
-                      onValueChange={(value) => setEditData(prev => ({ ...prev, subcategory: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={`Select ${editData.institution_type === 'college' ? 'division' : 'class'}`} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getSubcategoryOptions().map((opt) => (
-                          <SelectItem key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-              </div>
-            ) : (
-              // View Mode
-              <div className="grid gap-4">
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                  <Phone className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Contact Number</p>
-                    <p className="font-medium">{profile?.phone_number}</p>
-                  </div>
-                </div>
-
-                {profile?.whatsapp_number && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <MessageCircle className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">WhatsApp Number</p>
-                      <p className="font-medium">{profile.whatsapp_number}</p>
-                    </div>
-                  </div>
-                )}
-
-                {institution && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <Building2 className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Institution Type</p>
-                      <p className="font-medium">
-                        {profile?.institution_type
-                          ? institutionTypeLabels[profile.institution_type]
-                          : '-'}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {profile?.subcategory && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <MapPin className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        {profile.institution_type === 'university' || profile.institution_type === 'national_university'
-                          ? 'Department'
-                          : profile.institution_type === 'college'
-                          ? 'Division'
-                          : 'Class'}
-                      </p>
-                      <p className="font-medium">{profile.subcategory}</p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                  <Calendar className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Member Since</p>
-                    <p className="font-medium">
-                      {profile?.created_at
-                        ? new Date(profile.created_at).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })
-                        : '-'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="notifications">
