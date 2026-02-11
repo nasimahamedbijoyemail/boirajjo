@@ -46,7 +46,16 @@ export const useAdminStats = () => {
   return useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const [ordersRes, demandsRes, booksRes, usersRes, shopsRes, shopOrdersRes, paymentsRes] = await Promise.all([
+      const [
+        ordersRes, 
+        demandsRes, 
+        booksRes, 
+        usersRes, 
+        shopsRes, 
+        shopOrdersRes, 
+        paymentsRes,
+        deletionRequestsRes // Added this
+      ] = await Promise.all([
         supabase.from('orders').select('id, status', { count: 'exact' }),
         supabase.from('book_demands').select('id, status', { count: 'exact' }),
         supabase.from('books').select('id, book_type', { count: 'exact' }),
@@ -54,6 +63,8 @@ export const useAdminStats = () => {
         supabase.from('shops').select('id', { count: 'exact' }),
         supabase.from('shop_orders').select('id, status', { count: 'exact' }),
         supabase.from('contact_unlock_payments').select('id, status', { count: 'exact' }),
+        // Specifically count rows where deletion_requested is true
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('deletion_requested', true),
       ]);
 
       const pendingOrders = ordersRes.data?.filter(o => o.status === 'pending').length || 0;
@@ -61,6 +72,7 @@ export const useAdminStats = () => {
       const nilkhetBooks = booksRes.data?.filter(b => b.book_type === 'nilkhet').length || 0;
       const pendingShopOrders = shopOrdersRes.data?.filter(o => o.status === 'pending').length || 0;
       const pendingPayments = paymentsRes.data?.filter(p => p.status === 'pending').length || 0;
+      const pendingDeletions = deletionRequestsRes.count || 0; // Capture the count
 
       return {
         totalOrders: ordersRes.count || 0,
@@ -74,6 +86,7 @@ export const useAdminStats = () => {
         totalShopOrders: shopOrdersRes.count || 0,
         pendingShopOrders,
         pendingPayments,
+        pendingDeletions, // Return this so the UI can see it
       };
     },
   });
