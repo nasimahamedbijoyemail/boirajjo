@@ -252,7 +252,11 @@ const ShopDetailsPage = () => {
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="font-medium">{rating.profile?.name || 'Anonymous'}</p>
+                          <p className="font-medium">
+                            {rating.user_id === user?.id
+                              ? rating.profile?.name || 'You'
+                              : rating.profile?.name || 'A verified buyer'}
+                          </p>
                           <div className="flex items-center gap-1 mt-1">
                             {[...Array(5)].map((_, i) => (
                               <Star
