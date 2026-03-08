@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Search, Plus, ShoppingBag, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -8,7 +9,7 @@ const navItems = [
   { to: '/nilkhet', icon: Search, label: 'Nilkhet' },
   { to: '/add-book', icon: Plus, label: 'Sell', accent: true },
   { to: '/my-orders', icon: ShoppingBag, label: 'Orders' },
-  { to: '/profile', icon: User, label: 'Profile' },
+  { to: '/profile', icon: User, label: 'Profile', showBadge: true },
 ];
 
 export const MobileBottomNav = () => {
