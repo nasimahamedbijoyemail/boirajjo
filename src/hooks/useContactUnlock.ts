@@ -15,7 +15,7 @@ export const useMyContactUnlocks = () => {
         .from('contact_unlock_payments')
         .select(`
           *,
-          book:books(id, title, author, price, seller_id, seller:profiles(*))
+          book:books(id, title, author, price, seller_id)
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });

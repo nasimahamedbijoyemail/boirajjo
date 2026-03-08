@@ -174,7 +174,6 @@ export const useBook = (bookId: string) => {
         .from('books')
         .select(`
           *,
-          seller:profiles!books_seller_id_fkey(*),
           institution:institutions(*)
         `)
         .eq('id', bookId)
