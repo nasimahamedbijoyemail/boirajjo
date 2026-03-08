@@ -97,11 +97,7 @@ const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse-soft text-primary">Loading...</div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   if (!user) return <Navigate to="/auth" replace />;
