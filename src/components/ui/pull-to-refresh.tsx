@@ -17,6 +17,7 @@ export const PullToRefresh = ({ onRefresh, children }: PullToRefreshProps) => {
   const y = useMotionValue(0);
   const spinnerOpacity = useTransform(y, [0, THRESHOLD * 0.4, THRESHOLD], [0, 0.5, 1]);
   const spinnerScale = useTransform(y, [0, THRESHOLD], [0.5, 1]);
+  const spinnerY = useTransform(y, [0, THRESHOLD], [-20, 12]);
 
   const isAtTop = () => {
     const el = containerRef.current;
@@ -78,7 +79,7 @@ export const PullToRefresh = ({ onRefresh, children }: PullToRefreshProps) => {
         className="absolute left-1/2 -translate-x-1/2 top-0 z-10 flex items-center justify-center"
       >
         <motion.div
-          style={{ y: useTransform(y, [0, THRESHOLD], [-20, 12]) }}
+          style={{ y: spinnerY }}
           className="h-9 w-9 rounded-full bg-card shadow-card flex items-center justify-center border border-border"
         >
           <Loader2 className={`h-4 w-4 text-primary ${refreshing ? 'animate-spin' : ''}`} />

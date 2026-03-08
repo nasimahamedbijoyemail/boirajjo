@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { BookGrid } from '@/components/books/BookGrid';
@@ -12,6 +12,8 @@ import { Send, BookOpen, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
+import { useQueryClient } from '@tanstack/react-query';
 
 const BrowseCategoryPage = () => {
   const { category } = useParams<{ category: string }>();
@@ -41,6 +43,11 @@ const BrowseCategoryPage = () => {
   }), [debouncedSearch, subcategory, bookType, isAcademic, departmentId, academicDepartmentId, profile?.department_id, profile?.academic_department_id, selectedCategory, selectedSubcategory]);
 
   const { data: books = [], isLoading } = useBooks(filters);
+  const queryClient = useQueryClient();
+
+  const handleRefresh = useCallback(() => {
+    return queryClient.invalidateQueries({ queryKey: ['books'] });
+  }, [queryClient]);
 
   const title = isAcademic ? 'In Your Campus' : 'Outside Campus';
   const description = isAcademic 
@@ -74,6 +81,7 @@ const BrowseCategoryPage = () => {
         description={category === 'academic' ? 'Browse used academic books from your university department. Buy textbooks from trusted campus students.' : 'Explore general books from students across Bangladesh. Fiction, non-fiction, and more.'}
         path={`/browse/${category}`}
       />
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="container py-6 space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
@@ -207,6 +215,7 @@ const BrowseCategoryPage = () => {
           }
         />
       </div>
+      </PullToRefresh>
     </Layout>
   );
 };
