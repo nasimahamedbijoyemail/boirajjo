@@ -54,7 +54,6 @@ export const useAdminStats = () => {
         shopsRes, 
         shopOrdersRes, 
         paymentsRes,
-        deletionRequestsRes
       ] = await Promise.all([
         supabase.from('orders').select('id, status', { count: 'exact' }),
         supabase.from('book_demands').select('id, status', { count: 'exact' }),
@@ -63,11 +62,12 @@ export const useAdminStats = () => {
         supabase.from('shops').select('id', { count: 'exact' }),
         supabase.from('shop_orders').select('id, status', { count: 'exact' }),
         supabase.from('contact_unlock_payments').select('id, status', { count: 'exact' }),
-        // Fixed: Querying the exact column you kept in your database
-        supabase.from('profiles')
-          .select('id', { count: 'exact', head: true })
-          .eq('deletion_requested', true),
       ]);
+
+      const deletionRequestsRes = await (supabase
+        .from('profiles') as any)
+        .select('id', { count: 'exact', head: true })
+        .eq('deletion_requested', true);
 
       const pendingOrders = ordersRes.data?.filter(o => o.status === 'pending').length || 0;
       const pendingDemands = demandsRes.data?.filter(d => d.status === 'requested').length || 0;
