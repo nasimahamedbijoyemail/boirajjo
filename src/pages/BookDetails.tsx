@@ -279,9 +279,9 @@ const BookDetailsPage = () => {
           bookId={book.id}
           bookTitle={book.title}
           bookPrice={book.price}
-          sellerPhone={book.seller?.phone_number}
-          sellerWhatsapp={book.seller?.whatsapp_number || undefined}
-          sellerName={book.seller?.name}
+          sellerPhone={sellerContact?.phone_number || undefined}
+          sellerWhatsapp={sellerContact?.whatsapp_number || undefined}
+          sellerName={sellerContact?.name}
         />
       )}
     </Layout>
