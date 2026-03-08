@@ -9,6 +9,23 @@ import { Lock, Eye, EyeOff, Mail, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
+
+const getPasswordStrength = (password: string): { score: number; label: string; color: string } => {
+  if (!password) return { score: 0, label: '', color: '' };
+  let score = 0;
+  if (password.length >= 6) score++;
+  if (password.length >= 10) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+
+  if (score <= 1) return { score: 20, label: 'Weak', color: 'bg-destructive' };
+  if (score === 2) return { score: 40, label: 'Fair', color: 'bg-warning' };
+  if (score === 3) return { score: 60, label: 'Good', color: 'bg-yellow-500' };
+  if (score === 4) return { score: 80, label: 'Strong', color: 'bg-primary' };
+  return { score: 100, label: 'Very Strong', color: 'bg-success' };
+};
 
 const passwordSchema = z.object({
   newPassword: z.string().min(6, 'Password must be at least 6 characters'),
