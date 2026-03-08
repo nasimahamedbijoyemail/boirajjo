@@ -27,7 +27,15 @@ const NilkhetPage = () => {
     subcategory: selectedSubcategory || undefined,
   });
 
+  const queryClient = useQueryClient();
   const categoryObj = NILKHET_CATEGORIES.find((c) => c.id === selectedCategory);
+
+  const handleRefresh = useCallback(() => {
+    return Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['shops'] }),
+      queryClient.invalidateQueries({ queryKey: ['shop-books'] }),
+    ]);
+  }, [queryClient]);
 
   const filteredShops = shops.filter((shop) =>
     shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
