@@ -8,6 +8,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const OrderSkeleton = () => (
   <div className="space-y-4">
@@ -31,11 +34,17 @@ const OrderSkeleton = () => (
 
 const MyOrdersPage = () => {
   const { data: shopOrders = [], isLoading } = useMyShopOrders();
+  const queryClient = useQueryClient();
+
+  const handleRefresh = useCallback(() => {
+    return queryClient.invalidateQueries({ queryKey: ['my-shop-orders'] });
+  }, [queryClient]);
 
   return (
     <Layout>
       <SEOHead title="My Orders" description="Track your Nilkhet book orders and delivery status." path="/my-orders" />
-      <div className="container py-6 max-w-3xl">
+      <PullToRefresh onRefresh={handleRefresh}>
+        <div className="container py-6 max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -132,7 +141,8 @@ const MyOrdersPage = () => {
             ))}
           </div>
         )}
-      </div>
+        </div>
+      </PullToRefresh>
     </Layout>
   );
 };

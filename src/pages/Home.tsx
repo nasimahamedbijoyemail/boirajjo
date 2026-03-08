@@ -6,6 +6,9 @@ import { usePromoBanner } from '@/hooks/useAppSettings';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const categories = [
   {
@@ -62,6 +65,7 @@ const cardVariants = {
 const HomePage = () => {
   const { data: promoBanner, isLoading: promoLoading } = usePromoBanner();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleBannerClick = () => {
     if (!promoBanner.link) return;
@@ -72,6 +76,10 @@ const HomePage = () => {
     }
   };
 
+  const handleRefresh = useCallback(() => {
+    return queryClient.invalidateQueries({ queryKey: ['promo-banner'] });
+  }, [queryClient]);
+
   return (
     <Layout>
       <SEOHead
@@ -79,7 +87,8 @@ const HomePage = () => {
         description="Explore campus books, Nilkhet book market, and book demands. Buy and sell used academic books with trusted students."
         path="/home"
       />
-      <div className="container py-6 sm:py-8">
+      <PullToRefresh onRefresh={handleRefresh}>
+        <div className="container py-6 sm:py-8">
         {/* Promo Banner */}
         {promoLoading ? (
           <Skeleton className="w-full h-32 sm:h-44 rounded-2xl mb-6" />
@@ -140,7 +149,8 @@ const HomePage = () => {
             </motion.div>
           ))}
         </motion.div>
-      </div>
+        </div>
+      </PullToRefresh>
     </Layout>
   );
 };
