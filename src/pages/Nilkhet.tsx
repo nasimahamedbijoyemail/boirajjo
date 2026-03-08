@@ -310,6 +310,7 @@ const NilkhetPage = () => {
           </>
         )}
       </div>
+      </PullToRefresh>
     </Layout>
   );
 };
