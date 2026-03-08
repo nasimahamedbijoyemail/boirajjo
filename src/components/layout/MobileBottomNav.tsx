@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Search, Plus, ShoppingBag, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,9 +14,15 @@ const navItems = [
   { to: '/profile', icon: User, label: 'Profile', showBadge: true },
 ];
 
-const MotionLink = motion.create(Link);
+// Use forwardRef to fix the React warning when motion wraps Link
+const ForwardedLink = React.forwardRef<HTMLAnchorElement, React.ComponentProps<typeof Link>>(
+  (props, ref) => <Link ref={ref} {...props} />
+);
+ForwardedLink.displayName = 'ForwardedLink';
 
-export const MobileBottomNav = () => {
+const MotionLink = motion.create(ForwardedLink);
+
+export const MobileBottomNav = React.forwardRef<HTMLElement>((_, ref) => {
   const { user, profile } = useAuth();
   const { data: unreadCount = 0 } = useUnreadNotificationsCount();
   const location = useLocation();
@@ -23,7 +30,7 @@ export const MobileBottomNav = () => {
   if (!user || !profile?.institution_id) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 safe-area-bottom">
+    <nav ref={ref} className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 safe-area-bottom">
       <div className="flex items-stretch justify-around">
         {navItems.map(({ to, icon: Icon, label, accent, showBadge }) => {
           const isActive = location.pathname === to || 
@@ -74,4 +81,6 @@ export const MobileBottomNav = () => {
       </div>
     </nav>
   );
-};
+});
+
+MobileBottomNav.displayName = 'MobileBottomNav';
