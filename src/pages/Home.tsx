@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { PullToRefresh } from '@/components/ui/pull-to-refresh';
+import { useAuth } from '@/contexts/AuthContext';
 
 const categories = [
   {
@@ -64,6 +65,7 @@ const cardVariants = {
 
 const HomePage = () => {
   const { data: promoBanner, isLoading: promoLoading } = usePromoBanner();
+  const { profile } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -79,6 +81,8 @@ const HomePage = () => {
   const handleRefresh = useCallback(() => {
     return queryClient.invalidateQueries({ queryKey: ['promo-banner'] });
   }, [queryClient]);
+
+  const firstName = profile?.name?.split(' ')[0] || '';
 
   return (
     <Layout>
@@ -116,7 +120,11 @@ const HomePage = () => {
           className="text-center mb-6 sm:mb-8"
         >
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1.5">
-            Welcome to <span className="text-primary">Boi Rajjo</span>
+            {firstName ? (
+              <>Hey {firstName}, welcome back! 👋</>
+            ) : (
+              <>Welcome to <span className="text-primary">Boi Rajjo</span></>
+            )}
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base">
             What would you like to explore today?
