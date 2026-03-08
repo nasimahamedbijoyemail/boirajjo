@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, MessageCircle, BookOpen, Send, Trash2 } from 'lucide-react';
+import { BookOpen, Send, Trash2, User } from 'lucide-react';
  import { PhotoUpload } from '@/components/ui/photo-upload';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
