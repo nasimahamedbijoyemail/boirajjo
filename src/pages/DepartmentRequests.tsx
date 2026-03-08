@@ -208,25 +208,9 @@ const DepartmentRequestsPage = () => {
                           </div>
                         </div>
                         {request.user_id !== user?.id && request.profile && (
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleCall(request.profile!.phone_number)}
-                            >
-                              <Phone className="h-4 w-4 mr-1" />
-                              Call
-                            </Button>
-                            {request.profile.whatsapp_number && (
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={() => handleWhatsApp(request.profile!.whatsapp_number!, request.title)}
-                              >
-                                <MessageCircle className="h-4 w-4 mr-1" />
-                                WhatsApp
-                              </Button>
-                            )}
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <User className="h-4 w-4" />
+                            <span>Requested by: {request.profile.name}</span>
                           </div>
                         )}
                       </div>
