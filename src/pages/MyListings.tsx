@@ -32,6 +32,7 @@ const MyListingsPage = () => {
 
   return (
     <Layout>
+      <SEOHead title="My Listings" description="Manage your book listings on Boi Rajjo." path="/my-listings" />
       <div className="container py-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
