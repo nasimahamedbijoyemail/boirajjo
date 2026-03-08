@@ -201,12 +201,12 @@ const BookDetailsPage = () => {
                           </div>
                         )}
                       </>
-                    ) : (
+                    ) : paymentEnabled ? (
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Lock className="h-4 w-4" />
                         <span>Contact hidden - Pay ৳{unlockFee} to unlock</span>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 </CardContent>
               </Card>
