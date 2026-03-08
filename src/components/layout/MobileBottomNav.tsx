@@ -14,6 +14,7 @@ const navItems = [
 
 export const MobileBottomNav = () => {
   const { user, profile } = useAuth();
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount();
   const location = useLocation();
 
   if (!user || !profile?.institution_id) return null;
