@@ -16,6 +16,7 @@ import {
 } from '@/hooks/useDepartmentRequests';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const DepartmentRequestsPage = () => {
   const { profile, user } = useAuth();
