@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { PageSkeleton } from "@/components/layout/PageSkeleton";
+import { HelmetProvider } from "react-helmet-async";
 
 // Lazy-loaded pages
 const Index = lazy(() => import("./pages/Index"));
