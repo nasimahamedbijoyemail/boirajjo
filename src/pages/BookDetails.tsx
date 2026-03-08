@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useBook } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContactUnlockForBook } from '@/hooks/useContactUnlock';
+import { usePaymentEnabled } from '@/hooks/useAppSettings';
 import { ContactUnlockDialog } from '@/components/books/ContactUnlockDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall, Lock } from 'lucide-react';
@@ -31,7 +32,7 @@ const BookDetailsPage = () => {
   const { profile } = useAuth();
   const { data: book, isLoading, error } = useBook(id || '');
   const { data: unlockPayment } = useContactUnlockForBook(id || '');
-
+  const { data: paymentEnabled } = usePaymentEnabled();
   // Use secure RPC for seller contact info
   const { data: sellerContact } = useQuery({
     queryKey: ['seller-contact', id],
@@ -46,7 +47,7 @@ const BookDetailsPage = () => {
   const [showUnlockDialog, setShowUnlockDialog] = useState(false);
 
   const isOwnBook = profile?.id === book?.seller_id;
-  const isContactUnlocked = unlockPayment?.status === 'approved';
+  const isContactUnlocked = !paymentEnabled || unlockPayment?.status === 'approved';
 
   // Calculate unlock fee based on book price
   const unlockFee = book ? (book.price >= 500 ? 20 : 10) : 10;
@@ -200,12 +201,12 @@ const BookDetailsPage = () => {
                           </div>
                         )}
                       </>
-                    ) : (
+                    ) : paymentEnabled ? (
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Lock className="h-4 w-4" />
                         <span>Contact hidden - Pay ৳{unlockFee} to unlock</span>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 </CardContent>
               </Card>
@@ -239,7 +240,7 @@ const BookDetailsPage = () => {
                       </Button>
                     )}
                   </div>
-                ) : (
+                ) : paymentEnabled ? (
                   <div className="space-y-3">
                     <Button
                       size="lg"
@@ -253,7 +254,7 @@ const BookDetailsPage = () => {
                       Pay via bKash to view seller's contact details
                     </p>
                   </div>
-                )}
+                ) : null}
               </>
             )}
 
