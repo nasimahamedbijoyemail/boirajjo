@@ -14,6 +14,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall, Lock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const conditionLabels = {
   new: 'New',
@@ -34,7 +36,8 @@ const BookDetailsPage = () => {
   const { data: book, isLoading, error } = useBook(id || '');
   const { data: unlockPayment } = useContactUnlockForBook(id || '');
   const { data: paymentEnabled } = usePaymentEnabled();
-  // Use secure RPC for seller contact info
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const { data: sellerContact } = useQuery({
     queryKey: ['seller-contact', id],
     queryFn: async () => {
@@ -49,8 +52,6 @@ const BookDetailsPage = () => {
 
   const isOwnBook = profile?.id === book?.seller_id;
   const isContactUnlocked = !paymentEnabled || unlockPayment?.status === 'approved';
-
-  // Calculate unlock fee based on book price
   const unlockFee = book ? (book.price >= 500 ? 20 : 10) : 10;
 
   const formatPhoneNumber = (phoneNumber: string) => {
@@ -60,10 +61,8 @@ const BookDetailsPage = () => {
 
   const handleWhatsAppClick = () => {
     if (!sellerContact) return;
-    
     const whatsappNumber = sellerContact.whatsapp_number || sellerContact.phone_number;
     if (!whatsappNumber) return;
-    
     const message = encodeURIComponent(
       `Hi, I saw your book "${book?.title}" on Boi Rajjo. Is it still available?`
     );
@@ -82,16 +81,19 @@ const BookDetailsPage = () => {
   if (isLoading) {
     return (
       <Layout>
-        <div className="container py-6 space-y-6">
-          <Skeleton className="h-8 w-32" />
-          <div className="grid md:grid-cols-2 gap-8">
-            <Skeleton className="aspect-[4/3] rounded-xl" />
+        <div className="container px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+          <Skeleton className="h-8 w-24 rounded-lg" />
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+            <Skeleton className="aspect-[4/3] rounded-2xl" />
             <div className="space-y-4">
-              <Skeleton className="h-10 w-3/4" />
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-16 rounded-full" />
+              </div>
+              <Skeleton className="h-9 w-3/4" />
               <Skeleton className="h-6 w-1/2" />
-              <Skeleton className="h-8 w-32" />
-              <Skeleton className="h-24 w-full" />
-              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-40" />
+              <Skeleton className="h-24 w-full rounded-xl" />
+              <Skeleton className="h-12 w-full rounded-xl" />
             </div>
           </div>
         </div>
@@ -108,7 +110,7 @@ const BookDetailsPage = () => {
             Go Back
           </Button>
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="rounded-full bg-muted p-6 mb-4">
+            <div className="rounded-2xl bg-muted p-6 mb-4">
               <BookOpen className="h-12 w-12 text-muted-foreground" />
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">Book Not Found</h3>
@@ -129,29 +131,53 @@ const BookDetailsPage = () => {
         path={`/book/${book.id}`}
       />
       <div className="container px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="rounded-xl">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
 
-        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-          {/* Book Image */}
-          <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
+        <div className="grid md:grid-cols-2 gap-5 sm:gap-8">
+          {/* Book Image - premium presentation */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="aspect-[4/3] rounded-2xl overflow-hidden bg-muted relative shadow-card"
+          >
             {book.photo_url ? (
-              <img
-                src={book.photo_url}
-                alt={book.title}
-                className="h-full w-full object-cover"
-              />
+              <>
+                {!imageLoaded && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-muted via-muted/70 to-muted animate-pulse" />
+                )}
+                <img
+                  src={book.photo_url}
+                  alt={book.title}
+                  onLoad={() => setImageLoaded(true)}
+                  className={cn(
+                    'h-full w-full object-cover transition-opacity duration-500',
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </>
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-secondary to-muted">
-                <BookOpen className="h-24 w-24 text-muted-foreground/50" />
+                <BookOpen className="h-20 w-20 sm:h-24 sm:w-24 text-muted-foreground/30" />
               </div>
             )}
-          </div>
+            {book.status === 'sold' && (
+              <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
+                <Badge variant="destructive" className="text-base font-bold px-6 py-2 shadow-lg">Sold</Badge>
+              </div>
+            )}
+          </motion.div>
 
           {/* Book Details */}
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="space-y-5"
+          >
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant={conditionColors[book.condition]}>
@@ -161,56 +187,63 @@ const BookDetailsPage = () => {
                   <Badge variant="destructive">Sold</Badge>
                 )}
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{book.title}</h1>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground leading-tight">{book.title}</h1>
               <p className="text-base sm:text-lg text-muted-foreground mt-1">by {book.author}</p>
             </div>
 
-            <div className="text-3xl sm:text-4xl font-bold text-primary">
+            <div className="text-3xl sm:text-4xl font-bold text-primary tabular-nums">
               ৳{book.price.toLocaleString()}
             </div>
 
             {book.institution && (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <MapPin className="h-4 w-4" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 shrink-0" />
                 <span>{book.institution.name}</span>
                 {book.subcategory && (
                   <>
-                    <span>•</span>
+                    <span className="text-border">•</span>
                     <span>{book.subcategory}</span>
                   </>
                 )}
               </div>
             )}
 
-            {/* Seller Info */}
+            {/* Seller Info Card */}
             {sellerContact && (
-              <Card>
+              <Card className="border-0 shadow-card overflow-hidden">
                 <CardContent className="p-4">
-                  <h3 className="font-semibold text-foreground mb-3">Seller Information</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <User className="h-4 w-4" />
-                      <span>{sellerContact.name}</span>
+                  <h3 className="font-semibold text-foreground mb-3 text-sm">Seller Information</h3>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <User className="h-4 w-4 text-primary" />
+                      </div>
+                      <span className="font-medium text-foreground">{sellerContact.name}</span>
                     </div>
                     
-                    {/* Show contact only if RPC returned phone data */}
                     {sellerContact.phone_number ? (
                       <>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Phone className="h-4 w-4" />
-                          <span>Contact: {sellerContact.phone_number}</span>
+                        <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                            <Phone className="h-4 w-4" />
+                          </div>
+                          <span>{sellerContact.phone_number}</span>
                         </div>
                         {sellerContact.whatsapp_number && (
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <MessageCircle className="h-4 w-4" />
-                            <span>WhatsApp: {sellerContact.whatsapp_number}</span>
+                          <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                            <div className="h-8 w-8 rounded-full bg-success/10 flex items-center justify-center shrink-0">
+                              <MessageCircle className="h-4 w-4 text-success" />
+                            </div>
+                            <span>{sellerContact.whatsapp_number}</span>
                           </div>
                         )}
                       </>
                     ) : paymentEnabled ? (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Lock className="h-4 w-4" />
-                        <span>Contact hidden - Pay ৳{unlockFee} to unlock</span>
+                      <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                        <div className="h-8 w-8 rounded-full bg-warning/10 flex items-center justify-center shrink-0">
+                          <Lock className="h-4 w-4 text-warning" />
+                        </div>
+                        <span>Contact hidden — Pay ৳{unlockFee} to unlock</span>
                       </div>
                     ) : null}
                   </div>
@@ -218,16 +251,16 @@ const BookDetailsPage = () => {
               </Card>
             )}
 
-            {/* Action Buttons */}
+            {/* Action Buttons - sticky on mobile */}
             {book.status === 'available' && !isOwnBook && (
-              <>
+              <div className="sticky bottom-20 md:static z-10">
                 {isContactUnlocked ? (
                   <div className="flex flex-col sm:flex-row gap-3">
                     {hasWhatsApp && (
                       <Button
                         variant="whatsapp"
                         size="lg"
-                        className="flex-1"
+                        className="flex-1 rounded-xl"
                         onClick={handleWhatsAppClick}
                       >
                         <MessageCircle className="h-5 w-5" />
@@ -238,7 +271,7 @@ const BookDetailsPage = () => {
                       <Button
                         variant="outline"
                         size="lg"
-                        className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                        className="flex-1 rounded-xl border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                         onClick={handleCallClick}
                       >
                         <PhoneCall className="h-5 w-5" />
@@ -250,35 +283,34 @@ const BookDetailsPage = () => {
                   <div className="space-y-3">
                     <Button
                       size="lg"
-                      className="w-full"
+                      className="w-full rounded-xl"
                       onClick={() => setShowUnlockDialog(true)}
                     >
                       <Lock className="h-5 w-5 mr-2" />
                       Unlock Contact (৳{unlockFee})
                     </Button>
-                    <p className="text-sm text-muted-foreground text-center">
+                    <p className="text-xs text-muted-foreground text-center">
                       Pay via bKash to view seller's contact details
                     </p>
                   </div>
                 ) : null}
-              </>
+              </div>
             )}
 
             {isOwnBook && (
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full"
+                className="w-full rounded-xl"
                 onClick={() => navigate('/my-listings')}
               >
                 Manage Listings
               </Button>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Unlock Dialog */}
       {book && (
         <ContactUnlockDialog
           open={showUnlockDialog}
