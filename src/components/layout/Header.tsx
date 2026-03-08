@@ -123,7 +123,8 @@ export const Header = () => {
             </nav>
 
             {/* Mobile: Bell + Menu */}
-            <div className="flex items-center gap-1 md:hidden">
+            <div className="flex items-center gap-0.5 md:hidden">
+              <ThemeToggle />
               <Button variant="ghost" size="icon" className="relative" asChild>
                 <Link to="/profile?tab=notifications">
                   <Bell className="h-5 w-5" />
