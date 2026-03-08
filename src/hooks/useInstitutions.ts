@@ -37,5 +37,6 @@ export const useDepartments = (institutionId?: string) => {
       return data as Department[];
     },
     enabled: !!institutionId,
+    staleTime: 10 * 60 * 1000,
   });
 };
