@@ -5,6 +5,8 @@ import { useIsAdmin } from '@/hooks/useAdmin';
 import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings, List, History, Bell } from 'lucide-react';
 import { useState } from 'react';
+import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
+import { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
