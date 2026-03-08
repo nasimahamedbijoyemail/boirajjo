@@ -118,6 +118,7 @@ const AppRoutes = () => {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/onboarding" element={<OnboardingRoute><OnboardingPage /></OnboardingRoute>} />
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/browse/:category" element={<ProtectedRoute><BrowseCategoryPage /></ProtectedRoute>} />
