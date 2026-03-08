@@ -78,6 +78,8 @@ export const ProfileAvatar = ({ photoUrl, name, editable = false, size = 'lg', c
 
       await refreshProfile();
       toast.success('Profile photo updated!');
+      setJustUploaded(true);
+      setTimeout(() => setJustUploaded(false), 2000);
     } catch (error: unknown) {
       console.error('Upload error:', error);
       toast.error('Failed to upload photo');
