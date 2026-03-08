@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useMyBooks } from '@/hooks/useBooks';
 import { useMyOrders } from '@/hooks/useOrders';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { useMyDemands } from '@/hooks/useBookDemands';
 import { useMyShopOrders } from '@/hooks/useShops';
 import { useMyContactUnlocks, useRequestRefund } from '@/hooks/useContactUnlock';
