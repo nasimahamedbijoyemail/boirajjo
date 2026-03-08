@@ -64,10 +64,10 @@ export const useAdminStats = () => {
         supabase.from('contact_unlock_payments').select('id, status', { count: 'exact' }),
       ]);
 
-      const deletionRequestsRes = await supabase
-        .from('profiles')
+      const deletionRequestsRes = await (supabase
+        .from('profiles') as any)
         .select('id', { count: 'exact', head: true })
-        .eq('deletion_requested' as any, true);
+        .eq('deletion_requested', true);
 
       const pendingOrders = ordersRes.data?.filter(o => o.status === 'pending').length || 0;
       const pendingDemands = demandsRes.data?.filter(d => d.status === 'requested').length || 0;
