@@ -73,6 +73,8 @@ export const Header = () => {
                 </Link>
               </Button>
 
+              <ThemeToggle />
+
               {/* Notification Bell */}
               <Button variant="ghost" size="icon" className="relative" asChild>
                 <Link to="/profile?tab=notifications">
