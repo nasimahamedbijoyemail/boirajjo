@@ -114,6 +114,7 @@ export interface BookDemand {
   profile_id: string;
   book_name: string;
   author_name: string | null;
+  photo_url: string | null;
   division_id: string | null;
   district_id: string | null;
   thana_id: string | null;
