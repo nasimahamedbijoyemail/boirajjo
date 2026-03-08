@@ -123,13 +123,18 @@ const BookDetailsPage = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
-        <Button variant="ghost" onClick={() => navigate(-1)}>
+      <SEOHead
+        title={book.title}
+        description={`${book.title} by ${book.author} — ৳${book.price}. Buy on Boi Rajjo campus marketplace.`}
+        path={`/book/${book.id}`}
+      />
+      <div className="container px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Browse
+          Back
         </Button>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
           {/* Book Image */}
           <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
             {book.photo_url ? (
