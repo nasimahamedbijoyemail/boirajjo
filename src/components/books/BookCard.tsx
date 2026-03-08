@@ -32,6 +32,7 @@ export const BookCard = ({ book, isNilkhet = false }: BookCardProps) => {
             <img
               src={book.photo_url}
               alt={book.title}
+              loading="lazy"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
