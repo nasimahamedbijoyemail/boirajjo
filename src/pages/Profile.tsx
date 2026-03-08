@@ -39,6 +39,8 @@ import UserNotifications from '@/components/notifications/UserNotifications';
 import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SEOHead } from '@/components/seo/SEOHead';
+import { BD_PHONE_REGEX } from '@/lib/validators';
 
 const ProfileInfoRow = ({ icon: Icon, label, value, index = 0 }: { icon: React.ElementType; label: string; value: string; index?: number }) => (
   <motion.div
