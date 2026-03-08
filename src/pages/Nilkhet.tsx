@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,6 +10,8 @@ import { Store, Star, MapPin, Phone, Search, BookOpen } from 'lucide-react';
 import { useShops, useShopBooks } from '@/hooks/useShops';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { useQueryClient } from '@tanstack/react-query';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const NilkhetPage = () => {
   const [conditionType, setConditionType] = useState<'old' | 'new'>('new');
