@@ -269,9 +269,9 @@ const BookDetailsPage = () => {
                 variant="outline"
                 size="lg"
                 className="w-full"
-                onClick={() => navigate(`/edit-book/${book.id}`)}
+                onClick={() => navigate('/my-listings')}
               >
-                Edit Listing
+                Manage Listings
               </Button>
             )}
           </div>

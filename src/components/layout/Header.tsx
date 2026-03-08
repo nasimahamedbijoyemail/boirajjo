@@ -241,8 +241,9 @@ export const Header = () => {
               Sign Out
             </Button>
           </nav>
-        </div>
-      )}
+        </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
