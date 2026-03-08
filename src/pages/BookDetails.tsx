@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,7 @@ import { useBook } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContactUnlockForBook } from '@/hooks/useContactUnlock';
 import { ContactUnlockDialog } from '@/components/books/ContactUnlockDialog';
+import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall, Lock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
