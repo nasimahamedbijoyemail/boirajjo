@@ -58,14 +58,6 @@ const DepartmentRequestsPage = () => {
     }
   };
 
-  const handleCall = (phoneNumber: string) => {
-    window.location.href = `tel:${phoneNumber}`;
-  };
-
-  const handleWhatsApp = (whatsappNumber: string, bookTitle: string) => {
-    const message = `Hi, I saw your request for "${bookTitle}" on Boi Rajjo. I have this book available!`;
-    window.open(`https://wa.me/${whatsappNumber.replace(/\\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
-  };
 
   return (
     <Layout>
