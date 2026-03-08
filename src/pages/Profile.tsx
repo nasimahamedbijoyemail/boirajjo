@@ -186,8 +186,8 @@ const ProfilePage = () => {
 
   return (
     <Layout>
-      <div className="container py-6 max-w-2xl">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">My Profile</h1>
+      <div className="px-4 sm:px-6 py-4 sm:py-6 max-w-2xl mx-auto w-full">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4 sm:mb-6">My Profile</h1>
 
         <Tabs defaultValue={defaultTab} className="space-y-4">
           <TabsList>
@@ -204,20 +204,20 @@ const ProfilePage = () => {
           </TabsList>
 
           <TabsContent value="profile">
-            <div className="flex items-center justify-end mb-4">
+            <div className="flex items-center justify-end mb-3 sm:mb-4">
               {!isEditing ? (
-                <Button variant="outline" onClick={startEditing}>
-                  <Edit2 className="h-4 w-4 mr-2" />
+                <Button variant="outline" size="sm" className="sm:size-default" onClick={startEditing}>
+                  <Edit2 className="h-4 w-4 mr-1.5 sm:mr-2" />
                   Edit Profile
                 </Button>
               ) : (
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={cancelEditing} disabled={saving}>
-                    <X className="h-4 w-4 mr-2" />
+                  <Button variant="outline" size="sm" onClick={cancelEditing} disabled={saving}>
+                    <X className="h-4 w-4 mr-1" />
                     Cancel
                   </Button>
-                  <Button onClick={saveChanges} disabled={saving}>
-                    <Save className="h-4 w-4 mr-2" />
+                  <Button size="sm" onClick={saveChanges} disabled={saving}>
+                    <Save className="h-4 w-4 mr-1" />
                     {saving ? 'Saving...' : 'Save'}
                   </Button>
                 </div>
@@ -225,20 +225,20 @@ const ProfilePage = () => {
             </div>
 
             <Card className="shadow-card">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <User className="h-8 w-8 text-primary" />
+              <CardHeader className="p-4 sm:p-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <User className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
                   </div>
-                  <div>
-                    <CardTitle className="text-xl">{profile?.name}</CardTitle>
-                    <Badge variant="institution" className="mt-1">
+                  <div className="min-w-0">
+                    <CardTitle className="text-lg sm:text-xl truncate">{profile?.name}</CardTitle>
+                    <Badge variant="institution" className="mt-1 text-xs sm:text-sm max-w-full truncate">
                       {institution?.name || 'No institution selected'}
                     </Badge>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 p-4 sm:p-6 pt-0 sm:pt-0">
                 {isEditing ? (
                   <div className="space-y-4">
                     <div className="space-y-2">
@@ -392,25 +392,26 @@ const ProfilePage = () => {
             </Card>
 
             {/* Danger Zone */}
-            <Card className="mt-6 border-red-100 bg-red-50/50">
-              <CardHeader>
-                <CardTitle className="text-red-700 flex items-center gap-2 text-lg">
-                  <Settings className="h-5 w-5" /> Danger Zone
+            <Card className="mt-4 sm:mt-6 border-red-100 bg-red-50/50">
+              <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-2">
+                <CardTitle className="text-red-700 flex items-center gap-2 text-base sm:text-lg">
+                  <Settings className="h-4 w-4 sm:h-5 sm:w-5" /> Danger Zone
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
+              <CardContent className="p-4 sm:p-6 pt-2 sm:pt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <p className="font-medium text-red-900 text-sm md:text-base">Delete Account</p>
+                    <p className="font-medium text-red-900 text-sm">Delete Account</p>
                     <p className="text-xs text-red-600">This will notify the admin to permanently remove your data.</p>
                   </div>
                   <Button 
                     variant="destructive" 
                     size="sm" 
+                    className="w-full sm:w-auto shrink-0"
                     onClick={handleRequestDeletion}
                     disabled={profile?.deletion_requested}
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
+                    <Trash2 className="h-4 w-4 mr-1.5" />
                     {profile?.deletion_requested ? 'Request Sent' : 'Delete Request'}
                   </Button>
                 </div>
