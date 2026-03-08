@@ -22,8 +22,9 @@ export const MobileBottomNav = () => {
       <div className="flex items-stretch justify-around">
         {navItems.map(({ to, icon: Icon, label, accent }) => {
           const isActive = location.pathname === to || 
-            (to === '/browse' && (location.pathname.startsWith('/browse') || location.pathname.startsWith('/outside-campus'))) ||
-            (to === '/my-orders' && location.pathname.startsWith('/my-orders'));
+            (to === '/nilkhet' && location.pathname.startsWith('/nilkhet')) ||
+            (to === '/my-orders' && location.pathname.startsWith('/my-orders')) ||
+            (to === '/profile' && location.pathname.startsWith('/profile'));
 
           return (
             <Link
