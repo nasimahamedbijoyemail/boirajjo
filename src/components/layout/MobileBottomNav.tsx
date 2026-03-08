@@ -3,6 +3,7 @@ import { Home, Search, Plus, ShoppingBag, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const navItems = [
   { to: '/home', icon: Home, label: 'Home' },
@@ -11,6 +12,8 @@ const navItems = [
   { to: '/my-orders', icon: ShoppingBag, label: 'Orders' },
   { to: '/profile', icon: User, label: 'Profile', showBadge: true },
 ];
+
+const MotionLink = motion.create(Link);
 
 export const MobileBottomNav = () => {
   const { user, profile } = useAuth();
@@ -29,9 +32,11 @@ export const MobileBottomNav = () => {
             (to === '/profile' && location.pathname.startsWith('/profile'));
 
           return (
-            <Link
+            <MotionLink
               key={to}
               to={to}
+              whileTap={{ scale: 0.85 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               className={cn(
                 'flex flex-col items-center justify-center gap-0.5 py-2 px-3 min-w-0 flex-1 transition-colors',
                 isActive && !accent && 'text-primary',
@@ -39,9 +44,13 @@ export const MobileBottomNav = () => {
               )}
             >
               {accent ? (
-                <div className="flex items-center justify-center h-10 w-10 -mt-4 rounded-full bg-accent text-accent-foreground shadow-lg">
+                <motion.div
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className="flex items-center justify-center h-10 w-10 -mt-4 rounded-full bg-accent text-accent-foreground shadow-lg"
+                >
                   <Icon className="h-5 w-5" />
-                </div>
+                </motion.div>
               ) : (
                 <div className="relative">
                   <Icon className={cn('h-5 w-5', isActive && 'stroke-[2.5]')} />
@@ -59,7 +68,7 @@ export const MobileBottomNav = () => {
               )}>
                 {label}
               </span>
-            </Link>
+            </MotionLink>
           );
         })}
       </div>
