@@ -16,6 +16,7 @@ interface ProfileAvatarProps {
 export const ProfileAvatar = ({ photoUrl, name, editable = false, size = 'lg', className }: ProfileAvatarProps) => {
   const { user, updateProfile, refreshProfile } = useAuth();
   const [uploading, setUploading] = useState(false);
+  const [justUploaded, setJustUploaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sizeClasses = {
@@ -77,6 +78,8 @@ export const ProfileAvatar = ({ photoUrl, name, editable = false, size = 'lg', c
 
       await refreshProfile();
       toast.success('Profile photo updated!');
+      setJustUploaded(true);
+      setTimeout(() => setJustUploaded(false), 2000);
     } catch (error: unknown) {
       console.error('Upload error:', error);
       toast.error('Failed to upload photo');
@@ -113,15 +116,22 @@ export const ProfileAvatar = ({ photoUrl, name, editable = false, size = 'lg', c
         )}
       </button>
 
-      {/* Always-visible camera badge for editable mode */}
+      {/* Always-visible camera badge for editable mode / success checkmark */}
       {editable && !uploading && (
         <div
           className={cn(
             badgeSize,
-            'absolute -bottom-0.5 -right-0.5 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md border-2 border-card'
+            'absolute -bottom-0.5 -right-0.5 rounded-full flex items-center justify-center shadow-md border-2 border-card transition-all duration-300',
+            justUploaded ? 'bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))] scale-110' : 'bg-primary text-primary-foreground'
           )}
         >
-          <Camera className={badgeIconSize} />
+          {justUploaded ? (
+            <svg className={badgeIconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <Camera className={badgeIconSize} />
+          )}
         </div>
       )}
 

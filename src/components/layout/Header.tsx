@@ -157,6 +157,18 @@ export const Header = () => {
       {mobileMenuOpen && user && profile?.institution_id && (
         <div className="md:hidden border-t bg-card/95 backdrop-blur animate-fade-in shadow-lg">
           <nav className="container py-4 flex flex-col gap-2">
+            {/* Mobile profile header */}
+            <div className="flex items-center gap-3 px-3 py-2 mb-1 rounded-xl bg-muted/50">
+              <ProfileAvatar 
+                photoUrl={profile?.photo_url || null} 
+                name={profile?.name || ''} 
+                size="md"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-sm truncate">{profile?.name}</p>
+                <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+              </div>
+            </div>
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
               <Link to="/home">
                 <Home className="h-4 w-4" />
@@ -201,6 +213,7 @@ export const Header = () => {
                 Sell Book
               </Link>
             </Button>
+            <div className="border-t border-border my-1" />
             <Button variant="ghost" className="justify-start text-destructive" onClick={handleSignOut}>
               <LogOut className="h-4 w-4 mr-2" />
               Sign Out
