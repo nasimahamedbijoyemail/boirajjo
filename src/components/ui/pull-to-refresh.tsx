@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, forwardRef } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 
@@ -9,7 +9,7 @@ interface PullToRefreshProps {
 
 const THRESHOLD = 80;
 
-export const PullToRefresh = ({ onRefresh, children }: PullToRefreshProps) => {
+export const PullToRefresh = forwardRef<HTMLDivElement, PullToRefreshProps>(({ onRefresh, children }, ref) => {
   const [refreshing, setRefreshing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
@@ -67,7 +67,11 @@ export const PullToRefresh = ({ onRefresh, children }: PullToRefreshProps) => {
 
   return (
     <div
-      ref={containerRef}
+      ref={(node) => {
+        containerRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -92,4 +96,6 @@ export const PullToRefresh = ({ onRefresh, children }: PullToRefreshProps) => {
       </motion.div>
     </div>
   );
-};
+});
+
+PullToRefresh.displayName = 'PullToRefresh';
