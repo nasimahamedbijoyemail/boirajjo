@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +21,6 @@ const demandSchema = z.object({
 });
 
 const BookDemandPage = () => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const createDemand = useCreateDemand();
   const { data: myDemands = [], isLoading } = useMyDemands();
