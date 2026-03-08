@@ -11,7 +11,8 @@ import { useCreateDemand, useMyDemands } from '@/hooks/useBookDemands';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { BookMarked, Plus, Clock } from 'lucide-react';
- import { PhotoUpload } from '@/components/ui/photo-upload';
+import { PhotoUpload } from '@/components/ui/photo-upload';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const demandSchema = z.object({
   book_name: z.string().min(1, 'Book name is required').max(200),
