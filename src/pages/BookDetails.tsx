@@ -13,6 +13,7 @@ import { ContactUnlockDialog } from '@/components/books/ContactUnlockDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall, Lock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const conditionLabels = {
   new: 'New',
