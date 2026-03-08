@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 
 const conditionLabels = {
   new: 'New',
