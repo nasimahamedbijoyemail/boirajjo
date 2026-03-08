@@ -168,7 +168,7 @@ const ProfilePage = () => {
 
   const cancelEditing = () => setIsEditing(false);
 
-  const BD_PHONE_REGEX = /^01[3-9]\d{8}$/;
+  
 
   const saveChanges = async () => {
     if (!editData.name.trim()) {
