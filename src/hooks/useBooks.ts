@@ -176,9 +176,10 @@ export const useBook = (bookId: string) => {
           institution:institutions(*)
         `)
         .eq('id', bookId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Book not found');
       return data as BookWithSeller;
     },
     enabled: !!bookId,

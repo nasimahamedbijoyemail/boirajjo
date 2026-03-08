@@ -132,7 +132,7 @@ const ProfilePage = () => {
         .from('academic_departments')
         .select('name')
         .eq('id', profile.academic_department_id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data;
     },

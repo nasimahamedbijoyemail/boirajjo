@@ -156,9 +156,10 @@ export const useShopBook = (id: string) => {
           shop:shops(*)
         `)
         .eq('id', id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Shop book not found');
       return data as ShopBook;
     },
     enabled: !!id,
