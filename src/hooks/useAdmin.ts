@@ -63,10 +63,9 @@ export const useAdminStats = () => {
         supabase.from('shops').select('id', { count: 'exact' }),
         supabase.from('shop_orders').select('id, status', { count: 'exact' }),
         supabase.from('contact_unlock_payments').select('id, status', { count: 'exact' }),
-        // Fixed: Querying the exact column you kept in your database
         supabase.from('profiles')
           .select('id', { count: 'exact', head: true })
-          .eq('deletion_requested', true),
+          .eq('deletion_requested' as any, true),
       ]);
 
       const pendingOrders = ordersRes.data?.filter(o => o.status === 'pending').length || 0;

@@ -38,6 +38,8 @@ export interface Profile {
   subcategory: string | null;
   department_id: string | null;
   academic_department_id: string | null;
+  deletion_requested: boolean | null;
+  deletion_requested_at: string | null;
   created_at: string;
   updated_at: string;
 }
