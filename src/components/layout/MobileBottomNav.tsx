@@ -22,7 +22,7 @@ export const MobileBottomNav = () => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 safe-area-bottom">
       <div className="flex items-stretch justify-around">
-        {navItems.map(({ to, icon: Icon, label, accent }) => {
+        {navItems.map(({ to, icon: Icon, label, accent, showBadge }) => {
           const isActive = location.pathname === to || 
             (to === '/nilkhet' && location.pathname.startsWith('/nilkhet')) ||
             (to === '/my-orders' && location.pathname.startsWith('/my-orders')) ||
