@@ -35,7 +35,12 @@ export const PhotoUpload = ({
     setUploading(true);
     try {
       // Compress image client-side
+      const originalSize = file.size;
       const compressed = await compressImage(file);
+      const compressedSize = compressed.size;
+      console.log(
+        `📸 Image compression: ${(originalSize / 1024).toFixed(0)}KB → ${(compressedSize / 1024).toFixed(0)}KB (${((1 - compressedSize / originalSize) * 100).toFixed(0)}% reduction)`
+      );
       
       // Build storage path: {userId}/{folder}/{timestamp}-{filename}
       const ext = compressed.name.split('.').pop() || 'jpg';
