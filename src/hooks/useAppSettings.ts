@@ -1,19 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
-// Generic setting getter
+// Uses secure RPC to read whitelisted public settings (non-admins can't query table directly)
 const useAppSetting = (key: string) => {
   return useQuery({
     queryKey: ['app-settings', key],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('app_settings')
-        .select('value')
-        .eq('key', key)
-        .single();
-
+      const { data, error } = await supabase.rpc('get_public_setting', { setting_key: key });
       if (error) return null;
-      return data?.value;
+      return data;
     },
     staleTime: 5 * 60 * 1000,
   });
