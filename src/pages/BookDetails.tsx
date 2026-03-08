@@ -47,7 +47,7 @@ const BookDetailsPage = () => {
   const [showUnlockDialog, setShowUnlockDialog] = useState(false);
 
   const isOwnBook = profile?.id === book?.seller_id;
-  const isContactUnlocked = unlockPayment?.status === 'approved';
+  const isContactUnlocked = !paymentEnabled || unlockPayment?.status === 'approved';
 
   // Calculate unlock fee based on book price
   const unlockFee = book ? (book.price >= 500 ? 20 : 10) : 10;
