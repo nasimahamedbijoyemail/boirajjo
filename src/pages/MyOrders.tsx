@@ -141,7 +141,7 @@ const MyOrdersPage = () => {
             ))}
           </div>
         )}
-      </div>
+      </PullToRefresh>
     </Layout>
   );
 };

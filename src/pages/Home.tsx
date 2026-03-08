@@ -149,7 +149,7 @@ const HomePage = () => {
             </motion.div>
           ))}
         </motion.div>
-      </div>
+      </PullToRefresh>
     </Layout>
   );
 };
