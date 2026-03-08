@@ -34,10 +34,21 @@ export const BookCard = ({ book, isNilkhet = false }: BookCardProps) => {
         <div className="aspect-[4/3] overflow-hidden bg-muted relative">
           {book.photo_url && !imageError ? (
             <>
-              {/* Shimmer placeholder while loading */}
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-gradient-to-r from-muted via-muted/60 to-muted animate-pulse" />
-              )}
+              {/* Blur-up placeholder */}
+              <div
+                className={cn(
+                  'absolute inset-0 transition-opacity duration-700',
+                  imageLoaded ? 'opacity-0' : 'opacity-100'
+                )}
+              >
+                <div className="absolute inset-0 animate-shimmer" />
+                <img
+                  src={`${book.photo_url}?width=32&quality=10`}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full object-cover scale-110 blur-xl"
+                />
+              </div>
               <img
                 src={book.photo_url}
                 alt={book.title}

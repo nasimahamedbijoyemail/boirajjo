@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 
 const conditionLabels = {
   new: 'New',
@@ -129,7 +130,31 @@ const BookDetailsPage = () => {
         title={book.title}
         description={`${book.title} by ${book.author} — ৳${book.price}. Buy on Boi Rajjo campus marketplace.`}
         path={`/book/${book.id}`}
+        ogImage={book.photo_url || undefined}
       />
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": book.title,
+            "description": `${book.title} by ${book.author}`,
+            "image": book.photo_url || undefined,
+            "offers": {
+              "@type": "Offer",
+              "price": book.price,
+              "priceCurrency": "BDT",
+              "availability": book.status === 'available'
+                ? "https://schema.org/InStock"
+                : "https://schema.org/SoldOut",
+              "itemCondition": book.condition === 'new'
+                ? "https://schema.org/NewCondition"
+                : "https://schema.org/UsedCondition",
+            },
+            "brand": { "@type": "Organization", "name": "Boi Rajjo" },
+          })}
+        </script>
+      </Helmet>
       <div className="container px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="rounded-xl">
           <ArrowLeft className="h-4 w-4 mr-2" />
