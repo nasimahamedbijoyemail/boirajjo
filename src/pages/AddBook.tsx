@@ -18,6 +18,7 @@ import { useCreateBook } from '@/hooks/useBooks';
 import { BookCondition, BookType } from '@/types/database';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { toast } from 'sonner';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { z } from 'zod';
 
 const bookSchema = z.object({
