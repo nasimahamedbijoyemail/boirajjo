@@ -176,27 +176,27 @@ const BookDetailsPage = () => {
             )}
 
             {/* Seller Info */}
-            {book.seller && (
+            {sellerContact && (
               <Card>
                 <CardContent className="p-4">
                   <h3 className="font-semibold text-foreground mb-3">Seller Information</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <User className="h-4 w-4" />
-                      <span>{book.seller.name}</span>
+                      <span>{sellerContact.name}</span>
                     </div>
                     
-                    {/* Show contact only if own book or contact is unlocked */}
-                    {(isOwnBook || isContactUnlocked) ? (
+                    {/* Show contact only if RPC returned phone data */}
+                    {sellerContact.phone_number ? (
                       <>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Phone className="h-4 w-4" />
-                          <span>Contact: {book.seller.phone_number}</span>
+                          <span>Contact: {sellerContact.phone_number}</span>
                         </div>
-                        {book.seller.whatsapp_number && (
+                        {sellerContact.whatsapp_number && (
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <MessageCircle className="h-4 w-4" />
-                            <span>WhatsApp: {book.seller.whatsapp_number}</span>
+                            <span>WhatsApp: {sellerContact.whatsapp_number}</span>
                           </div>
                         )}
                       </>
