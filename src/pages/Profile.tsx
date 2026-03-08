@@ -102,9 +102,9 @@ const ProfilePage = () => {
         .from('institutions')
         .select('*')
         .eq('id', profile.institution_id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
-      return data as Institution;
+      return data as Institution | null;
     },
     enabled: !!profile?.institution_id,
   });
@@ -117,7 +117,7 @@ const ProfilePage = () => {
         .from('departments')
         .select('name')
         .eq('id', profile.department_id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -132,7 +132,7 @@ const ProfilePage = () => {
         .from('academic_departments')
         .select('name')
         .eq('id', profile.academic_department_id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data;
     },

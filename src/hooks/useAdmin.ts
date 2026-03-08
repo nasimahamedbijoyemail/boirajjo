@@ -132,7 +132,7 @@ export const useUserBooks = (userId: string) => {
         .from('profiles')
         .select('id')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (!profile) return [];
 
