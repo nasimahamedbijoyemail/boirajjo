@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { useBooks } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Send, BookOpen } from 'lucide-react';
+import { Send, BookOpen, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { SEOHead } from '@/components/seo/SEOHead';
 
