@@ -117,7 +117,7 @@ const ProfilePage = () => {
         .from('departments')
         .select('name')
         .eq('id', profile.department_id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
