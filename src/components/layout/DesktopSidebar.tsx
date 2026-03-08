@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
+import { motion } from 'framer-motion';
 
 const navItems = [
   { to: '/home', icon: Home, label: 'Home' },
