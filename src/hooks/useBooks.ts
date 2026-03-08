@@ -43,7 +43,6 @@ export const useBooks = (filters?: {
           .from('books')
           .select(`
             *,
-            seller:profiles!books_seller_id_fkey(*),
             institution:institutions(*)
           `)
           .eq('book_type', 'nilkhet')
@@ -72,7 +71,6 @@ export const useBooks = (filters?: {
           .from('books')
           .select(`
             *,
-            seller:profiles!books_seller_id_fkey(*),
             institution:institutions(*)
           `)
           .eq('book_type', 'non_academic')
@@ -109,7 +107,6 @@ export const useBooks = (filters?: {
         .from('books')
         .select(`
           *,
-          seller:profiles!books_seller_id_fkey(*),
           institution:institutions(*)
         `)
         .eq('institution_id', profile.institution_id)
@@ -176,7 +173,6 @@ export const useBook = (bookId: string) => {
         .from('books')
         .select(`
           *,
-          seller:profiles!books_seller_id_fkey(*),
           institution:institutions(*)
         `)
         .eq('id', bookId)
