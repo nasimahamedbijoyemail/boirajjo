@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { BookGrid } from '@/components/books/BookGrid';
@@ -12,6 +12,8 @@ import { Send, BookOpen, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
+import { useQueryClient } from '@tanstack/react-query';
 
 const BrowseCategoryPage = () => {
   const { category } = useParams<{ category: string }>();
