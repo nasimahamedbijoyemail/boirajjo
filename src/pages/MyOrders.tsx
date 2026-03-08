@@ -3,12 +3,14 @@
  import { useMyShopOrders } from '@/hooks/useShops';
  import { OrderStatusTracker } from '@/components/orders/OrderStatusTracker';
  import { Package, Store } from 'lucide-react';
+ import { SEOHead } from '@/components/seo/SEOHead';
  
  const MyOrdersPage = () => {
    const { data: shopOrders = [], isLoading } = useMyShopOrders();
  
    return (
      <Layout>
+       <SEOHead title="My Orders" description="Track your Nilkhet book orders and delivery status." path="/my-orders" />
        <div className="container py-6 max-w-3xl">
          <div className="mb-6">
            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
