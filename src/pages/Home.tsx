@@ -57,6 +57,7 @@ const HomePage = () => {
         description="Explore campus books, Nilkhet book market, and book demands. Buy and sell used academic books with trusted students."
         path="/home"
       />
+      <div className="container py-8">
         {/* Promo Banner */}
         {promoLoading ? (
           <Skeleton className="w-full h-32 sm:h-44 rounded-xl mb-6" />
