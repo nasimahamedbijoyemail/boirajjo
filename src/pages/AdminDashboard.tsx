@@ -214,6 +214,10 @@ const AdminDashboard = () => {
           <TabsContent value="broadcast">
             <AdminBroadcastTab />
           </TabsContent>
+
+          <TabsContent value="settings">
+            <AdminSettingsTab />
+          </TabsContent>
         </Tabs>
       </div>
     </Layout>
