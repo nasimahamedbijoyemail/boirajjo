@@ -16,6 +16,7 @@ interface ProfileAvatarProps {
 export const ProfileAvatar = ({ photoUrl, name, editable = false, size = 'lg', className }: ProfileAvatarProps) => {
   const { user, updateProfile, refreshProfile } = useAuth();
   const [uploading, setUploading] = useState(false);
+  const [justUploaded, setJustUploaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sizeClasses = {
