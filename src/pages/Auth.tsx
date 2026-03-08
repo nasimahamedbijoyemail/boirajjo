@@ -138,7 +138,7 @@ const AuthPage = () => {
           return;
         }
         toast.success('Welcome back!');
-        navigate('/browse');
+        navigate('/home');
       }
     } catch (err) {
       toast.error('Something went wrong. Please try again.');

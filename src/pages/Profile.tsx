@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,6 +28,8 @@ import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 
 const ProfilePage = () => {
   const { profile, updateProfile, refreshProfile } = useAuth();
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') === 'notifications' ? 'notifications' : 'profile';
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   
@@ -186,7 +189,7 @@ const ProfilePage = () => {
       <div className="container py-6 max-w-2xl">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">My Profile</h1>
 
-        <Tabs defaultValue="profile" className="space-y-4">
+        <Tabs defaultValue={defaultTab} className="space-y-4">
           <TabsList>
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center gap-2">

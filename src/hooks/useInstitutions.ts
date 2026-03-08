@@ -17,6 +17,7 @@ export const useInstitutions = (type?: InstitutionType) => {
       if (error) throw error;
       return data as Institution[];
     },
+    staleTime: 10 * 60 * 1000, // 10 minutes - institutions rarely change
   });
 };
 
@@ -36,5 +37,6 @@ export const useDepartments = (institutionId?: string) => {
       return data as Department[];
     },
     enabled: !!institutionId,
+    staleTime: 10 * 60 * 1000,
   });
 };

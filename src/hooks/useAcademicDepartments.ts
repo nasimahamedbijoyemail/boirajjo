@@ -15,5 +15,6 @@ export const useAcademicDepartments = () => {
       if (error) throw error;
       return data as AcademicDepartment[];
     },
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };

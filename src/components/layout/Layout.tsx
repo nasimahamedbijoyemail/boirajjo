@@ -1,4 +1,5 @@
 import { Header } from './Header';
+import { PageTransition } from './PageTransition';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,7 +10,9 @@ export const Layout = ({ children, showHeader = true }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       {showHeader && <Header />}
-      <main>{children}</main>
+      <PageTransition>
+        <main>{children}</main>
+      </PageTransition>
     </div>
   );
 };

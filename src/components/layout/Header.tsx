@@ -2,7 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsAdmin } from '@/hooks/useAdmin';
-import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings, List, History } from 'lucide-react';
+import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
+import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings, List, History, Bell } from 'lucide-react';
 import { useState } from 'react';
 import {
   DropdownMenu,
@@ -15,6 +16,7 @@ import {
 export const Header = () => {
   const { user, profile, signOut } = useAuth();
   const { data: isAdmin } = useIsAdmin();
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -67,6 +69,19 @@ export const Header = () => {
                   Sell Book
                 </Link>
               </Button>
+
+              {/* Notification Bell */}
+              <Button variant="ghost" size="icon" className="relative" asChild>
+                <Link to="/profile?tab=notifications">
+                  <Bell className="h-4 w-4" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center animate-scale-in">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="gap-1">
@@ -98,15 +113,26 @@ export const Header = () => {
               </DropdownMenu>
             </nav>
 
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
+            {/* Mobile: Bell + Menu */}
+            <div className="flex items-center gap-1 md:hidden">
+              <Button variant="ghost" size="icon" className="relative" asChild>
+                <Link to="/profile?tab=notifications">
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center animate-scale-in">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+            </div>
           </>
         )}
 
