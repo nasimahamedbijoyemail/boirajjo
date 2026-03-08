@@ -392,25 +392,26 @@ const ProfilePage = () => {
             </Card>
 
             {/* Danger Zone */}
-            <Card className="mt-6 border-red-100 bg-red-50/50">
-              <CardHeader>
-                <CardTitle className="text-red-700 flex items-center gap-2 text-lg">
-                  <Settings className="h-5 w-5" /> Danger Zone
+            <Card className="mt-4 sm:mt-6 border-red-100 bg-red-50/50">
+              <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-2">
+                <CardTitle className="text-red-700 flex items-center gap-2 text-base sm:text-lg">
+                  <Settings className="h-4 w-4 sm:h-5 sm:w-5" /> Danger Zone
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
+              <CardContent className="p-4 sm:p-6 pt-2 sm:pt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <p className="font-medium text-red-900 text-sm md:text-base">Delete Account</p>
+                    <p className="font-medium text-red-900 text-sm">Delete Account</p>
                     <p className="text-xs text-red-600">This will notify the admin to permanently remove your data.</p>
                   </div>
                   <Button 
                     variant="destructive" 
                     size="sm" 
+                    className="w-full sm:w-auto shrink-0"
                     onClick={handleRequestDeletion}
                     disabled={profile?.deletion_requested}
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
+                    <Trash2 className="h-4 w-4 mr-1.5" />
                     {profile?.deletion_requested ? 'Request Sent' : 'Delete Request'}
                   </Button>
                 </div>
