@@ -10,6 +10,23 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { Separator } from '@/components/ui/separator';
 
+
+const getPasswordStrength = (password: string): { score: number; label: string; color: string } => {
+  if (!password) return { score: 0, label: '', color: '' };
+  let score = 0;
+  if (password.length >= 6) score++;
+  if (password.length >= 10) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+
+  if (score <= 1) return { score: 20, label: 'Weak', color: 'bg-destructive' };
+  if (score === 2) return { score: 40, label: 'Fair', color: 'bg-warning' };
+  if (score === 3) return { score: 60, label: 'Good', color: 'bg-yellow-500' };
+  if (score === 4) return { score: 80, label: 'Strong', color: 'bg-primary' };
+  return { score: 100, label: 'Very Strong', color: 'bg-success' };
+};
+
 const passwordSchema = z.object({
   newPassword: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string(),
@@ -101,6 +118,25 @@ export const ChangePasswordForm = () => {
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
+            {newPassword && (
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">Password strength</span>
+                  <span className={`text-xs font-medium ${
+                    getPasswordStrength(newPassword).score <= 20 ? 'text-destructive' :
+                    getPasswordStrength(newPassword).score <= 40 ? 'text-warning' :
+                    getPasswordStrength(newPassword).score <= 60 ? 'text-yellow-500' :
+                    'text-primary'
+                  }`}>{getPasswordStrength(newPassword).label}</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-300 ${getPasswordStrength(newPassword).color}`}
+                    style={{ width: `${getPasswordStrength(newPassword).score}%` }}
+                  />
+                </div>
+              </div>
+            )}
             {errors.newPassword && <p className="text-sm text-destructive">{errors.newPassword}</p>}
           </div>
           <div className="space-y-2">
