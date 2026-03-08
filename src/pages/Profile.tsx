@@ -296,6 +296,7 @@ const ProfilePage = () => {
 
   return (
     <Layout>
+      <SEOHead title="My Profile" description="Manage your Boi Rajjo profile, institution, and contact details." path="/profile" />
       <div className="px-4 sm:px-6 py-4 sm:py-8 max-w-2xl mx-auto w-full">
         <Tabs defaultValue={defaultTab} className="space-y-4 sm:space-y-6">
           <TabsList className="w-full grid grid-cols-2 h-11 sm:h-12 rounded-xl bg-muted/60 p-1">
