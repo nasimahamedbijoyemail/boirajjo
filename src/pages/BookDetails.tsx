@@ -32,7 +32,7 @@ const BookDetailsPage = () => {
   const { profile } = useAuth();
   const { data: book, isLoading, error } = useBook(id || '');
   const { data: unlockPayment } = useContactUnlockForBook(id || '');
-
+  const { data: paymentEnabled } = usePaymentEnabled();
   // Use secure RPC for seller contact info
   const { data: sellerContact } = useQuery({
     queryKey: ['seller-contact', id],
