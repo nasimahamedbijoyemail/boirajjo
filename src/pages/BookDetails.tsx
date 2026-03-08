@@ -165,7 +165,7 @@ const BookDetailsPage = () => {
               <p className="text-base sm:text-lg text-muted-foreground mt-1">by {book.author}</p>
             </div>
 
-            <div className="text-4xl font-bold text-primary">
+            <div className="text-3xl sm:text-4xl font-bold text-primary">
               ৳{book.price.toLocaleString()}
             </div>
 

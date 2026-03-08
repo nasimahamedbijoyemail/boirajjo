@@ -215,6 +215,7 @@ const BrowseCategoryPage = () => {
           }
         />
       </div>
+      </PullToRefresh>
     </Layout>
   );
 };
