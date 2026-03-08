@@ -63,29 +63,18 @@ const MyOrdersPage = () => {
         {isLoading ? (
           <OrderSkeleton />
         ) : shopOrders.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
+          <EmptyState
+            type="orders"
+            title="No orders yet"
+            description="Browse Nilkhet shops and place your first order to see it here"
           >
-            <Card className="border-dashed">
-              <CardContent className="py-16 text-center">
-                <div className="mx-auto mb-4 h-16 w-16 rounded-2xl bg-muted flex items-center justify-center">
-                  <ShoppingBag className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">No orders yet</h3>
-                <p className="text-muted-foreground text-sm mb-6 max-w-xs mx-auto">
-                  Browse Nilkhet shops and place your first order to see it here
-                </p>
-                <Button asChild>
-                  <Link to="/nilkhet">
-                    <Store className="h-4 w-4" />
-                    Browse Nilkhet
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
+            <Button asChild>
+              <Link to="/nilkhet">
+                <Store className="h-4 w-4" />
+                Browse Nilkhet
+              </Link>
+            </Button>
+          </EmptyState>
         ) : (
           <div className="space-y-4">
             {shopOrders.map((order, i) => (

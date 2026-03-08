@@ -231,17 +231,11 @@ const BookDemandPage = () => {
               ))}
             </div>
           ) : myDemands.length === 0 ? (
-            <Card className="border-0 shadow-card">
-              <CardContent className="p-8 sm:p-12 text-center">
-                <div className="rounded-full bg-muted p-5 w-fit mx-auto mb-4">
-                  <BookMarked className="h-10 w-10 text-muted-foreground" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-1">No requests yet</h3>
-                <p className="text-sm text-muted-foreground">
-                  Tap "New Request" to demand a book
-                </p>
-              </CardContent>
-            </Card>
+            <EmptyState
+              type="demands"
+              title="No requests yet"
+              description="Tap 'New Request' to demand a book you need"
+            />
           ) : (
             <div className="space-y-3">
               {myDemands.map((demand, index) => (
