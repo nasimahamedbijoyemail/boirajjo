@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2, GraduationCap, BookOpen } from 'lucide-react';
+import { Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2, GraduationCap, BookOpen, Mail } from 'lucide-react';
 import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,16 +28,17 @@ import UserNotifications from '@/components/notifications/UserNotifications';
 import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ProfileInfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) => (
+const ProfileInfoRow = ({ icon: Icon, label, value, index = 0 }: { icon: React.ElementType; label: string; value: string; index?: number }) => (
   <motion.div
-    initial={{ opacity: 0, y: 8 }}
+    initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
-    className="flex items-center gap-3 p-3 sm:p-3.5 rounded-xl bg-muted/40 border border-border/50 transition-colors hover:bg-muted/60"
+    transition={{ delay: index * 0.05, duration: 0.25 }}
+    className="flex items-center gap-3 p-3 sm:p-3.5 rounded-xl bg-muted/40 border border-border/50 transition-colors hover:bg-muted/60 active:bg-muted/70"
   >
     <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
       <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
     </div>
-    <div className="min-w-0">
+    <div className="min-w-0 flex-1">
       <p className="text-xs text-muted-foreground">{label}</p>
       <p className="font-medium text-sm sm:text-base truncate">{value}</p>
     </div>
@@ -45,7 +46,7 @@ const ProfileInfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType;
 );
 
 const ProfilePage = () => {
-  const { profile, updateProfile, refreshProfile } = useAuth();
+  const { user, profile, updateProfile, refreshProfile } = useAuth();
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') === 'notifications' ? 'notifications' : 'profile';
   const [isEditing, setIsEditing] = useState(false);
@@ -453,18 +454,25 @@ const ProfilePage = () => {
                       exit={{ opacity: 0 }}
                       className="grid gap-2.5 sm:gap-3"
                     >
-                      <ProfileInfoRow icon={Phone} label="Contact Number" value={profile?.phone_number || '-'} />
+                      {user?.email && (
+                        <ProfileInfoRow icon={Mail} label="Email" value={user.email} index={0} />
+                      )}
+                      <ProfileInfoRow icon={Phone} label="Contact Number" value={profile?.phone_number || '-'} index={1} />
                       {profile?.whatsapp_number && (
-                        <ProfileInfoRow icon={MessageCircle} label="WhatsApp Number" value={profile.whatsapp_number} />
+                        <ProfileInfoRow icon={MessageCircle} label="WhatsApp Number" value={profile.whatsapp_number} index={2} />
                       )}
                       <ProfileInfoRow
                         icon={Building2}
                         label="Institution Type"
                         value={profile?.institution_type ? institutionTypeLabels[profile.institution_type] : '-'}
+                        index={3}
                       />
+                      {institution?.name && (
+                        <ProfileInfoRow icon={GraduationCap} label="Institution" value={institution.name} index={4} />
+                      )}
                       {/* Show college for NU users */}
                       {profile?.institution_type === 'national_university' && department?.name && (
-                        <ProfileInfoRow icon={GraduationCap} label="College" value={department.name} />
+                        <ProfileInfoRow icon={GraduationCap} label="College" value={department.name} index={5} />
                       )}
                       {/* Show academic department / division / class */}
                       {getSubcategoryLabel() && (
@@ -476,12 +484,14 @@ const ProfilePage = () => {
                               : profile?.institution_type === 'college' ? 'Division' : 'Class'
                           }
                           value={getSubcategoryLabel()!}
+                          index={6}
                         />
                       )}
                       <ProfileInfoRow
                         icon={Calendar}
                         label="Member Since"
                         value={profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '-'}
+                        index={7}
                       />
                     </motion.div>
                   )}
