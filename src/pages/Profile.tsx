@@ -454,18 +454,25 @@ const ProfilePage = () => {
                       exit={{ opacity: 0 }}
                       className="grid gap-2.5 sm:gap-3"
                     >
-                      <ProfileInfoRow icon={Phone} label="Contact Number" value={profile?.phone_number || '-'} />
+                      {user?.email && (
+                        <ProfileInfoRow icon={Mail} label="Email" value={user.email} index={0} />
+                      )}
+                      <ProfileInfoRow icon={Phone} label="Contact Number" value={profile?.phone_number || '-'} index={1} />
                       {profile?.whatsapp_number && (
-                        <ProfileInfoRow icon={MessageCircle} label="WhatsApp Number" value={profile.whatsapp_number} />
+                        <ProfileInfoRow icon={MessageCircle} label="WhatsApp Number" value={profile.whatsapp_number} index={2} />
                       )}
                       <ProfileInfoRow
                         icon={Building2}
                         label="Institution Type"
                         value={profile?.institution_type ? institutionTypeLabels[profile.institution_type] : '-'}
+                        index={3}
                       />
+                      {institution?.name && (
+                        <ProfileInfoRow icon={GraduationCap} label="Institution" value={institution.name} index={4} />
+                      )}
                       {/* Show college for NU users */}
                       {profile?.institution_type === 'national_university' && department?.name && (
-                        <ProfileInfoRow icon={GraduationCap} label="College" value={department.name} />
+                        <ProfileInfoRow icon={GraduationCap} label="College" value={department.name} index={5} />
                       )}
                       {/* Show academic department / division / class */}
                       {getSubcategoryLabel() && (
@@ -477,12 +484,14 @@ const ProfilePage = () => {
                               : profile?.institution_type === 'college' ? 'Division' : 'Class'
                           }
                           value={getSubcategoryLabel()!}
+                          index={6}
                         />
                       )}
                       <ProfileInfoRow
                         icon={Calendar}
                         label="Member Since"
                         value={profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '-'}
+                        index={7}
                       />
                     </motion.div>
                   )}
