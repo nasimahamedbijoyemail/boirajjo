@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useBook } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContactUnlockForBook } from '@/hooks/useContactUnlock';
+import { usePaymentEnabled } from '@/hooks/useAppSettings';
 import { ContactUnlockDialog } from '@/components/books/ContactUnlockDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall, Lock } from 'lucide-react';
