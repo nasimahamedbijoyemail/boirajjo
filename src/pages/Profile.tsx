@@ -186,8 +186,8 @@ const ProfilePage = () => {
 
   return (
     <Layout>
-      <div className="container py-6 max-w-2xl">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">My Profile</h1>
+      <div className="px-4 sm:px-6 py-4 sm:py-6 max-w-2xl mx-auto w-full">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4 sm:mb-6">My Profile</h1>
 
         <Tabs defaultValue={defaultTab} className="space-y-4">
           <TabsList>
