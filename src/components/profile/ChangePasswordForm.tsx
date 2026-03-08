@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lock, Eye, EyeOff, Mail, CheckCircle } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Separator } from '@/components/ui/separator';
@@ -45,8 +46,9 @@ export const ChangePasswordForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
@@ -60,6 +62,11 @@ export const ChangePasswordForm = () => {
       return;
     }
 
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmUpdate = async () => {
+    setShowConfirmDialog(false);
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password: newPassword });
 
@@ -92,6 +99,7 @@ export const ChangePasswordForm = () => {
   };
 
   return (
+    <>
     <Card className="border-0 shadow-card">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
@@ -215,5 +223,23 @@ export const ChangePasswordForm = () => {
         </div>
       </CardContent>
     </Card>
+
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Password Change</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to update your password? You will need to use the new password the next time you sign in.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmUpdate}>
+              Yes, Update Password
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
