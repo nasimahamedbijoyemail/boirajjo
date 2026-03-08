@@ -6,10 +6,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
+import { RouteErrorBoundary } from "@/components/layout/RouteErrorBoundary";
 
 import { toast } from "sonner";
 import { PageSkeleton } from "@/components/layout/PageSkeleton";
 import { HelmetProvider } from "react-helmet-async";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 
 // Lazy-loaded pages
 const Index = lazy(() => import("./pages/Index"));
