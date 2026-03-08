@@ -2,55 +2,114 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/logo.png" />
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="theme-color" content="#21827b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Preconnect to external origins -->
+    <link rel="preconnect" href="https://mnutgeonsezibafrefin.supabase.co" />
+    <link rel="dns-prefetch" href="https://mnutgeonsezibafrefin.supabase.co" />
+
     <link rel="manifest" href="/manifest.json" />
     <link rel="canonical" href="https://boirajjo.lovable.app/" />
 
-    <title>Boi Rajjo | Campus Book Marketplace - Buy & Sell Used Books</title>
-    <meta name="description" content="Buy and sell used books within your campus. Trade academic books easily with trusted students. Fast, affordable, and powered by WhatsApp." />
+    <title>Boi Rajjo | Buy & Sell Used Books on Campus — Bangladesh Book Marketplace</title>
+    <meta name="description" content="Boi Rajjo is Bangladesh's campus book marketplace. Buy and sell used academic books with trusted students via WhatsApp. Browse Nilkhet shops, request books, and get doorstep delivery." />
     <meta name="author" content="Boi Rajjo" />
-    <meta name="keywords" content="used books, campus books, buy sell books, academic books, Nilkhet, Bangladesh books" />
+    <meta name="keywords" content="used books Bangladesh, campus books, buy sell books, academic books, Nilkhet book market, university books, college books, second hand books, book exchange, বই রাজ্য" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Boi Rajjo | Campus Book Marketplace" />
-    <meta property="og:description" content="Buy and sell used books within your campus. Trade academic books easily with trusted students." />
+    <meta property="og:title" content="Boi Rajjo — Campus Book Marketplace in Bangladesh" />
+    <meta property="og:description" content="Buy and sell used academic books with trusted campus students. Browse Nilkhet shops, request books, and connect via WhatsApp." />
     <meta property="og:url" content="https://boirajjo.lovable.app/" />
-    <meta property="og:image" content="https://boirajjo.lovable.app/logo.png" />
+    <meta property="og:image" content="https://boirajjo.lovable.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Boi Rajjo — Campus Book Marketplace" />
     <meta property="og:site_name" content="Boi Rajjo" />
+    <meta property="og:locale" content="en_BD" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Boi Rajjo | Campus Book Marketplace" />
-    <meta name="twitter:description" content="Buy and sell used books within your campus. Fast, affordable, and trusted." />
-    <meta name="twitter:image" content="https://boirajjo.lovable.app/logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Boi Rajjo — Campus Book Marketplace in Bangladesh" />
+    <meta name="twitter:description" content="Buy and sell used academic books with trusted campus students. Fast, affordable, and powered by WhatsApp." />
+    <meta name="twitter:image" content="https://boirajjo.lovable.app/og-image.png" />
+    <meta name="twitter:image:alt" content="Boi Rajjo campus book marketplace banner" />
 
-    <!-- JSON-LD Structured Data -->
+    <!-- JSON-LD Structured Data: Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Boi Rajjo",
+      "alternateName": "বই রাজ্য",
       "url": "https://boirajjo.lovable.app",
-      "description": "Campus book marketplace for buying and selling used academic books in Bangladesh.",
+      "description": "Campus book marketplace for buying and selling used academic books in Bangladesh. Browse Nilkhet shops, request books, and connect with sellers via WhatsApp.",
       "applicationCategory": "ShoppingApplication",
       "operatingSystem": "Web",
+      "inLanguage": ["en", "bn"],
       "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "BDT"
+        "@type": "AggregateOffer",
+        "priceCurrency": "BDT",
+        "lowPrice": "0",
+        "offerCount": "100+",
+        "availability": "https://schema.org/InStock"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Boi Rajjo",
+        "url": "https://boirajjo.lovable.app",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://boirajjo.lovable.app/logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://boirajjo.lovable.app/browse/academic?q={search_term_string}",
+        "query-input": "required name=search_term_string"
       }
     }
     </script>
+
+    <!-- JSON-LD: Local Business for Nilkhet -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Nilkhet Book Market — via Boi Rajjo",
+      "description": "Browse and order books from Nilkhet book market shops online with home delivery across Bangladesh.",
+      "url": "https://boirajjo.lovable.app/nilkhet",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Nilkhet",
+        "addressLocality": "Dhaka",
+        "addressCountry": "BD"
+      },
+      "priceRange": "৳"
+    }
+    </script>
+
+    <!-- Noscript fallback -->
+    <noscript>
+      <style>
+        body { font-family: system-ui, sans-serif; text-align: center; padding: 2rem; }
+      </style>
+    </noscript>
   </head>
 
   <body>
+    <noscript>
+      <h1>Boi Rajjo — Campus Book Marketplace</h1>
+      <p>Please enable JavaScript to use Boi Rajjo. Buy and sell used academic books with trusted campus students in Bangladesh.</p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

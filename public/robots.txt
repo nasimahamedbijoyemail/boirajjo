@@ -12,3 +12,11 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /profile
+Disallow: /my-listings
+Disallow: /my-orders
+Disallow: /transaction-history
+Disallow: /shop/dashboard
+
+Sitemap: https://boirajjo.lovable.app/sitemap.xml
