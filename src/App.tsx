@@ -32,6 +32,7 @@ const ShopDashboard = lazy(() => import("./pages/ShopDashboard"));
 const ShopDetailsPage = lazy(() => import("./pages/ShopDetails"));
 const ShopBookDetailsPage = lazy(() => import("./pages/ShopBookDetails"));
 const TransactionHistory = lazy(() => import("./pages/TransactionHistory"));
+const ResetPasswordPage = lazy(() => import("./pages/ResetPassword"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
