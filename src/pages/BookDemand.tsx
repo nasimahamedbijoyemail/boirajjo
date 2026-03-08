@@ -72,6 +72,7 @@ const BookDemandPage = () => {
       await createDemand.mutateAsync({
         book_name: formData.book_name.trim(),
         author_name: formData.author_name.trim() || undefined,
+        photo_url: formData.photo_url || undefined,
         division_id: address.division_id || undefined,
         district_id: address.district_id || undefined,
         detail_address: fullAddress || undefined,
