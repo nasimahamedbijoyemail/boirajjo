@@ -16,7 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2, GraduationCap, BookOpen } from 'lucide-react';
+import { Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2, GraduationCap, BookOpen } from 'lucide-react';
+import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Institution, InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
