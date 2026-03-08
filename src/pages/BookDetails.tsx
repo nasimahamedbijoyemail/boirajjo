@@ -161,8 +161,8 @@ const BookDetailsPage = () => {
                   <Badge variant="destructive">Sold</Badge>
                 )}
               </div>
-              <h1 className="text-3xl font-bold text-foreground">{book.title}</h1>
-              <p className="text-lg text-muted-foreground mt-1">by {book.author}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{book.title}</h1>
+              <p className="text-base sm:text-lg text-muted-foreground mt-1">by {book.author}</p>
             </div>
 
             <div className="text-4xl font-bold text-primary">
