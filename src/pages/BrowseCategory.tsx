@@ -81,6 +81,7 @@ const BrowseCategoryPage = () => {
         description={category === 'academic' ? 'Browse used academic books from your university department. Buy textbooks from trusted campus students.' : 'Explore general books from students across Bangladesh. Fiction, non-fiction, and more.'}
         path={`/browse/${category}`}
       />
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="container py-6 space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
