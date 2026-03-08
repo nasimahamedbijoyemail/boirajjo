@@ -25,7 +25,7 @@ export const useTogglePayment = () => {
     mutationFn: async (enabled: boolean) => {
       const { error } = await supabase
         .from('app_settings')
-        .update({ value: enabled as unknown as Record<string, unknown>, updated_at: new Date().toISOString() })
+        .update({ value: JSON.parse(JSON.stringify(enabled)), updated_at: new Date().toISOString() })
         .eq('key', 'payment_enabled');
 
       if (error) throw error;
