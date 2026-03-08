@@ -22,21 +22,73 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+
+    // Authenticate the caller
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const callerId = claimsData.claims.sub;
+
+    // Use service role client for DB operations
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Verify caller is admin or shop owner (authorized to change statuses)
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", callerId)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    const isAdmin = !!roleData;
+
+    // If not admin, check if they're a shop owner (for shop_order status changes)
+    if (!isAdmin) {
+      const { data: shopData } = await supabase
+        .from("shops")
+        .select("id")
+        .eq("user_id", callerId)
+        .maybeSingle();
+
+      if (!shopData) {
+        return new Response(
+          JSON.stringify({ error: "Forbidden: only admins and shop owners can send status notifications" }),
+          { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+    }
 
     const { type, reference_id, user_id, new_status, title, message }: StatusChangeRequest = await req.json();
 
     console.log("Status change notification:", { type, reference_id, user_id, new_status });
 
-    // Get profile ID for user
+    // Get profile ID for target user
     const { data: profile } = await supabase
       .from("profiles")
       .select("id")
       .eq("user_id", user_id)
-      .single();
+      .maybeSingle();
 
     // Generate default title and message based on type
     let notificationTitle = title;
