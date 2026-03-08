@@ -102,9 +102,9 @@ const ProfilePage = () => {
         .from('institutions')
         .select('*')
         .eq('id', profile.institution_id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
-      return data as Institution;
+      return data as Institution | null;
     },
     enabled: !!profile?.institution_id,
   });
