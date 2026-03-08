@@ -166,6 +166,8 @@ const ProfilePage = () => {
 
   const cancelEditing = () => setIsEditing(false);
 
+  const BD_PHONE_REGEX = /^01[3-9]\d{8}$/;
+
   const saveChanges = async () => {
     if (!editData.name.trim()) {
       toast.error('Name is required');
@@ -173,6 +175,14 @@ const ProfilePage = () => {
     }
     if (!editData.phone_number.trim()) {
       toast.error('Contact number is required');
+      return;
+    }
+    if (!BD_PHONE_REGEX.test(editData.phone_number.trim())) {
+      toast.error('Enter a valid BD number (e.g. 01712345678)');
+      return;
+    }
+    if (editData.whatsapp_number.trim() && !BD_PHONE_REGEX.test(editData.whatsapp_number.trim())) {
+      toast.error('Enter a valid WhatsApp number (e.g. 01712345678)');
       return;
     }
 
