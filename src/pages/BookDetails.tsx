@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,7 @@ import { useBook } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContactUnlockForBook } from '@/hooks/useContactUnlock';
 import { ContactUnlockDialog } from '@/components/books/ContactUnlockDialog';
+import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, BookOpen, MapPin, MessageCircle, User, Phone, PhoneCall, Lock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -30,6 +32,17 @@ const BookDetailsPage = () => {
   const { data: book, isLoading, error } = useBook(id || '');
   const { data: unlockPayment } = useContactUnlockForBook(id || '');
 
+  // Use secure RPC for seller contact info
+  const { data: sellerContact } = useQuery({
+    queryKey: ['seller-contact', id],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('get_seller_contact', { p_book_id: id! });
+      if (error) throw error;
+      return data as { name: string; phone_number: string | null; whatsapp_number: string | null } | null;
+    },
+    enabled: !!id,
+  });
+
   const [showUnlockDialog, setShowUnlockDialog] = useState(false);
 
   const isOwnBook = profile?.id === book?.seller_id;
@@ -44,25 +57,25 @@ const BookDetailsPage = () => {
   };
 
   const handleWhatsAppClick = () => {
-    if (!book?.seller) return;
+    if (!sellerContact) return;
     
-    const whatsappNumber = book.seller.whatsapp_number || book.seller.phone_number;
+    const whatsappNumber = sellerContact.whatsapp_number || sellerContact.phone_number;
     if (!whatsappNumber) return;
     
     const message = encodeURIComponent(
-      `Hi, I saw your book "${book.title}" on Boi Rajjo. Is it still available?`
+      `Hi, I saw your book "${book?.title}" on Boi Rajjo. Is it still available?`
     );
     const formattedPhone = formatPhoneNumber(whatsappNumber);
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
   };
 
   const handleCallClick = () => {
-    if (!book?.seller?.phone_number) return;
-    window.open(`tel:${book.seller.phone_number}`, '_self');
+    if (!sellerContact?.phone_number) return;
+    window.open(`tel:${sellerContact.phone_number}`, '_self');
   };
 
-  const hasWhatsApp = book?.seller?.whatsapp_number || book?.seller?.phone_number;
-  const hasCall = book?.seller?.phone_number;
+  const hasWhatsApp = sellerContact?.whatsapp_number || sellerContact?.phone_number;
+  const hasCall = sellerContact?.phone_number;
 
   if (isLoading) {
     return (
@@ -163,27 +176,27 @@ const BookDetailsPage = () => {
             )}
 
             {/* Seller Info */}
-            {book.seller && (
+            {sellerContact && (
               <Card>
                 <CardContent className="p-4">
                   <h3 className="font-semibold text-foreground mb-3">Seller Information</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <User className="h-4 w-4" />
-                      <span>{book.seller.name}</span>
+                      <span>{sellerContact.name}</span>
                     </div>
                     
-                    {/* Show contact only if own book or contact is unlocked */}
-                    {(isOwnBook || isContactUnlocked) ? (
+                    {/* Show contact only if RPC returned phone data */}
+                    {sellerContact.phone_number ? (
                       <>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Phone className="h-4 w-4" />
-                          <span>Contact: {book.seller.phone_number}</span>
+                          <span>Contact: {sellerContact.phone_number}</span>
                         </div>
-                        {book.seller.whatsapp_number && (
+                        {sellerContact.whatsapp_number && (
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <MessageCircle className="h-4 w-4" />
-                            <span>WhatsApp: {book.seller.whatsapp_number}</span>
+                            <span>WhatsApp: {sellerContact.whatsapp_number}</span>
                           </div>
                         )}
                       </>
@@ -266,9 +279,9 @@ const BookDetailsPage = () => {
           bookId={book.id}
           bookTitle={book.title}
           bookPrice={book.price}
-          sellerPhone={book.seller?.phone_number}
-          sellerWhatsapp={book.seller?.whatsapp_number || undefined}
-          sellerName={book.seller?.name}
+          sellerPhone={sellerContact?.phone_number || undefined}
+          sellerWhatsapp={sellerContact?.whatsapp_number || undefined}
+          sellerName={sellerContact?.name}
         />
       )}
     </Layout>

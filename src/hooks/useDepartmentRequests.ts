@@ -17,8 +17,6 @@ export interface DepartmentBookRequest {
   profile?: {
     id: string;
     name: string;
-    phone_number: string;
-    whatsapp_number: string | null;
   };
 }
 
@@ -39,7 +37,7 @@ export const useDepartmentRequests = () => {
         .from('department_book_requests')
         .select(`
           *,
-          profile:profiles(id, name, phone_number, whatsapp_number)
+          profile:profiles(id, name)
         `)
         .eq('status', 'open')
         .order('created_at', { ascending: false });
