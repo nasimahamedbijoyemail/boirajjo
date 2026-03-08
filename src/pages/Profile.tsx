@@ -28,6 +28,8 @@ import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 
 const ProfilePage = () => {
   const { profile, updateProfile, refreshProfile } = useAuth();
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') === 'notifications' ? 'notifications' : 'profile';
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   
