@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,8 @@ import { z } from 'zod';
 import { BookMarked, Plus, Clock } from 'lucide-react';
 import { PhotoUpload } from '@/components/ui/photo-upload';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { useQueryClient } from '@tanstack/react-query';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const demandSchema = z.object({
   book_name: z.string().min(1, 'Book name is required').max(200),
