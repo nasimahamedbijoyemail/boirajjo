@@ -39,6 +39,11 @@ const NilkhetPage = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Nilkhet Book Market"
+        description="Browse and order books from Nilkhet book market shops online. New and used books with home delivery across Bangladesh."
+        path="/nilkhet"
+      />
       <div className="container py-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
