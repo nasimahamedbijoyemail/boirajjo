@@ -12,7 +12,7 @@ export const useNetworkStatus = () => {
       toast.error('You are offline', {
         id: 'network-status',
         duration: Infinity,
-        description: 'Check your internet connection. Changes will sync when you're back online.',
+        description: 'Check your internet connection. Changes will sync when you are back online.',
       });
     };
 
