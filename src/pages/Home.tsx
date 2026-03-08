@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { GraduationCap, Globe, BookMarked, Store } from 'lucide-react';
+import { usePromoBanner } from '@/hooks/useAppSettings';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const categories = [
   {
@@ -35,9 +37,38 @@ const categories = [
 ];
 
 const HomePage = () => {
+  const { data: promoBanner, isLoading: promoLoading } = usePromoBanner();
+  const navigate = useNavigate();
+
+  const handleBannerClick = () => {
+    if (!promoBanner.link) return;
+    if (promoBanner.link.startsWith('http')) {
+      window.open(promoBanner.link, '_blank');
+    } else {
+      navigate(promoBanner.link);
+    }
+  };
+
   return (
     <Layout>
       <div className="container py-8">
+        {/* Promo Banner */}
+        {promoLoading ? (
+          <Skeleton className="w-full h-32 sm:h-44 rounded-xl mb-6" />
+        ) : promoBanner.enabled && promoBanner.imageUrl ? (
+          <div
+            className="mb-6 rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 cursor-pointer group"
+            onClick={handleBannerClick}
+          >
+            <img
+              src={promoBanner.imageUrl}
+              alt="Promotion"
+              className="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-300"
+              loading="eager"
+            />
+          </div>
+        ) : null}
+
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Welcome to Boi Rajjo
