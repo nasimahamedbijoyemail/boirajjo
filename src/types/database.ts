@@ -33,6 +33,7 @@ export interface Profile {
   name: string;
   phone_number: string;
   whatsapp_number: string | null;
+  photo_url: string | null;
   institution_type: InstitutionType | null;
   institution_id: string | null;
   subcategory: string | null;
