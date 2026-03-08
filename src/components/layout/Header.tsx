@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 import { BookOpen, Plus, User, LogOut, Menu, X, Home, ShoppingBag, Settings, List, History, Bell } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
@@ -72,6 +73,8 @@ export const Header = () => {
                 </Link>
               </Button>
 
+              <ThemeToggle />
+
               {/* Notification Bell */}
               <Button variant="ghost" size="icon" className="relative" asChild>
                 <Link to="/profile?tab=notifications">
@@ -120,7 +123,8 @@ export const Header = () => {
             </nav>
 
             {/* Mobile: Bell + Menu */}
-            <div className="flex items-center gap-1 md:hidden">
+            <div className="flex items-center gap-0.5 md:hidden">
+              <ThemeToggle />
               <Button variant="ghost" size="icon" className="relative" asChild>
                 <Link to="/profile?tab=notifications">
                   <Bell className="h-5 w-5" />
@@ -144,6 +148,7 @@ export const Header = () => {
 
         {!user && (
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button variant="ghost" asChild>
               <Link to="/auth">Sign In</Link>
             </Button>
