@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Send, BookOpen } from 'lucide-react';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const BrowseCategoryPage = () => {
   const { category } = useParams<{ category: string }>();
@@ -67,6 +68,11 @@ const BrowseCategoryPage = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title={category === 'academic' ? 'Academic Books — In Your Campus' : 'Non-Academic Books — Outside Campus'}
+        description={category === 'academic' ? 'Browse used academic books from your university department. Buy textbooks from trusted campus students.' : 'Explore general books from students across Bangladesh. Fiction, non-fiction, and more.'}
+        path={`/browse/${category}`}
+      />
       <div className="container py-6 space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">

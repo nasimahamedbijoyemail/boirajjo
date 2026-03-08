@@ -3,24 +3,18 @@
   "name": "Boi Rajjo: Campus Book Marketplace",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
+      "src": "logo.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "any maskable"
     }
   ],
   "start_url": "/home",
   "display": "standalone",
   "theme_color": "#21827b",
   "background_color": "#fcfdfd",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "scope": "/",
+  "description": "Buy and sell used academic books with trusted campus students in Bangladesh.",
+  "categories": ["education", "shopping"]
 }

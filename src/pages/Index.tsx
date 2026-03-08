@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import heroImage from '@/assets/hero-illustration.png';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const Index = () => {
   const { user, profile, loading } = useAuth();
@@ -50,7 +51,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen gradient-hero">
-      {/* Hero Section */}
+      <SEOHead
+        title="Buy & Sell Used Books on Campus"
+        description="Boi Rajjo is Bangladesh's campus book marketplace. Buy and sell used academic books with trusted students via WhatsApp. Browse Nilkhet shops and get doorstep delivery."
+        path="/"
+      />
       <div className="container px-4 py-8">
         <nav className="flex items-center justify-between mb-12 md:mb-16">
           <div className="flex items-center gap-2">

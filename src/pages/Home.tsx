@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { GraduationCap, Globe, BookMarked, Store } from 'lucide-react';
 import { usePromoBanner } from '@/hooks/useAppSettings';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const categories = [
   {
@@ -51,6 +52,11 @@ const HomePage = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Home"
+        description="Explore campus books, Nilkhet book market, and book demands. Buy and sell used academic books with trusted students."
+        path="/home"
+      />
       <div className="container py-8">
         {/* Promo Banner */}
         {promoLoading ? (
