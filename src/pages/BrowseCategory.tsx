@@ -43,6 +43,11 @@ const BrowseCategoryPage = () => {
   }), [debouncedSearch, subcategory, bookType, isAcademic, departmentId, academicDepartmentId, profile?.department_id, profile?.academic_department_id, selectedCategory, selectedSubcategory]);
 
   const { data: books = [], isLoading } = useBooks(filters);
+  const queryClient = useQueryClient();
+
+  const handleRefresh = useCallback(() => {
+    return queryClient.invalidateQueries({ queryKey: ['books'] });
+  }, [queryClient]);
 
   const title = isAcademic ? 'In Your Campus' : 'Outside Campus';
   const description = isAcademic 
