@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,6 +10,8 @@ import { Store, Star, MapPin, Phone, Search, BookOpen } from 'lucide-react';
 import { useShops, useShopBooks } from '@/hooks/useShops';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { useQueryClient } from '@tanstack/react-query';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const NilkhetPage = () => {
   const [conditionType, setConditionType] = useState<'old' | 'new'>('new');
@@ -25,7 +27,15 @@ const NilkhetPage = () => {
     subcategory: selectedSubcategory || undefined,
   });
 
+  const queryClient = useQueryClient();
   const categoryObj = NILKHET_CATEGORIES.find((c) => c.id === selectedCategory);
+
+  const handleRefresh = useCallback(() => {
+    return Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['shops'] }),
+      queryClient.invalidateQueries({ queryKey: ['shop-books'] }),
+    ]);
+  }, [queryClient]);
 
   const filteredShops = shops.filter((shop) =>
     shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,6 +54,7 @@ const NilkhetPage = () => {
         description="Browse and order books from Nilkhet book market shops online. New and used books with home delivery across Bangladesh."
         path="/nilkhet"
       />
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="container py-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -299,6 +310,7 @@ const NilkhetPage = () => {
           </>
         )}
       </div>
+      </PullToRefresh>
     </Layout>
   );
 };

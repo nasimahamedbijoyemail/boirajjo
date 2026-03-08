@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,8 @@ import { z } from 'zod';
 import { BookMarked, Plus, Clock } from 'lucide-react';
 import { PhotoUpload } from '@/components/ui/photo-upload';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { useQueryClient } from '@tanstack/react-query';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const demandSchema = z.object({
   book_name: z.string().min(1, 'Book name is required').max(200),
@@ -21,8 +23,13 @@ const demandSchema = z.object({
 
 const BookDemandPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const createDemand = useCreateDemand();
   const { data: myDemands = [], isLoading } = useMyDemands();
+
+  const handleRefresh = useCallback(() => {
+    return queryClient.invalidateQueries({ queryKey: ['my-demands'] });
+  }, [queryClient]);
 
   const [showForm, setShowForm] = useState(false);
    const [formData, setFormData] = useState({
@@ -83,6 +90,7 @@ const BookDemandPage = () => {
   return (
     <Layout>
       <SEOHead title="Book Demand" description="Request any book you need and get it delivered to your doorstep." path="/book-demand" />
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="container py-6 max-w-3xl">
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -217,6 +225,7 @@ const BookDemandPage = () => {
           )}
         </div>
       </div>
+      </PullToRefresh>
     </Layout>
   );
 };
