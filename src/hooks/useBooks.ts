@@ -43,7 +43,6 @@ export const useBooks = (filters?: {
           .from('books')
           .select(`
             *,
-            seller:profiles!books_seller_id_fkey(*),
             institution:institutions(*)
           `)
           .eq('book_type', 'nilkhet')
