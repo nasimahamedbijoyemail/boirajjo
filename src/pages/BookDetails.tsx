@@ -57,25 +57,25 @@ const BookDetailsPage = () => {
   };
 
   const handleWhatsAppClick = () => {
-    if (!book?.seller) return;
+    if (!sellerContact) return;
     
-    const whatsappNumber = book.seller.whatsapp_number || book.seller.phone_number;
+    const whatsappNumber = sellerContact.whatsapp_number || sellerContact.phone_number;
     if (!whatsappNumber) return;
     
     const message = encodeURIComponent(
-      `Hi, I saw your book "${book.title}" on Boi Rajjo. Is it still available?`
+      `Hi, I saw your book "${book?.title}" on Boi Rajjo. Is it still available?`
     );
     const formattedPhone = formatPhoneNumber(whatsappNumber);
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
   };
 
   const handleCallClick = () => {
-    if (!book?.seller?.phone_number) return;
-    window.open(`tel:${book.seller.phone_number}`, '_self');
+    if (!sellerContact?.phone_number) return;
+    window.open(`tel:${sellerContact.phone_number}`, '_self');
   };
 
-  const hasWhatsApp = book?.seller?.whatsapp_number || book?.seller?.phone_number;
-  const hasCall = book?.seller?.phone_number;
+  const hasWhatsApp = sellerContact?.whatsapp_number || sellerContact?.phone_number;
+  const hasCall = sellerContact?.phone_number;
 
   if (isLoading) {
     return (
