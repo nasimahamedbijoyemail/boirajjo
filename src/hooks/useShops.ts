@@ -28,9 +28,10 @@ export const useShop = (id: string) => {
         .from('shops')
         .select('*')
         .eq('id', id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Shop not found');
       return data as Shop;
     },
     enabled: !!id,
