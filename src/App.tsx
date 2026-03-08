@@ -113,35 +113,33 @@ const AppRoutes = () => {
   return (
     <>
       <BackButtonHandler />
-      <AnimatePresence mode="wait">
-        <Suspense fallback={<PageSkeleton />}>
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/onboarding" element={<OnboardingRoute><OnboardingPage /></OnboardingRoute>} />
-            <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-            <Route path="/browse/:category" element={<ProtectedRoute><BrowseCategoryPage /></ProtectedRoute>} />
-            <Route path="/book/:id" element={<ProtectedRoute><BookDetailsPage /></ProtectedRoute>} />
-            <Route path="/add-book" element={<ProtectedRoute><AddBookPage /></ProtectedRoute>} />
-            <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-            <Route path="/nilkhet" element={<ProtectedRoute><NilkhetPage /></ProtectedRoute>} />
-            <Route path="/nilkhet/:id" element={<ProtectedRoute><NilkhetBookDetailsPage /></ProtectedRoute>} />
-            <Route path="/book-demand" element={<ProtectedRoute><BookDemandPage /></ProtectedRoute>} />
-            <Route path="/my-orders" element={<ProtectedRoute><MyOrdersPage /></ProtectedRoute>} />
-            <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
-            <Route path="/shop" element={<ProtectedRoute><ShopAuthPage /></ProtectedRoute>} />
-            <Route path="/shop/dashboard" element={<ProtectedRoute><ShopDashboard /></ProtectedRoute>} />
-            <Route path="/nilkhet/shop/:id" element={<ProtectedRoute><ShopDetailsPage /></ProtectedRoute>} />
-            <Route path="/nilkhet/book/:id" element={<ProtectedRoute><ShopBookDetailsPage /></ProtectedRoute>} />
-            <Route path="/browse" element={<Navigate to="/home" replace />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </AnimatePresence>
+      <Suspense fallback={<PageSkeleton />}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/onboarding" element={<OnboardingRoute><OnboardingPage /></OnboardingRoute>} />
+          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/browse/:category" element={<ProtectedRoute><BrowseCategoryPage /></ProtectedRoute>} />
+          <Route path="/book/:id" element={<ProtectedRoute><BookDetailsPage /></ProtectedRoute>} />
+          <Route path="/add-book" element={<ProtectedRoute><AddBookPage /></ProtectedRoute>} />
+          <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/nilkhet" element={<ProtectedRoute><NilkhetPage /></ProtectedRoute>} />
+          <Route path="/nilkhet/:id" element={<ProtectedRoute><NilkhetBookDetailsPage /></ProtectedRoute>} />
+          <Route path="/book-demand" element={<ProtectedRoute><BookDemandPage /></ProtectedRoute>} />
+          <Route path="/my-orders" element={<ProtectedRoute><MyOrdersPage /></ProtectedRoute>} />
+          <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
+          <Route path="/shop" element={<ProtectedRoute><ShopAuthPage /></ProtectedRoute>} />
+          <Route path="/shop/dashboard" element={<ProtectedRoute><ShopDashboard /></ProtectedRoute>} />
+          <Route path="/nilkhet/shop/:id" element={<ProtectedRoute><ShopDetailsPage /></ProtectedRoute>} />
+          <Route path="/nilkhet/book/:id" element={<ProtectedRoute><ShopBookDetailsPage /></ProtectedRoute>} />
+          <Route path="/browse" element={<Navigate to="/home" replace />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };
