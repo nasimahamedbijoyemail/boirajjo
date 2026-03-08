@@ -222,5 +222,23 @@ export const ChangePasswordForm = () => {
         </div>
       </CardContent>
     </Card>
+
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Password Change</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to update your password? You will need to use the new password the next time you sign in.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmUpdate}>
+              Yes, Update Password
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
