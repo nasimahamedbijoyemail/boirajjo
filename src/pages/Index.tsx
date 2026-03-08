@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import heroImage from '@/assets/hero-illustration.png';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const Index = () => {
   const { user, profile, loading } = useAuth();
