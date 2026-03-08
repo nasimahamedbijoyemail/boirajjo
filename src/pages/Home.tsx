@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { GraduationCap, Globe, BookMarked, Store } from 'lucide-react';
 import { usePromoBanner } from '@/hooks/useAppSettings';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const categories = [
   {
