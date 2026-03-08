@@ -9,11 +9,12 @@ import { BookOpen, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
+import { BD_PHONE_REGEX } from '@/lib/validators';
 
 const signUpSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-  phone: z.string().min(11, 'Phone number must be at least 11 digits').max(15),
-  whatsapp: z.string().optional(),
+  phone: z.string().regex(BD_PHONE_REGEX, 'Enter a valid BD number (e.g. 01712345678)'),
+  whatsapp: z.string().refine((val) => !val || BD_PHONE_REGEX.test(val), { message: 'Enter a valid BD number (e.g. 01712345678)' }).optional(),
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
