@@ -307,9 +307,9 @@ const ProfilePage = () => {
             <Card className="overflow-hidden border-0 shadow-card">
               {/* Premium Header */}
               <CardHeader className="relative p-0">
-                <div className="h-24 sm:h-32 gradient-primary opacity-90" />
+                <div className="h-28 sm:h-36 gradient-primary opacity-90 rounded-t-lg" />
                 <div className="absolute inset-x-0 bottom-0 translate-y-1/2 px-4 sm:px-6 flex items-end gap-3 sm:gap-4">
-                  <div className="ring-4 ring-card rounded-full shadow-lg">
+                  <div className="ring-4 ring-card rounded-full shadow-lg shrink-0">
                     <ProfileAvatar 
                       photoUrl={profile?.photo_url || null} 
                       name={profile?.name || ''} 
@@ -317,9 +317,9 @@ const ProfilePage = () => {
                       size="lg"
                     />
                   </div>
-                  <div className="min-w-0 pb-1 sm:pb-2">
-                    <h1 className="text-lg sm:text-xl font-bold text-foreground truncate">{profile?.name}</h1>
-                    <Badge variant="institution" className="text-[11px] sm:text-xs max-w-full truncate">
+                  <div className="min-w-0 flex-1 pb-1 sm:pb-2">
+                    <h1 className="text-base sm:text-xl font-bold text-foreground truncate leading-tight">{profile?.name}</h1>
+                    <Badge variant="institution" className="text-[10px] sm:text-xs mt-0.5 max-w-[180px] sm:max-w-full truncate inline-block">
                       {institution?.name || 'No institution'}
                     </Badge>
                   </div>
