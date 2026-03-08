@@ -189,7 +189,7 @@ const ProfilePage = () => {
       <div className="container py-6 max-w-2xl">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">My Profile</h1>
 
-        <Tabs defaultValue="profile" className="space-y-4">
+        <Tabs defaultValue={defaultTab} className="space-y-4">
           <TabsList>
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center gap-2">
