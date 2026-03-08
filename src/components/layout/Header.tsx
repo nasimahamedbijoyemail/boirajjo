@@ -86,9 +86,13 @@ export const Header = () => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-1">
-                    <User className="h-4 w-4" />
-                    Profile
+                  <Button variant="ghost" size="sm" className="gap-1.5 pl-1.5">
+                    <ProfileAvatar 
+                      photoUrl={profile?.photo_url || null} 
+                      name={profile?.name || ''} 
+                      size="sm"
+                    />
+                    <span className="hidden lg:inline">Profile</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
