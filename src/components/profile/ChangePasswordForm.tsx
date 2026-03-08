@@ -48,7 +48,7 @@ export const ChangePasswordForm = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
@@ -62,6 +62,11 @@ export const ChangePasswordForm = () => {
       return;
     }
 
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmUpdate = async () => {
+    setShowConfirmDialog(false);
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password: newPassword });
 
