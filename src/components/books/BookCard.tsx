@@ -47,15 +47,15 @@ export const BookCard = ({ book, isNilkhet = false }: BookCardProps) => {
             {conditionLabels[book.condition]}
           </Badge>
         </div>
-        <CardContent className="p-4">
-          <h3 className="font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+        <CardContent className="p-3 sm:p-4">
+          <h3 className="font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors text-sm sm:text-base">
             {book.title}
           </h3>
-          <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 mt-0.5 sm:mt-1">
             by {book.author}
           </p>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-lg font-bold text-primary">
+          <div className="mt-2 sm:mt-3 flex items-center justify-between gap-1">
+            <span className="text-base sm:text-lg font-bold text-primary">
               ৳{book.price.toLocaleString()}
             </span>
             {book.institution && (

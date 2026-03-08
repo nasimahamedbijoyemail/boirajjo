@@ -80,7 +80,10 @@ export const useBooks = (filters?: {
           .order('created_at', { ascending: false });
 
         if (filters?.search) {
-          query = query.or(`title.ilike.%${filters.search}%,author.ilike.%${filters.search}%`);
+          const sanitized = filters.search.replace(/[%_(),.]/g, '');
+          if (sanitized) {
+            query = query.or(`title.ilike.%${sanitized}%,author.ilike.%${sanitized}%`);
+          }
         }
 
         // Filter by category (uses non_academic_category column)
@@ -122,7 +125,10 @@ export const useBooks = (filters?: {
       }
 
       if (filters?.search) {
-        query = query.or(`title.ilike.%${filters.search}%,author.ilike.%${filters.search}%`);
+        const sanitized = filters.search.replace(/[%_(),.]/g, '');
+        if (sanitized) {
+          query = query.or(`title.ilike.%${sanitized}%,author.ilike.%${sanitized}%`);
+        }
       }
 
       if (filters?.subcategory) {
