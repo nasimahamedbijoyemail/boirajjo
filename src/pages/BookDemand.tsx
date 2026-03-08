@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { BookMarked, Plus, Clock, ImageIcon } from 'lucide-react';
 import { PhotoUpload } from '@/components/ui/photo-upload';
+import { EmptyState } from '@/components/layout/EmptyState';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { useQueryClient } from '@tanstack/react-query';
 import { PullToRefresh } from '@/components/ui/pull-to-refresh';
