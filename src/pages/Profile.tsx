@@ -46,7 +46,7 @@ const ProfileInfoRow = ({ icon: Icon, label, value, index = 0 }: { icon: React.E
 );
 
 const ProfilePage = () => {
-  const { profile, updateProfile, refreshProfile } = useAuth();
+  const { user, profile, updateProfile, refreshProfile } = useAuth();
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') === 'notifications' ? 'notifications' : 'profile';
   const [isEditing, setIsEditing] = useState(false);
