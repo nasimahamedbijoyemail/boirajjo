@@ -2,7 +2,7 @@ import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { useMyShopOrders } from '@/hooks/useShops';
 import { OrderStatusTracker } from '@/components/orders/OrderStatusTracker';
-import { Package, Store, ShoppingBag } from 'lucide-react';
+import { Package, Store } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { PullToRefresh } from '@/components/ui/pull-to-refresh';
+import { EmptyState } from '@/components/layout/EmptyState';
 
 const OrderSkeleton = () => (
   <div className="space-y-4">
