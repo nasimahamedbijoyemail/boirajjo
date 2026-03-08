@@ -111,6 +111,7 @@ const AddBookPage = () => {
 
   return (
     <Layout>
+      <SEOHead title="Sell a Book" description="List your book for sale on Boi Rajjo campus marketplace." path="/add-book" />
       <div className="container py-6 max-w-2xl">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
