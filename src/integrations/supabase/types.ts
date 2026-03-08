@@ -331,13 +331,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "book_demands_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "book_demands_thana_id_fkey"
             columns: ["thana_id"]
             isOneToOne: false
@@ -452,13 +445,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "books_seller_id_fkey"
-            columns: ["seller_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
-            referencedColumns: ["id"]
-          },
         ]
       }
       contact_unlock_payments: {
@@ -531,13 +517,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "contact_unlock_payments_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
-            referencedColumns: ["id"]
-          },
         ]
       }
       department_book_requests: {
@@ -607,13 +586,6 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "department_book_requests_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -750,13 +722,6 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "orders_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
             referencedColumns: ["id"]
           },
           {
@@ -997,13 +962,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "shop_orders_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "shop_orders_shop_book_id_fkey"
             columns: ["shop_book_id"]
             isOneToOne: false
@@ -1063,13 +1021,6 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "shop_ratings_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
             referencedColumns: ["id"]
           },
           {
@@ -1184,13 +1135,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "user_notifications_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_safe"
-            referencedColumns: ["id"]
-          },
         ]
       }
       user_roles: {
@@ -1216,73 +1160,7 @@ export type Database = {
       }
     }
     Views: {
-      profiles_safe: {
-        Row: {
-          academic_department_id: string | null
-          created_at: string | null
-          department_id: string | null
-          id: string | null
-          institution_id: string | null
-          institution_type:
-            | Database["public"]["Enums"]["institution_type"]
-            | null
-          name: string | null
-          subcategory: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          academic_department_id?: string | null
-          created_at?: string | null
-          department_id?: string | null
-          id?: string | null
-          institution_id?: string | null
-          institution_type?:
-            | Database["public"]["Enums"]["institution_type"]
-            | null
-          name?: string | null
-          subcategory?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          academic_department_id?: string | null
-          created_at?: string | null
-          department_id?: string | null
-          id?: string | null
-          institution_id?: string | null
-          institution_type?:
-            | Database["public"]["Enums"]["institution_type"]
-            | null
-          name?: string | null
-          subcategory?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_academic_department_id_fkey"
-            columns: ["academic_department_id"]
-            isOneToOne: false
-            referencedRelation: "academic_departments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_department_id_fkey"
-            columns: ["department_id"]
-            isOneToOne: false
-            referencedRelation: "departments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_institution_id_fkey"
-            columns: ["institution_id"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       get_seller_contact: { Args: { p_book_id: string }; Returns: Json }
