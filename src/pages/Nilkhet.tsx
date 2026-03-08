@@ -54,6 +54,7 @@ const NilkhetPage = () => {
         description="Browse and order books from Nilkhet book market shops online. New and used books with home delivery across Bangladesh."
         path="/nilkhet"
       />
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="container py-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
