@@ -144,6 +144,14 @@
 @layer base {
   * {
     @apply border-border;
+    transition-property: color, background-color, border-color, outline-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  /* Exclude transitions from elements that handle their own */
+  input, textarea, [data-radix-popper-content-wrapper], [role="dialog"] {
+    transition-duration: 0ms;
   }
 
   html, body {
