@@ -87,6 +87,7 @@ const TransactionHistory = () => {
               Unlocks ({contactUnlocks.length})
             </TabsTrigger>
           </TabsList>
+          </div>
 
           {/* Sold Books */}
           <TabsContent value="sold" className="space-y-4">
