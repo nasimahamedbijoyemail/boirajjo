@@ -238,7 +238,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 p-4 sm:p-6 pt-0 sm:pt-0">
                 {isEditing ? (
                   <div className="space-y-4">
                     <div className="space-y-2">
