@@ -46,6 +46,7 @@ export const ChangePasswordForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
