@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,7 +16,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2, GraduationCap, BookOpen, Mail } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Trash2, GraduationCap, BookOpen, Mail, Shield, User } from 'lucide-react';
 import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -27,33 +38,51 @@ import { toast } from 'sonner';
 import UserNotifications from '@/components/notifications/UserNotifications';
 import { useUnreadNotificationsCount } from '@/hooks/useUserNotifications';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ProfileInfoRow = ({ icon: Icon, label, value, index = 0 }: { icon: React.ElementType; label: string; value: string; index?: number }) => (
   <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: index * 0.05, duration: 0.25 }}
-    className="flex items-center gap-3 p-3 sm:p-3.5 rounded-xl bg-muted/40 border border-border/50 transition-colors hover:bg-muted/60 active:bg-muted/70"
+    initial={{ opacity: 0, x: -12 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.06, duration: 0.3, ease: 'easeOut' }}
+    className="group flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-card border border-border/60 shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/20 hover:-translate-y-0.5 active:scale-[0.99]"
   >
-    <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-      <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+    <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl gradient-primary flex items-center justify-center shrink-0 shadow-sm">
+      <Icon className="h-4.5 w-4.5 sm:h-5 sm:w-5 text-primary-foreground" />
     </div>
     <div className="min-w-0 flex-1">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="font-medium text-sm sm:text-base truncate">{value}</p>
+      <p className="text-[11px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wider">{label}</p>
+      <p className="font-semibold text-sm sm:text-[15px] text-foreground truncate mt-0.5">{value}</p>
     </div>
   </motion.div>
 );
 
+const ProfileSkeleton = () => (
+  <div className="space-y-4">
+    <div className="flex items-center gap-4 p-6">
+      <Skeleton className="h-20 w-20 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-5 w-56" />
+      </div>
+    </div>
+    <div className="space-y-3 p-6 pt-0">
+      {[...Array(5)].map((_, i) => (
+        <Skeleton key={i} className="h-16 w-full rounded-xl" />
+      ))}
+    </div>
+  </div>
+);
+
 const ProfilePage = () => {
-  const { user, profile, updateProfile, refreshProfile } = useAuth();
+  const { user, profile, updateProfile, refreshProfile, loading } = useAuth();
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') === 'notifications' ? 'notifications' : 'profile';
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   
-  // Edit form state
   const [editData, setEditData] = useState({
+    name: '',
     phone_number: '',
     whatsapp_number: '',
     institution_type: '' as InstitutionType | '',
@@ -78,7 +107,6 @@ const ProfilePage = () => {
     enabled: !!profile?.institution_id,
   });
 
-  // Fetch department name for display
   const { data: department } = useQuery({
     queryKey: ['department', profile?.department_id],
     queryFn: async () => {
@@ -94,7 +122,6 @@ const ProfilePage = () => {
     enabled: !!profile?.department_id,
   });
 
-  // Fetch academic department name for display
   const { data: academicDept } = useQuery({
     queryKey: ['academic_department', profile?.academic_department_id],
     queryFn: async () => {
@@ -110,7 +137,6 @@ const ProfilePage = () => {
     enabled: !!profile?.academic_department_id,
   });
 
-  // Fetch for editing
   const { data: institutions } = useInstitutions(editData.institution_type || undefined);
   const { data: nuColleges } = useDepartments(
     editData.institution_type === 'national_university' ? editData.institution_id : undefined
@@ -126,6 +152,7 @@ const ProfilePage = () => {
 
   const startEditing = () => {
     setEditData({
+      name: profile?.name || '',
       phone_number: profile?.phone_number || '',
       whatsapp_number: profile?.whatsapp_number || '',
       institution_type: profile?.institution_type || '',
@@ -137,11 +164,13 @@ const ProfilePage = () => {
     setIsEditing(true);
   };
 
-  const cancelEditing = () => {
-    setIsEditing(false);
-  };
+  const cancelEditing = () => setIsEditing(false);
 
   const saveChanges = async () => {
+    if (!editData.name.trim()) {
+      toast.error('Name is required');
+      return;
+    }
     if (!editData.phone_number.trim()) {
       toast.error('Contact number is required');
       return;
@@ -150,6 +179,7 @@ const ProfilePage = () => {
     setSaving(true);
     
     const updateData: Record<string, unknown> = {
+      name: editData.name.trim(),
       phone_number: editData.phone_number.trim(),
       whatsapp_number: editData.whatsapp_number.trim() || null,
       institution_type: editData.institution_type || null,
@@ -176,35 +206,28 @@ const ProfilePage = () => {
       toast.error('Failed to update profile');
       console.error('Profile update error:', error);
     } else {
-      toast.success('Profile updated successfully');
+      toast.success('Profile updated successfully! ✨');
       await refreshProfile();
       setIsEditing(false);
     }
     setSaving(false);
   };
 
-  // Fixed: Use updateProfile helper which correctly uses .eq('user_id', user.id)
   const handleRequestDeletion = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to request account deletion? This action cannot be undone and an admin will process it."
-    );
+    if (!profile?.id) return;
+    const { error } = await updateProfile({ 
+      deletion_requested: true, 
+      deletion_requested_at: new Date().toISOString() 
+    });
 
-    if (confirmDelete && profile?.id) {
-      const { error } = await updateProfile({ 
-        deletion_requested: true, 
-        deletion_requested_at: new Date().toISOString() 
-      });
-
-      if (error) {
-        toast.error("Error: " + error.message);
-      } else {
-        toast.success("Deletion request sent to Admin.");
-        await refreshProfile();
-      }
+    if (error) {
+      toast.error("Error: " + error.message);
+    } else {
+      toast.success("Deletion request sent to Admin.");
+      await refreshProfile();
     }
   };
 
-  // Prepare options for selects
   const institutionOptions = useMemo(() => {
     return institutions?.map((inst) => ({
       value: inst.id,
@@ -239,111 +262,137 @@ const ProfilePage = () => {
 
   const { data: unreadCount = 0 } = useUnreadNotificationsCount();
 
-  // Build view-mode detail label
   const getSubcategoryLabel = () => {
     if (!profile?.institution_type) return null;
     if (profile.institution_type === 'national_university' || profile.institution_type === 'university') {
       return academicDept?.name || profile.subcategory || null;
     }
-    if (profile.institution_type === 'college') return profile.subcategory ? `Division: ${profile.subcategory}` : null;
+    if (profile.institution_type === 'college') return profile.subcategory ? `${profile.subcategory}` : null;
     if (profile.institution_type === 'school') return profile.subcategory ? `Class ${profile.subcategory}` : null;
     return null;
   };
 
+  if (loading) {
+    return (
+      <Layout>
+        <div className="px-4 sm:px-6 py-4 sm:py-8 max-w-2xl mx-auto w-full">
+          <ProfileSkeleton />
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-      <div className="px-4 sm:px-6 py-4 sm:py-6 max-w-2xl mx-auto w-full">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4 sm:mb-6">My Profile</h1>
-
-        <Tabs defaultValue={defaultTab} className="space-y-3 sm:space-y-4">
-          <TabsList className="w-full sm:w-auto">
-            <TabsTrigger value="profile" className="flex-1 sm:flex-none">Profile</TabsTrigger>
-            <TabsTrigger value="notifications" className="flex-1 sm:flex-none flex items-center gap-1.5 sm:gap-2">
-              <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span>Notifications</span>
+      <div className="px-4 sm:px-6 py-4 sm:py-8 max-w-2xl mx-auto w-full">
+        <Tabs defaultValue={defaultTab} className="space-y-4 sm:space-y-6">
+          <TabsList className="w-full grid grid-cols-2 h-11 sm:h-12 rounded-xl bg-muted/60 p-1">
+            <TabsTrigger value="profile" className="rounded-lg text-sm sm:text-base font-semibold data-[state=active]:shadow-sm">
+              <User className="h-4 w-4 mr-1.5" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="rounded-lg text-sm sm:text-base font-semibold data-[state=active]:shadow-sm relative">
+              <Bell className="h-4 w-4 mr-1.5" />
+              Notifications
               {unreadCount > 0 && (
-                <Badge variant="destructive" className="ml-0.5 h-5 min-w-5 px-1 flex items-center justify-center text-xs">
+                <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 rounded-full bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center animate-scale-in">
                   {unreadCount > 9 ? '9+' : unreadCount}
-                </Badge>
+                </span>
               )}
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="profile">
-            <div className="flex items-center justify-end mb-3 sm:mb-4">
-              <AnimatePresence mode="wait">
-                {!isEditing ? (
-                  <motion.div key="edit" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <Button variant="outline" size="sm" onClick={startEditing}>
-                      <Edit2 className="h-4 w-4 mr-1.5" />
-                      Edit Profile
-                    </Button>
-                  </motion.div>
-                ) : (
-                  <motion.div key="save" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={cancelEditing} disabled={saving}>
-                      <X className="h-4 w-4 mr-1" />
-                      Cancel
-                    </Button>
-                    <Button size="sm" onClick={saveChanges} disabled={saving} className="gradient-primary text-primary-foreground">
-                      <Save className="h-4 w-4 mr-1" />
-                      {saving ? 'Saving...' : 'Save'}
-                    </Button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <Card className="shadow-card overflow-hidden">
-              <CardHeader className="p-4 sm:p-6 bg-gradient-to-br from-primary/5 to-transparent">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <ProfileAvatar 
-                    photoUrl={profile?.photo_url || null} 
-                    name={profile?.name || ''} 
-                    editable={isEditing}
-                    size="lg"
-                  />
-                  <div className="min-w-0">
-                    <CardTitle className="text-lg sm:text-xl truncate">{profile?.name}</CardTitle>
-                    <Badge variant="institution" className="mt-1 text-xs sm:text-sm max-w-full truncate">
-                      {institution?.name || 'No institution selected'}
+          <TabsContent value="profile" className="space-y-4 sm:space-y-5">
+            {/* Profile Card */}
+            <Card className="overflow-hidden border-0 shadow-card">
+              {/* Premium Header */}
+              <CardHeader className="relative p-0">
+                <div className="h-24 sm:h-32 gradient-primary opacity-90" />
+                <div className="absolute inset-x-0 bottom-0 translate-y-1/2 px-4 sm:px-6 flex items-end gap-3 sm:gap-4">
+                  <div className="ring-4 ring-card rounded-full shadow-lg">
+                    <ProfileAvatar 
+                      photoUrl={profile?.photo_url || null} 
+                      name={profile?.name || ''} 
+                      editable={isEditing}
+                      size="lg"
+                    />
+                  </div>
+                  <div className="min-w-0 pb-1 sm:pb-2">
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground truncate">{profile?.name}</h1>
+                    <Badge variant="institution" className="text-[11px] sm:text-xs max-w-full truncate">
+                      {institution?.name || 'No institution'}
                     </Badge>
-                    {isEditing && (
-                      <p className="text-xs text-muted-foreground mt-1">Tap photo to change</p>
-                    )}
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-3 sm:pt-4">
+
+              <CardContent className="pt-14 sm:pt-16 px-4 sm:px-6 pb-5 sm:pb-6">
+                {/* Action buttons */}
+                <div className="flex justify-end mb-4 sm:mb-5">
+                  <AnimatePresence mode="wait">
+                    {!isEditing ? (
+                      <motion.div key="edit" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
+                        <Button variant="outline" size="sm" onClick={startEditing} className="rounded-xl shadow-sm">
+                          <Edit2 className="h-4 w-4 mr-1.5" />
+                          Edit Profile
+                        </Button>
+                      </motion.div>
+                    ) : (
+                      <motion.div key="save" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={cancelEditing} disabled={saving} className="rounded-xl">
+                          <X className="h-4 w-4 mr-1" />
+                          Cancel
+                        </Button>
+                        <Button size="sm" onClick={saveChanges} disabled={saving} className="gradient-primary text-primary-foreground rounded-xl shadow-sm">
+                          <Save className="h-4 w-4 mr-1" />
+                          {saving ? 'Saving...' : 'Save'}
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
                 <AnimatePresence mode="wait">
                   {isEditing ? (
                     <motion.div
                       key="editing"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.2 }}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.25 }}
                       className="space-y-4"
                     >
+                      {/* Name field */}
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">Contact Number *</Label>
+                        <Label className="text-sm font-semibold">Full Name *</Label>
+                        <Input
+                          value={editData.name}
+                          onChange={(e) => setEditData(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="Your full name"
+                          className="rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-semibold">Contact Number *</Label>
                         <Input
                           value={editData.phone_number}
                           onChange={(e) => setEditData(prev => ({ ...prev, phone_number: e.target.value }))}
                           placeholder="01XXXXXXXXX"
+                          className="rounded-xl"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">WhatsApp Number (Optional)</Label>
+                        <Label className="text-sm font-semibold">WhatsApp Number <span className="text-muted-foreground font-normal">(optional)</span></Label>
                         <Input
                           value={editData.whatsapp_number}
                           onChange={(e) => setEditData(prev => ({ ...prev, whatsapp_number: e.target.value }))}
-                          placeholder="01XXXXXXXXX (if different)"
+                          placeholder="01XXXXXXXXX"
+                          className="rounded-xl"
                         />
                         <p className="text-xs text-muted-foreground">Leave empty if same as contact number</p>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">Institution Type</Label>
+                        <Label className="text-sm font-semibold">Institution Type</Label>
                         <Select
                           value={editData.institution_type}
                           onValueChange={(value) => setEditData(prev => ({
@@ -355,7 +404,7 @@ const ProfilePage = () => {
                             academic_department_id: '',
                           }))}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="rounded-xl">
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
@@ -376,7 +425,7 @@ const ProfilePage = () => {
                             className="space-y-4"
                           >
                             <div className="space-y-2">
-                              <Label className="text-sm font-medium">Institution</Label>
+                              <Label className="text-sm font-semibold">Institution</Label>
                               <SearchableSelect
                                 options={institutionOptions}
                                 value={editData.institution_id}
@@ -391,10 +440,9 @@ const ProfilePage = () => {
                               />
                             </div>
 
-                            {/* NU: College under National University */}
                             {editData.institution_type === 'national_university' && editData.institution_id && (
                               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-                                <Label className="text-sm font-medium">College</Label>
+                                <Label className="text-sm font-semibold">College</Label>
                                 <SearchableSelect
                                   options={nuCollegeOptions}
                                   value={editData.department_id}
@@ -407,10 +455,9 @@ const ProfilePage = () => {
                               </motion.div>
                             )}
 
-                            {/* Academic Department for University and NU */}
                             {(editData.institution_type === 'university' || editData.institution_type === 'national_university') && editData.institution_id && (
                               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-                                <Label className="text-sm font-medium">Academic Department</Label>
+                                <Label className="text-sm font-semibold">Academic Department</Label>
                                 <SearchableSelect
                                   options={academicDepartmentOptions}
                                   value={editData.academic_department_id}
@@ -423,15 +470,14 @@ const ProfilePage = () => {
                               </motion.div>
                             )}
 
-                            {/* College Division or School Class */}
                             {(editData.institution_type === 'college' || editData.institution_type === 'school') && editData.institution_id && (
                               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-                                <Label className="text-sm font-medium">{editData.institution_type === 'college' ? 'Division' : 'Class'}</Label>
+                                <Label className="text-sm font-semibold">{editData.institution_type === 'college' ? 'Division' : 'Class'}</Label>
                                 <Select
                                   value={editData.subcategory}
                                   onValueChange={(value) => setEditData(prev => ({ ...prev, subcategory: value }))}
                                 >
-                                  <SelectTrigger>
+                                  <SelectTrigger className="rounded-xl">
                                     <SelectValue placeholder={`Select ${editData.institution_type === 'college' ? 'division' : 'class'}`} />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -452,14 +498,14 @@ const ProfilePage = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="grid gap-2.5 sm:gap-3"
+                      className="grid gap-3"
                     >
                       {user?.email && (
                         <ProfileInfoRow icon={Mail} label="Email" value={user.email} index={0} />
                       )}
                       <ProfileInfoRow icon={Phone} label="Contact Number" value={profile?.phone_number || '-'} index={1} />
                       {profile?.whatsapp_number && (
-                        <ProfileInfoRow icon={MessageCircle} label="WhatsApp Number" value={profile.whatsapp_number} index={2} />
+                        <ProfileInfoRow icon={MessageCircle} label="WhatsApp" value={profile.whatsapp_number} index={2} />
                       )}
                       <ProfileInfoRow
                         icon={Building2}
@@ -470,17 +516,15 @@ const ProfilePage = () => {
                       {institution?.name && (
                         <ProfileInfoRow icon={GraduationCap} label="Institution" value={institution.name} index={4} />
                       )}
-                      {/* Show college for NU users */}
                       {profile?.institution_type === 'national_university' && department?.name && (
                         <ProfileInfoRow icon={GraduationCap} label="College" value={department.name} index={5} />
                       )}
-                      {/* Show academic department / division / class */}
                       {getSubcategoryLabel() && (
                         <ProfileInfoRow
                           icon={BookOpen}
                           label={
                             profile?.institution_type === 'university' || profile?.institution_type === 'national_university'
-                              ? 'Academic Department'
+                              ? 'Department'
                               : profile?.institution_type === 'college' ? 'Division' : 'Class'
                           }
                           value={getSubcategoryLabel()!}
@@ -500,31 +544,57 @@ const ProfilePage = () => {
             </Card>
 
             {/* Danger Zone */}
-            <Card className="mt-4 sm:mt-6 border-destructive/20 bg-destructive/5">
-              <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-2">
-                <CardTitle className="text-destructive flex items-center gap-2 text-base sm:text-lg">
-                  <Settings className="h-4 w-4 sm:h-5 sm:w-5" /> Danger Zone
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-2 sm:pt-2">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <p className="font-medium text-destructive text-sm">Delete Account</p>
-                    <p className="text-xs text-muted-foreground">This will notify the admin to permanently remove your data.</p>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Card className="border border-destructive/15 bg-destructive/[0.03]">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center shrink-0">
+                        <Shield className="h-5 w-5 text-destructive" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-destructive text-sm">Delete Account</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Permanently remove your account and all data.</p>
+                      </div>
+                    </div>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          variant="destructive" 
+                          size="sm" 
+                          className="w-full sm:w-auto shrink-0 rounded-xl"
+                          disabled={profile?.deletion_requested}
+                        >
+                          <Trash2 className="h-4 w-4 mr-1.5" />
+                          {profile?.deletion_requested ? 'Request Sent' : 'Delete Request'}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will send a deletion request to the admin. Your account and all associated data will be permanently removed. This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleRequestDeletion}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Yes, delete my account
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
-                  <Button 
-                    variant="destructive" 
-                    size="sm" 
-                    className="w-full sm:w-auto shrink-0"
-                    onClick={handleRequestDeletion}
-                    disabled={profile?.deletion_requested}
-                  >
-                    <Trash2 className="h-4 w-4 mr-1.5" />
-                    {profile?.deletion_requested ? 'Request Sent' : 'Delete Request'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="notifications">
