@@ -107,7 +107,6 @@ export const useBooks = (filters?: {
         .from('books')
         .select(`
           *,
-          seller:profiles!books_seller_id_fkey(*),
           institution:institutions(*)
         `)
         .eq('institution_id', profile.institution_id)
