@@ -204,20 +204,20 @@ const ProfilePage = () => {
           </TabsList>
 
           <TabsContent value="profile">
-            <div className="flex items-center justify-end mb-4">
+            <div className="flex items-center justify-end mb-3 sm:mb-4">
               {!isEditing ? (
-                <Button variant="outline" onClick={startEditing}>
-                  <Edit2 className="h-4 w-4 mr-2" />
+                <Button variant="outline" size="sm" className="sm:size-default" onClick={startEditing}>
+                  <Edit2 className="h-4 w-4 mr-1.5 sm:mr-2" />
                   Edit Profile
                 </Button>
               ) : (
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={cancelEditing} disabled={saving}>
-                    <X className="h-4 w-4 mr-2" />
+                  <Button variant="outline" size="sm" onClick={cancelEditing} disabled={saving}>
+                    <X className="h-4 w-4 mr-1" />
                     Cancel
                   </Button>
-                  <Button onClick={saveChanges} disabled={saving}>
-                    <Save className="h-4 w-4 mr-2" />
+                  <Button size="sm" onClick={saveChanges} disabled={saving}>
+                    <Save className="h-4 w-4 mr-1" />
                     {saving ? 'Saving...' : 'Save'}
                   </Button>
                 </div>
