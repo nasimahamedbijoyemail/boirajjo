@@ -299,6 +299,58 @@ const ProfilePage = () => {
                         />
                       </div>
                     )}
+
+                    {/* NU: College under National University */}
+                    {editData.institution_type === 'national_university' && editData.institution_id && (
+                      <div className="space-y-2">
+                        <Label>College</Label>
+                        <SearchableSelect
+                          options={nuCollegeOptions}
+                          value={editData.department_id}
+                          onValueChange={(value) => setEditData(prev => ({
+                            ...prev,
+                            department_id: value,
+                          }))}
+                          placeholder="Search college..."
+                        />
+                      </div>
+                    )}
+
+                    {/* Academic Department for University and NU */}
+                    {(editData.institution_type === 'university' || editData.institution_type === 'national_university') && editData.institution_id && (
+                      <div className="space-y-2">
+                        <Label>Academic Department</Label>
+                        <SearchableSelect
+                          options={academicDepartmentOptions}
+                          value={editData.academic_department_id}
+                          onValueChange={(value) => setEditData(prev => ({
+                            ...prev,
+                            academic_department_id: value,
+                          }))}
+                          placeholder="Search department..."
+                        />
+                      </div>
+                    )}
+
+                    {/* College Division or School Class */}
+                    {(editData.institution_type === 'college' || editData.institution_type === 'school') && editData.institution_id && (
+                      <div className="space-y-2">
+                        <Label>{editData.institution_type === 'college' ? 'Division' : 'Class'}</Label>
+                        <Select
+                          value={editData.subcategory}
+                          onValueChange={(value) => setEditData(prev => ({ ...prev, subcategory: value }))}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder={`Select ${editData.institution_type === 'college' ? 'division' : 'class'}`} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {getSubcategoryOptions().map((opt) => (
+                              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="grid gap-4">
