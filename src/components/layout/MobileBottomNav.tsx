@@ -43,7 +43,14 @@ export const MobileBottomNav = () => {
                   <Icon className="h-5 w-5" />
                 </div>
               ) : (
-                <Icon className={cn('h-5 w-5', isActive && 'stroke-[2.5]')} />
+                <div className="relative">
+                  <Icon className={cn('h-5 w-5', isActive && 'stroke-[2.5]')} />
+                  {showBadge && unreadCount > 0 && (
+                    <span className="absolute -top-1.5 -right-2 h-4 min-w-4 px-0.5 rounded-full bg-accent text-accent-foreground text-[9px] font-bold flex items-center justify-center">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </div>
               )}
               <span className={cn(
                 'text-[10px] leading-tight',
