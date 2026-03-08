@@ -62,6 +62,7 @@ const DepartmentRequestsPage = () => {
 
   return (
     <Layout>
+      <SEOHead title="Department Requests" description="Request and find books from your department on Boi Rajjo." path="/department-requests" />
       <div className="container py-6 space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
