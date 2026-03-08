@@ -127,7 +127,7 @@ const AddBookPage = () => {
               {/* Photo Upload */}
               <div className="space-y-2">
                 <Label>Book Photo (Optional)</Label>
-                 <PhotoUpload value={photoUrl} onChange={setPhotoUrl} />
+                 <PhotoUpload value={photoUrl} onChange={setPhotoUrl} folder="books" />
               </div>
 
               {/* Book Type */}

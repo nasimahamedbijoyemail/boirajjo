@@ -151,7 +151,8 @@ const BookDemandPage = () => {
                      <Label>Book Photo (Optional)</Label>
                      <PhotoUpload 
                        value={formData.photo_url} 
-                       onChange={(url) => setFormData((prev) => ({ ...prev, photo_url: url }))} 
+                       onChange={(url) => setFormData((prev) => ({ ...prev, photo_url: url }))}
+                       folder="demands"
                      />
                    </div>
                 </div>
