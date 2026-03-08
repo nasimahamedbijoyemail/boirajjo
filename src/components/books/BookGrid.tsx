@@ -1,6 +1,7 @@
 import { BookWithSeller } from '@/types/database';
 import { BookCard } from './BookCard';
 import { BookOpen } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface BookGridProps {
   books: BookWithSeller[];
@@ -9,22 +10,26 @@ interface BookGridProps {
   isNilkhet?: boolean;
 }
 
+const BookSkeleton = ({ index }: { index: number }) => (
+  <div className="animate-fade-in rounded-xl overflow-hidden shadow-card" style={{ animationDelay: `${index * 60}ms` }}>
+    <Skeleton className="aspect-[4/3] w-full rounded-none" />
+    <div className="p-3 sm:p-4 space-y-2.5 bg-card">
+      <Skeleton className="h-4 sm:h-5 w-3/4" />
+      <Skeleton className="h-3.5 w-1/2" />
+      <div className="flex items-center justify-between pt-1">
+        <Skeleton className="h-5 sm:h-6 w-16" />
+        <Skeleton className="h-5 w-20 rounded-full" />
+      </div>
+    </div>
+  </div>
+);
+
 export const BookGrid = ({ books, loading, emptyMessage = 'No books found', isNilkhet = false }: BookGridProps) => {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="aspect-[4/3] bg-muted rounded-t-xl" />
-            <div className="p-4 bg-card rounded-b-xl border-x border-b">
-              <div className="h-5 bg-muted rounded w-3/4 mb-2" />
-              <div className="h-4 bg-muted rounded w-1/2 mb-3" />
-              <div className="flex justify-between">
-                <div className="h-6 bg-muted rounded w-20" />
-                <div className="h-5 bg-muted rounded w-24" />
-              </div>
-            </div>
-          </div>
+          <BookSkeleton key={i} index={i} />
         ))}
       </div>
     );
