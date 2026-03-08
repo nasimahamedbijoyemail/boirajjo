@@ -67,7 +67,11 @@ export const PullToRefresh = forwardRef<HTMLDivElement, PullToRefreshProps>(({ o
 
   return (
     <div
-      ref={containerRef}
+      ref={(node) => {
+        containerRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -92,4 +96,6 @@ export const PullToRefresh = forwardRef<HTMLDivElement, PullToRefreshProps>(({ o
       </motion.div>
     </div>
   );
-};
+});
+
+PullToRefresh.displayName = 'PullToRefresh';
