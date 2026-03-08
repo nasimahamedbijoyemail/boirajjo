@@ -32,6 +32,17 @@ const BookDetailsPage = () => {
   const { data: book, isLoading, error } = useBook(id || '');
   const { data: unlockPayment } = useContactUnlockForBook(id || '');
 
+  // Use secure RPC for seller contact info
+  const { data: sellerContact } = useQuery({
+    queryKey: ['seller-contact', id],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('get_seller_contact', { p_book_id: id! });
+      if (error) throw error;
+      return data as { name: string; phone_number: string | null; whatsapp_number: string | null } | null;
+    },
+    enabled: !!id,
+  });
+
   const [showUnlockDialog, setShowUnlockDialog] = useState(false);
 
   const isOwnBook = profile?.id === book?.seller_id;
