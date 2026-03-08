@@ -778,6 +778,7 @@ export type Database = {
             | null
           name: string
           phone_number: string
+          photo_url: string | null
           subcategory: string | null
           updated_at: string
           user_id: string
@@ -796,6 +797,7 @@ export type Database = {
             | null
           name: string
           phone_number: string
+          photo_url?: string | null
           subcategory?: string | null
           updated_at?: string
           user_id: string
@@ -814,6 +816,7 @@ export type Database = {
             | null
           name?: string
           phone_number?: string
+          photo_url?: string | null
           subcategory?: string | null
           updated_at?: string
           user_id?: string

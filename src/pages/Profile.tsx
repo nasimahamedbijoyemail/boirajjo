@@ -16,7 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2, GraduationCap, BookOpen } from 'lucide-react';
+import { Phone, Building2, Calendar, Edit2, Save, X, MessageCircle, Bell, Settings, Trash2, GraduationCap, BookOpen } from 'lucide-react';
+import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Institution, InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
@@ -295,14 +296,20 @@ const ProfilePage = () => {
             <Card className="shadow-card overflow-hidden">
               <CardHeader className="p-4 sm:p-6 bg-gradient-to-br from-primary/5 to-transparent">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center shrink-0">
-                    <User className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-                  </div>
+                  <ProfileAvatar 
+                    photoUrl={profile?.photo_url || null} 
+                    name={profile?.name || ''} 
+                    editable={isEditing}
+                    size="lg"
+                  />
                   <div className="min-w-0">
                     <CardTitle className="text-lg sm:text-xl truncate">{profile?.name}</CardTitle>
                     <Badge variant="institution" className="mt-1 text-xs sm:text-sm max-w-full truncate">
                       {institution?.name || 'No institution selected'}
                     </Badge>
+                    {isEditing && (
+                      <p className="text-xs text-muted-foreground mt-1">Tap photo to change</p>
+                    )}
                   </div>
                 </div>
               </CardHeader>
