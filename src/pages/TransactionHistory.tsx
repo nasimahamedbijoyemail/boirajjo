@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useMyBooks } from '@/hooks/useBooks';
 import { useMyOrders } from '@/hooks/useOrders';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { useMyDemands } from '@/hooks/useBookDemands';
 import { useMyShopOrders } from '@/hooks/useShops';
 import { useMyContactUnlocks, useRequestRefund } from '@/hooks/useContactUnlock';
@@ -56,6 +57,7 @@ const TransactionHistory = () => {
 
   return (
     <Layout>
+      <SEOHead title="Transaction History" description="View all your completed transactions and order history on Boi Rajjo." path="/transaction-history" />
       <div className="container py-6 space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
@@ -67,7 +69,8 @@ const TransactionHistory = () => {
         </div>
 
         <Tabs defaultValue="sold" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-5 max-w-2xl">
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <TabsList className="inline-flex w-auto min-w-full sm:grid sm:w-full sm:grid-cols-5 sm:max-w-2xl">
             <TabsTrigger value="sold" className="text-xs sm:text-sm">
               Sold ({soldBooks.length})
             </TabsTrigger>
@@ -84,6 +87,7 @@ const TransactionHistory = () => {
               Unlocks ({contactUnlocks.length})
             </TabsTrigger>
           </TabsList>
+          </div>
 
           {/* Sold Books */}
           <TabsContent value="sold" className="space-y-4">
