@@ -225,14 +225,14 @@ const ProfilePage = () => {
             </div>
 
             <Card className="shadow-card">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <User className="h-8 w-8 text-primary" />
+              <CardHeader className="p-4 sm:p-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <User className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
                   </div>
-                  <div>
-                    <CardTitle className="text-xl">{profile?.name}</CardTitle>
-                    <Badge variant="institution" className="mt-1">
+                  <div className="min-w-0">
+                    <CardTitle className="text-lg sm:text-xl truncate">{profile?.name}</CardTitle>
+                    <Badge variant="institution" className="mt-1 text-xs sm:text-sm max-w-full truncate">
                       {institution?.name || 'No institution selected'}
                     </Badge>
                   </div>
