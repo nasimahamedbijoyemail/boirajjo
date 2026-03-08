@@ -99,6 +99,7 @@ export const ChangePasswordForm = () => {
   };
 
   return (
+    <>
     <Card className="border-0 shadow-card">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
