@@ -18,16 +18,39 @@ interface NotificationRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+
+    // Authenticate the caller
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Use service role client for DB operations
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { type, title, message, reference_id }: NotificationRequest = await req.json();
 
@@ -54,7 +77,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Notification stored in database:", notification.id);
 
-    // Send email notification using fetch
+    // Send email notification
     try {
       const emailSubject = `[Boi Rajjo] ${title}`;
       const emailHtml = `
@@ -83,7 +106,6 @@ const handler = async (req: Request): Promise<Response> => {
       const emailData = await emailResponse.json();
       console.log("Email sent successfully:", emailData);
 
-      // Update notification to mark email as sent
       await supabase
         .from("admin_notifications")
         .update({ email_sent: true })
@@ -91,7 +113,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     } catch (emailError) {
       console.error("Email sending error:", emailError);
-      // Don't fail the request if email fails, notification is still stored
     }
 
     return new Response(
