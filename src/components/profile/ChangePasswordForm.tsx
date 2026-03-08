@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Lock, Eye, EyeOff } from 'lucide-react';
+import { Lock, Eye, EyeOff, Mail, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { Separator } from '@/components/ui/separator';
 
 const passwordSchema = z.object({
   newPassword: z.string().min(6, 'Password must be at least 6 characters'),
@@ -17,9 +19,12 @@ const passwordSchema = z.object({
 });
 
 export const ChangePasswordForm = () => {
+  const { user } = useAuth();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -51,6 +56,24 @@ export const ChangePasswordForm = () => {
     setLoading(false);
   };
 
+  const handleSendResetLink = async () => {
+    if (!user?.email) {
+      toast.error('No email associated with your account');
+      return;
+    }
+    setResetLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      toast.error(error.message);
+    } else {
+      setResetSent(true);
+      toast.success('Reset link sent to your email!');
+    }
+    setResetLoading(false);
+  };
+
   return (
     <Card className="border-0 shadow-card">
       <CardHeader className="pb-3">
@@ -58,9 +81,10 @@ export const ChangePasswordForm = () => {
           <Lock className="h-5 w-5 text-primary" />
           <CardTitle className="text-lg">Change Password</CardTitle>
         </div>
-        <CardDescription>Update your account password</CardDescription>
+        <CardDescription>Update your password directly or request a reset link via email</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-5">
+        {/* Direct password change */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="newPassword">New Password</Label>
@@ -100,6 +124,42 @@ export const ChangePasswordForm = () => {
             {loading ? 'Updating…' : 'Update Password'}
           </Button>
         </form>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <Separator className="flex-1" />
+          <span className="text-xs text-muted-foreground font-medium">OR</span>
+          <Separator className="flex-1" />
+        </div>
+
+        {/* Forgot password / reset via email */}
+        <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <Mail className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+            <div className="space-y-1">
+              <p className="text-sm font-medium">Forgot your current password?</p>
+              <p className="text-xs text-muted-foreground">
+                We'll send a password reset link to <span className="font-medium text-foreground">{user?.email}</span>
+              </p>
+            </div>
+          </div>
+          {resetSent ? (
+            <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+              <CheckCircle className="h-4 w-4" />
+              Reset link sent! Check your inbox.
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSendResetLink}
+              disabled={resetLoading}
+              className="w-full rounded-xl"
+            >
+              {resetLoading ? 'Sending…' : 'Send Reset Link'}
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
