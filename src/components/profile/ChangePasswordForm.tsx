@@ -135,6 +135,23 @@ export const ChangePasswordForm = () => {
                     style={{ width: `${getPasswordStrength(newPassword).score}%` }}
                   />
                 </div>
+                <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
+                  {[
+                    { test: /.{6,}/, label: '6+ chars' },
+                    { test: /[A-Z]/, label: 'Uppercase' },
+                    { test: /[0-9]/, label: 'Number' },
+                    { test: /[^A-Za-z0-9]/, label: 'Special char' },
+                  ].map(({ test, label }) => (
+                    <span
+                      key={label}
+                      className={`text-[11px] transition-colors ${
+                        test.test(newPassword) ? 'text-primary font-medium' : 'text-muted-foreground'
+                      }`}
+                    >
+                      {test.test(newPassword) ? '✓' : '○'} {label}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
             {errors.newPassword && <p className="text-sm text-destructive">{errors.newPassword}</p>}
