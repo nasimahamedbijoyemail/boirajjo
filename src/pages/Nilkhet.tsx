@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Store, Star, MapPin, Phone, Search, BookOpen } from 'lucide-react';
 import { useShops, useShopBooks } from '@/hooks/useShops';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const NilkhetPage = () => {
   const [conditionType, setConditionType] = useState<'old' | 'new'>('new');
