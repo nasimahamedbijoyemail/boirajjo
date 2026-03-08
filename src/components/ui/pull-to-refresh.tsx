@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, forwardRef } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 
@@ -9,7 +9,7 @@ interface PullToRefreshProps {
 
 const THRESHOLD = 80;
 
-export const PullToRefresh = ({ onRefresh, children }: PullToRefreshProps) => {
+export const PullToRefresh = forwardRef<HTMLDivElement, PullToRefreshProps>(({ onRefresh, children }, ref) => {
   const [refreshing, setRefreshing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
