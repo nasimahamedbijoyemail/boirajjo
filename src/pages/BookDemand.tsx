@@ -23,8 +23,13 @@ const demandSchema = z.object({
 
 const BookDemandPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const createDemand = useCreateDemand();
   const { data: myDemands = [], isLoading } = useMyDemands();
+
+  const handleRefresh = useCallback(() => {
+    return queryClient.invalidateQueries({ queryKey: ['my-demands'] });
+  }, [queryClient]);
 
   const [showForm, setShowForm] = useState(false);
    const [formData, setFormData] = useState({
