@@ -249,6 +249,8 @@ const ProfilePage = () => {
               </CardContent>
             </Card>
 
+            <ChangePasswordForm />
+
             <ProfileDangerZone
               deletionRequested={profile?.deletion_requested}
               onRequestDeletion={handleRequestDeletion}
