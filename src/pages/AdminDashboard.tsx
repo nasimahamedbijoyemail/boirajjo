@@ -154,6 +154,10 @@ const AdminDashboard = () => {
               <Send className="h-4 w-4 mr-1" />
               Broadcast
             </TabsTrigger>
+            <TabsTrigger value="settings">
+              <Settings className="h-4 w-4 mr-1" />
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
