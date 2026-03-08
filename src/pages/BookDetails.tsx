@@ -240,7 +240,7 @@ const BookDetailsPage = () => {
                       </Button>
                     )}
                   </div>
-                ) : (
+                ) : paymentEnabled ? (
                   <div className="space-y-3">
                     <Button
                       size="lg"
@@ -254,7 +254,7 @@ const BookDetailsPage = () => {
                       Pay via bKash to view seller's contact details
                     </p>
                   </div>
-                )}
+                ) : null}
               </>
             )}
 
