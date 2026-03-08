@@ -1,7 +1,7 @@
 import { BookWithSeller } from '@/types/database';
 import { BookCard } from './BookCard';
-import { BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { EmptyState } from '@/components/layout/EmptyState';
 
 interface BookGridProps {
   books: BookWithSeller[];
@@ -55,19 +55,11 @@ export const BookGrid = ({ books, loading, emptyMessage = 'No books found', isNi
 
   if (books.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center justify-center py-16 text-center"
-      >
-        <div className="rounded-2xl bg-muted/60 p-6 mb-4">
-          <BookOpen className="h-12 w-12 text-muted-foreground/50" />
-        </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">{emptyMessage}</h3>
-        <p className="text-muted-foreground text-sm max-w-md">
-          Check back later or try adjusting your search filters.
-        </p>
-      </motion.div>
+      <EmptyState
+        type="books"
+        title={emptyMessage}
+        description="Check back later or try adjusting your search filters."
+      />
     );
   }
 

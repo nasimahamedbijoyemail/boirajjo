@@ -6,10 +6,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
+import { RouteErrorBoundary } from "@/components/layout/RouteErrorBoundary";
 
 import { toast } from "sonner";
 import { PageSkeleton } from "@/components/layout/PageSkeleton";
 import { HelmetProvider } from "react-helmet-async";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 
 // Lazy-loaded pages
 const Index = lazy(() => import("./pages/Index"));
@@ -38,9 +40,14 @@ const ResetPasswordPage = lazy(() => import("./pages/ResetPassword"));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 2 * 60 * 1000, // 2 minutes default
-      gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
+      staleTime: 2 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
       refetchOnWindowFocus: false,
+      retry: (failureCount, error) => {
+        // Don't retry on auth errors
+        if (error && typeof error === 'object' && 'code' in error && error.code === '42501') return false;
+        return failureCount < 2;
+      },
     },
   },
 });
@@ -108,38 +115,46 @@ const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const NetworkWatcher = () => {
+  useNetworkStatus();
+  return null;
+};
+
 const AppRoutes = () => {
   const location = useLocation();
 
   return (
     <>
       <BackButtonHandler />
+      <NetworkWatcher />
       <Suspense fallback={<PageSkeleton />}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/onboarding" element={<OnboardingRoute><OnboardingPage /></OnboardingRoute>} />
-          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-          <Route path="/browse/:category" element={<ProtectedRoute><BrowseCategoryPage /></ProtectedRoute>} />
-          <Route path="/book/:id" element={<ProtectedRoute><BookDetailsPage /></ProtectedRoute>} />
-          <Route path="/add-book" element={<ProtectedRoute><AddBookPage /></ProtectedRoute>} />
-          <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="/nilkhet" element={<ProtectedRoute><NilkhetPage /></ProtectedRoute>} />
-          <Route path="/nilkhet/:id" element={<ProtectedRoute><NilkhetBookDetailsPage /></ProtectedRoute>} />
-          <Route path="/book-demand" element={<ProtectedRoute><BookDemandPage /></ProtectedRoute>} />
-          <Route path="/my-orders" element={<ProtectedRoute><MyOrdersPage /></ProtectedRoute>} />
-          <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
-          <Route path="/shop" element={<ProtectedRoute><ShopAuthPage /></ProtectedRoute>} />
-          <Route path="/shop/dashboard" element={<ProtectedRoute><ShopDashboard /></ProtectedRoute>} />
-          <Route path="/nilkhet/shop/:id" element={<ProtectedRoute><ShopDetailsPage /></ProtectedRoute>} />
-          <Route path="/nilkhet/book/:id" element={<ProtectedRoute><ShopBookDetailsPage /></ProtectedRoute>} />
-          <Route path="/browse" element={<Navigate to="/home" replace />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <RouteErrorBoundary>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/onboarding" element={<OnboardingRoute><OnboardingPage /></OnboardingRoute>} />
+            <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/browse/:category" element={<ProtectedRoute><BrowseCategoryPage /></ProtectedRoute>} />
+            <Route path="/book/:id" element={<ProtectedRoute><BookDetailsPage /></ProtectedRoute>} />
+            <Route path="/add-book" element={<ProtectedRoute><AddBookPage /></ProtectedRoute>} />
+            <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route path="/nilkhet" element={<ProtectedRoute><NilkhetPage /></ProtectedRoute>} />
+            <Route path="/nilkhet/:id" element={<ProtectedRoute><NilkhetBookDetailsPage /></ProtectedRoute>} />
+            <Route path="/book-demand" element={<ProtectedRoute><BookDemandPage /></ProtectedRoute>} />
+            <Route path="/my-orders" element={<ProtectedRoute><MyOrdersPage /></ProtectedRoute>} />
+            <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
+            <Route path="/shop" element={<ProtectedRoute><ShopAuthPage /></ProtectedRoute>} />
+            <Route path="/shop/dashboard" element={<ProtectedRoute><ShopDashboard /></ProtectedRoute>} />
+            <Route path="/nilkhet/shop/:id" element={<ProtectedRoute><ShopDetailsPage /></ProtectedRoute>} />
+            <Route path="/nilkhet/book/:id" element={<ProtectedRoute><ShopBookDetailsPage /></ProtectedRoute>} />
+            <Route path="/browse" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </RouteErrorBoundary>
       </Suspense>
     </>
   );

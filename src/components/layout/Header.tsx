@@ -76,11 +76,11 @@ export const Header = () => {
               <ThemeToggle />
 
               {/* Notification Bell */}
-              <Button variant="ghost" size="icon" className="relative" asChild>
+              <Button variant="ghost" size="icon" className="relative" asChild aria-label="Notifications">
                 <Link to="/profile?tab=notifications">
-                  <Bell className="h-4 w-4" />
+                  <Bell className="h-4 w-4" aria-hidden="true" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center animate-scale-in">
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center animate-scale-in" aria-label={`${unreadCount} unread notifications`}>
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
@@ -125,11 +125,11 @@ export const Header = () => {
             {/* Mobile: Bell + Menu */}
             <div className="flex items-center gap-0.5 md:hidden">
               <ThemeToggle />
-              <Button variant="ghost" size="icon" className="relative" asChild>
+              <Button variant="ghost" size="icon" className="relative" asChild aria-label="Notifications">
                 <Link to="/profile?tab=notifications">
-                  <Bell className="h-5 w-5" />
+                  <Bell className="h-5 w-5" aria-hidden="true" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center animate-scale-in">
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center animate-scale-in" aria-label={`${unreadCount} unread`}>
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
@@ -139,8 +139,10 @@ export const Header = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={mobileMenuOpen}
               >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {mobileMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
               </Button>
             </div>
           </>
