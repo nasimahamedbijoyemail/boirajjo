@@ -118,6 +118,25 @@ export const ChangePasswordForm = () => {
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
+            {newPassword && (
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">Password strength</span>
+                  <span className={`text-xs font-medium ${
+                    getPasswordStrength(newPassword).score <= 20 ? 'text-destructive' :
+                    getPasswordStrength(newPassword).score <= 40 ? 'text-warning' :
+                    getPasswordStrength(newPassword).score <= 60 ? 'text-yellow-500' :
+                    'text-primary'
+                  }`}>{getPasswordStrength(newPassword).label}</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-300 ${getPasswordStrength(newPassword).color}`}
+                    style={{ width: `${getPasswordStrength(newPassword).score}%` }}
+                  />
+                </div>
+              </div>
+            )}
             {errors.newPassword && <p className="text-sm text-destructive">{errors.newPassword}</p>}
           </div>
           <div className="space-y-2">
