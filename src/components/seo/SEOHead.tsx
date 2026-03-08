@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 interface SEOHeadProps {
@@ -13,13 +14,13 @@ const DEFAULT_TITLE = 'Boi Rajjo | Campus Book Marketplace';
 const DEFAULT_DESC = 'Buy and sell used academic books with trusted campus students in Bangladesh. Browse Nilkhet shops, request books, and connect via WhatsApp.';
 const DEFAULT_OG = `${BASE_URL}/og-image.png`;
 
-export const SEOHead = ({
+export const SEOHead = forwardRef<HTMLDivElement, SEOHeadProps>(({
   title,
   description = DEFAULT_DESC,
   path = '/',
   ogImage = DEFAULT_OG,
   type = 'website',
-}: SEOHeadProps) => {
+}, _ref) => {
   const fullTitle = title ? `${title} | Boi Rajjo` : DEFAULT_TITLE;
   const url = `${BASE_URL}${path}`;
 
@@ -38,4 +39,6 @@ export const SEOHead = ({
       <meta name="twitter:image" content={ogImage} />
     </Helmet>
   );
-};
+});
+
+SEOHead.displayName = 'SEOHead';
