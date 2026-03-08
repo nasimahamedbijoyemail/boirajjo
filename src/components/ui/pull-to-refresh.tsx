@@ -17,6 +17,7 @@ export const PullToRefresh = ({ onRefresh, children }: PullToRefreshProps) => {
   const y = useMotionValue(0);
   const spinnerOpacity = useTransform(y, [0, THRESHOLD * 0.4, THRESHOLD], [0, 0.5, 1]);
   const spinnerScale = useTransform(y, [0, THRESHOLD], [0.5, 1]);
+  const spinnerY = useTransform(y, [0, THRESHOLD], [-20, 12]);
 
   const isAtTop = () => {
     const el = containerRef.current;
