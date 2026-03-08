@@ -1195,6 +1195,7 @@ export type Database = {
     Functions: {
       get_public_setting: { Args: { setting_key: string }; Returns: Json }
       get_seller_contact: { Args: { p_book_id: string }; Returns: Json }
+      get_shop_public_info: { Args: { p_shop_id: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
