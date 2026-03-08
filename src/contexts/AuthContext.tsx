@@ -45,19 +45,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
+    let initialLoad = true;
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Defer profile fetch with setTimeout
-        if (session?.user) {
-          setTimeout(() => {
+        // Only fetch profile on auth changes AFTER initial load
+        if (!initialLoad) {
+          if (session?.user) {
             fetchProfile(session.user.id).then(setProfile);
-          }, 0);
-        } else {
-          setProfile(null);
+          } else {
+            setProfile(null);
+          }
         }
       }
     );
@@ -71,9 +73,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         fetchProfile(session.user.id).then(profileData => {
           setProfile(profileData);
           setLoading(false);
+          initialLoad = false;
         });
       } else {
         setLoading(false);
+        initialLoad = false;
       }
     });
 

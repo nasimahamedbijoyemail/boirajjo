@@ -150,7 +150,7 @@ export const Header = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && user && profile?.institution_id && (
-        <div className="md:hidden border-t bg-card animate-fade-in">
+        <div className="md:hidden border-t bg-card/95 backdrop-blur animate-fade-in shadow-lg">
           <nav className="container py-4 flex flex-col gap-2">
             <Button variant="ghost" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
               <Link to="/home">

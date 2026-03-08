@@ -81,15 +81,15 @@ const BrowseCategoryPage = () => {
             {departmentActions.map((action) => (
               <Link key={action.title} to={action.href}>
                 <Card className="h-full hover:shadow-md transition-all cursor-pointer group">
-                  <CardContent className="p-4 flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${action.color} group-hover:scale-110 transition-transform`}>
+                  <CardContent className="p-3 sm:p-4 flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left">
+                    <div className={`p-2 rounded-lg ${action.color} group-hover:scale-110 transition-transform shrink-0`}>
                       <action.icon className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm text-foreground truncate">
+                      <h3 className="font-medium text-xs sm:text-sm text-foreground leading-tight">
                         {action.title}
                       </h3>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-xs text-muted-foreground leading-tight mt-0.5 hidden sm:block">
                         {action.description}
                       </p>
                     </div>

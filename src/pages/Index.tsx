@@ -92,6 +92,7 @@ const Index = () => {
               src={heroImage} 
               alt="Students exchanging books on campus" 
               className="w-full rounded-2xl shadow-card-hover"
+              loading="lazy"
             />
           </div>
         </div>
