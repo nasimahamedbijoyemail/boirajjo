@@ -14,7 +14,7 @@ const pageVariants = {
 
 const pageTransition = {
   duration: 0.22,
-  ease: [0.22, 1, 0.36, 1], // custom ease-out curve for premium feel
+  ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
 };
 
 export const PageTransition = React.forwardRef<HTMLDivElement, PageTransitionProps>(
