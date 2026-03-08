@@ -6,6 +6,9 @@ import { usePromoBanner } from '@/hooks/useAppSettings';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const categories = [
   {
