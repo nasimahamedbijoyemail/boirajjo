@@ -155,17 +155,30 @@ export const Header = () => {
       </div>
 
       {/* Mobile Menu Backdrop */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden animate-fade-in"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && user && profile?.institution_id && (
-        <div className="md:hidden border-t bg-card/95 backdrop-blur animate-fade-in shadow-lg relative z-50">
-          <nav className="container py-4 flex flex-col gap-2">
+      <AnimatePresence>
+        {mobileMenuOpen && user && profile?.institution_id && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="md:hidden border-t bg-card/95 backdrop-blur shadow-lg relative z-50"
+          >
+            <nav className="container py-4 flex flex-col gap-2">
             {/* Mobile profile header */}
             <div className="flex items-center gap-3 px-3 py-2 mb-1 rounded-xl bg-muted/50">
               <ProfileAvatar 
