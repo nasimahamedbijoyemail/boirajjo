@@ -17,8 +17,6 @@ export interface DepartmentBookRequest {
   profile?: {
     id: string;
     name: string;
-    phone_number: string;
-    whatsapp_number: string | null;
   };
 }
 
