@@ -1190,6 +1190,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_public_setting: { Args: { setting_key: string }; Returns: Json }
       get_seller_contact: { Args: { p_book_id: string }; Returns: Json }
       has_role: {
         Args: {
