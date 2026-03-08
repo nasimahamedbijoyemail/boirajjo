@@ -744,6 +744,8 @@ export type Database = {
         Row: {
           academic_department_id: string | null
           created_at: string
+          deletion_requested: boolean | null
+          deletion_requested_at: string | null
           department_id: string | null
           id: string
           institution_id: string | null
@@ -760,6 +762,8 @@ export type Database = {
         Insert: {
           academic_department_id?: string | null
           created_at?: string
+          deletion_requested?: boolean | null
+          deletion_requested_at?: string | null
           department_id?: string | null
           id?: string
           institution_id?: string | null
@@ -776,6 +780,8 @@ export type Database = {
         Update: {
           academic_department_id?: string | null
           created_at?: string
+          deletion_requested?: boolean | null
+          deletion_requested_at?: string | null
           department_id?: string | null
           id?: string
           institution_id?: string | null
