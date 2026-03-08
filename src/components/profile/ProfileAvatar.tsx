@@ -108,7 +108,7 @@ export const ProfileAvatar = ({ photoUrl, name, editable = false, size = 'lg', c
         ) : photoUrl ? (
           <img 
             src={photoUrl} 
-            alt={name} 
+            alt={`${name}'s profile photo`} 
             className="h-full w-full object-cover"
           />
         ) : (
