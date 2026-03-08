@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Send, BookOpen } from 'lucide-react';
 import { NILKHET_CATEGORIES } from '@/constants/nilkhetCategories';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const BrowseCategoryPage = () => {
   const { category } = useParams<{ category: string }>();
