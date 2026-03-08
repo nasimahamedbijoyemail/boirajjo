@@ -291,6 +291,7 @@ export type Database = {
           district_id: string | null
           division_id: string | null
           id: string
+          photo_url: string | null
           profile_id: string
           status: Database["public"]["Enums"]["demand_status"]
           thana_id: string | null
@@ -308,6 +309,7 @@ export type Database = {
           district_id?: string | null
           division_id?: string | null
           id?: string
+          photo_url?: string | null
           profile_id: string
           status?: Database["public"]["Enums"]["demand_status"]
           thana_id?: string | null
@@ -325,6 +327,7 @@ export type Database = {
           district_id?: string | null
           division_id?: string | null
           id?: string
+          photo_url?: string | null
           profile_id?: string
           status?: Database["public"]["Enums"]["demand_status"]
           thana_id?: string | null

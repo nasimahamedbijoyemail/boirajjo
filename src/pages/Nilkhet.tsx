@@ -175,11 +175,15 @@ const NilkhetPage = () => {
             {booksLoading ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {[...Array(8)].map((_, i) => (
-                  <Card key={i} className="animate-pulse">
-                    <div className="aspect-[3/4] bg-muted" />
-                    <CardContent className="p-3">
-                      <div className="h-4 bg-muted rounded mb-2" />
-                      <div className="h-3 bg-muted rounded w-2/3" />
+                  <Card key={i} className="overflow-hidden">
+                    <div className="aspect-[4/3] bg-muted animate-pulse" />
+                    <CardContent className="p-3 space-y-2">
+                      <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+                      <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+                      <div className="flex justify-between items-center">
+                        <div className="h-5 bg-muted animate-pulse rounded w-16" />
+                        <div className="h-5 bg-muted animate-pulse rounded w-12" />
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -245,10 +249,16 @@ const NilkhetPage = () => {
             {shopsLoading ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="animate-pulse">
-                    <CardContent className="p-4">
-                      <div className="h-6 bg-muted rounded mb-2" />
-                      <div className="h-4 bg-muted rounded w-2/3" />
+                  <Card key={i} className="overflow-hidden">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-start gap-3">
+                        <div className="h-12 w-12 rounded-lg bg-muted animate-pulse flex-shrink-0" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-5 bg-muted animate-pulse rounded w-2/3" />
+                          <div className="h-3 bg-muted animate-pulse rounded w-1/3" />
+                          <div className="h-3 bg-muted animate-pulse rounded w-3/4" />
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}

@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 interface CreateDemandData {
   book_name: string;
   author_name?: string;
+  photo_url?: string;
   division_id?: string;
   district_id?: string;
   thana_id?: string;
