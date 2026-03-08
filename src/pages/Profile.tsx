@@ -23,6 +23,7 @@ import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileEditForm, ProfileEditData } from '@/components/profile/ProfileEditForm';
 import { ProfileInfoList } from '@/components/profile/ProfileInfoList';
 import { ProfileDangerZone } from '@/components/profile/ProfileDangerZone';
+import { ChangePasswordForm } from '@/components/profile/ChangePasswordForm';
 
 const INSTITUTION_TYPE_LABELS: Record<string, string> = {
   university: 'University',
