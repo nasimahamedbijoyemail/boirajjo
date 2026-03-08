@@ -92,11 +92,11 @@ const Index = () => {
               </Button>
             </div>
           </div>
-          <div className="animate-fade-in-up hidden lg:block" style={{ animationDelay: '0.2s' }}>
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             <img 
               src={heroImage} 
               alt="Students exchanging books on campus" 
-              className="w-full rounded-2xl shadow-card-hover"
+              className="w-full max-w-xs mx-auto lg:max-w-none rounded-2xl shadow-card-hover"
               loading="lazy"
             />
           </div>

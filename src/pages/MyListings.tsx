@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useMyBooks, useUpdateBook } from '@/hooks/useBooks';
 import { BookOpen, Plus, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const conditionLabels = {
   new: 'New',
@@ -31,6 +32,7 @@ const MyListingsPage = () => {
 
   return (
     <Layout>
+      <SEOHead title="My Listings" description="Manage your book listings on Boi Rajjo." path="/my-listings" />
       <div className="container py-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>

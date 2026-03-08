@@ -12,28 +12,28 @@ const categories = [
     description: 'Books from your department',
     icon: GraduationCap,
     href: '/browse/academic',
-    color: 'bg-blue-500/10 text-blue-600',
+    colorClass: 'bg-category-academic/10 text-category-academic',
   },
   {
     title: 'Outside Campus',
     description: 'General books from everyone',
     icon: Globe,
     href: '/browse/non-academic',
-    color: 'bg-green-500/10 text-green-600',
+    colorClass: 'bg-category-global/10 text-category-global',
   },
   {
     title: 'Demand For A Book',
     description: 'Request a book you need',
     icon: BookMarked,
     href: '/book-demand',
-    color: 'bg-orange-500/10 text-orange-600',
+    colorClass: 'bg-category-demand/10 text-category-demand',
   },
   {
     title: 'Nilkhet',
     description: 'Order books with delivery',
     icon: Store,
     href: '/nilkhet',
-    color: 'bg-purple-500/10 text-purple-600',
+    colorClass: 'bg-category-nilkhet/10 text-category-nilkhet',
   },
 ];
 
@@ -57,7 +57,7 @@ const HomePage = () => {
         description="Explore campus books, Nilkhet book market, and book demands. Buy and sell used academic books with trusted students."
         path="/home"
       />
-      <div className="container py-8">
+      <div className="container py-6 sm:py-8">
         {/* Promo Banner */}
         {promoLoading ? (
           <Skeleton className="w-full h-32 sm:h-44 rounded-xl mb-6" />
@@ -75,27 +75,27 @@ const HomePage = () => {
           </div>
         ) : null}
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Welcome to Boi Rajjo
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm sm:text-base">
             What would you like to explore today?
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto">
           {categories.map((category) => (
             <Link key={category.title} to={category.href}>
-              <Card className="h-full hover:shadow-card-hover transition-all duration-300 cursor-pointer group">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className={`p-4 rounded-xl ${category.color} mb-4 group-hover:scale-110 transition-transform`}>
-                    <category.icon className="h-8 w-8" />
+              <Card className="h-full hover:shadow-card-hover transition-all duration-300 cursor-pointer group active:scale-[0.98]">
+                <CardContent className="p-4 sm:p-6 flex flex-col items-center text-center">
+                  <div className={`p-3 sm:p-4 rounded-xl ${category.colorClass} mb-3 sm:mb-4 group-hover:scale-110 transition-transform`}>
+                    <category.icon className="h-6 w-6 sm:h-8 sm:w-8" />
                   </div>
-                  <h3 className="font-semibold text-foreground mb-1">
+                  <h3 className="font-semibold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
                     {category.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {category.description}
                   </p>
                 </CardContent>

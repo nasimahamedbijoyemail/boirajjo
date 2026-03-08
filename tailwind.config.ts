@@ -59,6 +59,12 @@ export default {
           foreground: "hsl(var(--warning-foreground))",
         },
         whatsapp: "hsl(var(--whatsapp))",
+        category: {
+          academic: "hsl(var(--category-academic))",
+          global: "hsl(var(--category-global))",
+          demand: "hsl(var(--category-demand))",
+          nilkhet: "hsl(var(--category-nilkhet))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

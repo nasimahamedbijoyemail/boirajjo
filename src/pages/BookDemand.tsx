@@ -11,7 +11,8 @@ import { useCreateDemand, useMyDemands } from '@/hooks/useBookDemands';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { BookMarked, Plus, Clock } from 'lucide-react';
- import { PhotoUpload } from '@/components/ui/photo-upload';
+import { PhotoUpload } from '@/components/ui/photo-upload';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 const demandSchema = z.object({
   book_name: z.string().min(1, 'Book name is required').max(200),
@@ -81,6 +82,7 @@ const BookDemandPage = () => {
 
   return (
     <Layout>
+      <SEOHead title="Book Demand" description="Request any book you need and get it delivered to your doorstep." path="/book-demand" />
       <div className="container py-6 max-w-3xl">
         <div className="flex items-center justify-between mb-6">
           <div>

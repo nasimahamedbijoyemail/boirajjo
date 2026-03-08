@@ -83,11 +83,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse-soft text-primary">Loading...</div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   if (!user) return <Navigate to="/auth" replace />;
@@ -101,11 +97,7 @@ const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse-soft text-primary">Loading...</div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   if (!user) return <Navigate to="/auth" replace />;
@@ -139,8 +131,8 @@ const AppRoutes = () => {
             <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
-            <Route path="/shop" element={<ShopAuthPage />} />
-            <Route path="/shop/dashboard" element={<ShopDashboard />} />
+            <Route path="/shop" element={<ProtectedRoute><ShopAuthPage /></ProtectedRoute>} />
+            <Route path="/shop/dashboard" element={<ProtectedRoute><ShopDashboard /></ProtectedRoute>} />
             <Route path="/nilkhet/shop/:id" element={<ProtectedRoute><ShopDetailsPage /></ProtectedRoute>} />
             <Route path="/nilkhet/book/:id" element={<ProtectedRoute><ShopBookDetailsPage /></ProtectedRoute>} />
             <Route path="/browse" element={<Navigate to="/home" replace />} />
