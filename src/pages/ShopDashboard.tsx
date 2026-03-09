@@ -176,7 +176,8 @@ const ShopDashboard = () => {
     try {
       await deleteBook.mutateAsync(id);
       toast.success('Book deleted');
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to delete book:', err);
       toast.error('Failed to delete book');
     }
   };
