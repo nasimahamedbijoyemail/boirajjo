@@ -31,6 +31,7 @@ const MyOrdersPage = lazy(() => import("./pages/MyOrders"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const DepartmentRequestsPage = lazy(() => import("./pages/DepartmentRequests"));
 const ShopAuthPage = lazy(() => import("./pages/ShopAuth"));
+const ShopOnboarding = lazy(() => import("./pages/ShopOnboarding"));
 const ShopDashboard = lazy(() => import("./pages/ShopDashboard"));
 const ShopDetailsPage = lazy(() => import("./pages/ShopDetails"));
 const ShopBookDetailsPage = lazy(() => import("./pages/ShopBookDetails"));
