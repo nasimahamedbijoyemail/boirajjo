@@ -239,10 +239,16 @@ const ShopDashboard = () => {
 
   if (shopLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your shop...</p>
+      <div className="min-h-screen bg-background">
+        <div className="h-16 border-b bg-card/95 animate-pulse" />
+        <div className="container mx-auto px-4 py-6 space-y-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-28 rounded-xl bg-muted animate-pulse" />
+            ))}
+          </div>
+          <div className="h-64 rounded-xl bg-muted animate-pulse" />
+          <div className="h-48 rounded-xl bg-muted animate-pulse" />
         </div>
       </div>
     );
