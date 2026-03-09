@@ -373,7 +373,7 @@ const ShopDashboard = () => {
               <Card className="gradient-card">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium text-card-foreground">Customer Rating</CardTitle>
-                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                  <Star className="h-4 w-4 text-warning fill-warning" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-foreground">{shop.rating_average?.toFixed(1) || '0.0'}</div>
