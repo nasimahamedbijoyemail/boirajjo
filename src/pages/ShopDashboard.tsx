@@ -133,7 +133,8 @@ const ShopDashboard = () => {
       toast.success('Book updated');
       setEditingBook(null);
       resetBookForm();
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to update book:', err);
       toast.error('Failed to update book');
     }
   };
