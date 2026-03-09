@@ -12,8 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Store, Package, ShoppingCart, Star, LogOut, Plus, Trash2, Edit, 
   TrendingUp, DollarSign, CheckCircle, Clock,
-  Search, Filter, Eye, EyeOff, MessageSquare, BarChart3
+  Search, Filter, Eye, EyeOff, MessageSquare, BarChart3, Lock
 } from 'lucide-react';
+import { ChangePasswordForm } from '@/components/profile/ChangePasswordForm';
 import { PhotoUpload } from '@/components/ui/photo-upload';
 import { 
   useMyShop, useMyShopBooks, useShopOrders, useCreateShopBook, 
