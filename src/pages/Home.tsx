@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
-import { GraduationCap, Globe, BookMarked, Store } from 'lucide-react';
+import { GraduationCap, Globe, BookMarked, Store, LogIn } from 'lucide-react';
 import { usePromoBanner } from '@/hooks/useAppSettings';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -41,6 +41,14 @@ const categories = [
     description: 'Order books with delivery',
     icon: Store,
     href: '/nilkhet',
+    colorClass: 'bg-category-nilkhet/10 text-category-nilkhet',
+    hoverGlow: 'hover:shadow-[0_0_20px_-4px_hsl(var(--category-nilkhet)/0.25)]',
+  },
+  {
+    title: 'Shop Portal',
+    description: 'Sign in to manage your shop',
+    icon: LogIn,
+    href: '/shop',
     colorClass: 'bg-category-nilkhet/10 text-category-nilkhet',
     hoverGlow: 'hover:shadow-[0_0_20px_-4px_hsl(var(--category-nilkhet)/0.25)]',
   },
