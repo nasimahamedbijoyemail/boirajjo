@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -65,7 +65,7 @@ const ShopDashboard = () => {
   });
 
   // Update shop settings form when shop data loads
-  useState(() => {
+  useEffect(() => {
     if (shop) {
       setShopSettingsForm({
         name: shop.name,
@@ -76,7 +76,7 @@ const ShopDashboard = () => {
         logo_url: shop.logo_url || '',
       });
     }
-  });
+  }, [shop]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
