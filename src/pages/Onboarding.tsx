@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInstitutions, useDepartments } from '@/hooks/useInstitutions';
 import { useAcademicDepartments } from '@/hooks/useAcademicDepartments';
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { BookOpen, GraduationCap, School, Building2, ArrowRight, University } from 'lucide-react';
+import { BookOpen, GraduationCap, School, Building2, ArrowRight, University, Store } from 'lucide-react';
 import { toast } from 'sonner';
 import { InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
 
