@@ -328,6 +328,20 @@ const OnboardingPage = () => {
               <ArrowRight className="h-4 w-4" />
             </Button>
           )}
+
+          {/* Shop Portal Link */}
+          <div className="pt-4 border-t border-border">
+            <Link to="/shop">
+              <Button
+                variant="outline"
+                className="w-full"
+                size="lg"
+              >
+                <Store className="h-4 w-4 mr-2" />
+                Are you a shop owner? Sign in here
+              </Button>
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
