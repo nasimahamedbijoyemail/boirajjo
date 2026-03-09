@@ -108,7 +108,7 @@ const Index = () => {
               </span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 text-balance leading-relaxed">
-              Join your campus community to trade academic books easily. Fast, affordable, and trusted — powered by WhatsApp.
+              Buy, sell & share campus books, order from Nilkhet, or browse beyond your campus — all in one place. Fast, affordable & trusted.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
               <Button variant="hero" size="xl" className="rounded-xl shadow-lg" asChild>
