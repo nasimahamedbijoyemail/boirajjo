@@ -113,8 +113,8 @@ const ResetPasswordPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full" size="lg" onClick={() => navigate('/auth')}>
-              Back to Sign In
+            <Button className="w-full" size="lg" onClick={() => navigate(fromShop ? '/shop' : '/auth')}>
+              {fromShop ? 'Back to Shop Portal' : 'Back to Sign In'}
             </Button>
           </CardContent>
         </Card>
