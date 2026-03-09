@@ -1,5 +1,7 @@
 import { Profile, OrderStatus, BookCondition } from './database';
 
+export type ShopType = 'bookstore' | 'library' | 'individual_seller';
+
 export interface Shop {
   id: string;
   user_id: string;
@@ -9,6 +11,7 @@ export interface Shop {
   whatsapp_number: string | null;
   address: string | null;
   logo_url: string | null;
+  shop_type: ShopType;
   is_verified: boolean;
   is_active: boolean;
   rating_average: number;
