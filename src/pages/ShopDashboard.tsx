@@ -106,7 +106,8 @@ const ShopDashboard = () => {
       toast.success('Book added successfully!');
       setShowAddBook(false);
       resetBookForm();
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to add book:', err);
       toast.error('Failed to add book');
     }
   };
