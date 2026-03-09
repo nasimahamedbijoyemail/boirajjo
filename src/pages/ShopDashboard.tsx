@@ -106,7 +106,8 @@ const ShopDashboard = () => {
       toast.success('Book added successfully!');
       setShowAddBook(false);
       resetBookForm();
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to add book:', err);
       toast.error('Failed to add book');
     }
   };
@@ -132,7 +133,8 @@ const ShopDashboard = () => {
       toast.success('Book updated');
       setEditingBook(null);
       resetBookForm();
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to update book:', err);
       toast.error('Failed to update book');
     }
   };
@@ -174,7 +176,8 @@ const ShopDashboard = () => {
     try {
       await deleteBook.mutateAsync(id);
       toast.success('Book deleted');
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to delete book:', err);
       toast.error('Failed to delete book');
     }
   };
@@ -183,7 +186,8 @@ const ShopDashboard = () => {
     try {
       await updateBook.mutateAsync({ id, is_available: isAvailable });
       toast.success(isAvailable ? 'Book published' : 'Book unpublished');
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to toggle availability:', err);
       toast.error('Failed to update book');
     }
   };
@@ -207,7 +211,8 @@ const ShopDashboard = () => {
         ...shopSettingsForm,
       });
       toast.success('Shop settings updated!');
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to update shop settings:', err);
       toast.error('Failed to update shop settings');
     }
   };
@@ -234,10 +239,16 @@ const ShopDashboard = () => {
 
   if (shopLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your shop...</p>
+      <div className="min-h-screen bg-background">
+        <div className="h-16 border-b bg-card/95 animate-pulse" />
+        <div className="container mx-auto px-4 py-6 space-y-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-28 rounded-xl bg-muted animate-pulse" />
+            ))}
+          </div>
+          <div className="h-64 rounded-xl bg-muted animate-pulse" />
+          <div className="h-48 rounded-xl bg-muted animate-pulse" />
         </div>
       </div>
     );
@@ -273,7 +284,7 @@ const ShopDashboard = () => {
                 <h1 className="font-bold text-foreground text-lg">{shop.name}</h1>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
-                    <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                    <Star className="h-3 w-3 fill-warning text-warning" />
                     <span className="font-medium">{shop.rating_average?.toFixed(1) || '0.0'}</span>
                     <span>({shop.rating_count || 0})</span>
                   </div>
@@ -368,7 +379,7 @@ const ShopDashboard = () => {
               <Card className="gradient-card">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium text-card-foreground">Customer Rating</CardTitle>
-                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                  <Star className="h-4 w-4 text-warning fill-warning" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-foreground">{shop.rating_average?.toFixed(1) || '0.0'}</div>

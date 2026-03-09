@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, CreditCard, Package, Check } from 'lucide-react';
+import { Building2, CreditCard, Package, Check, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -283,7 +283,21 @@ const ShopOnboarding = () => {
         title="Shop Onboarding - Boirajjo"
         description="Complete your shop setup to start selling on Boirajjo"
       />
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex flex-col p-4">
+        {/* Back button */}
+        <div className="w-full max-w-2xl mx-auto mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/shop')}
+            className="gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Shop Portal
+          </Button>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center">
         <Card className="w-full max-w-2xl shadow-lg">
           <CardHeader>
             <div className="flex items-center justify-between mb-4">
@@ -359,6 +373,7 @@ const ShopOnboarding = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </>
   );

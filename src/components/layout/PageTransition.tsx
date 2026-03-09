@@ -17,27 +17,24 @@ const pageTransition = {
   ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
 };
 
-export const PageTransition = React.forwardRef<HTMLDivElement, PageTransitionProps>(
-  ({ children }, ref) => {
-    const location = useLocation();
+export const PageTransition = ({ children }: PageTransitionProps) => {
+  const location = useLocation();
 
-    return (
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          ref={ref}
-          key={location.pathname}
-          variants={pageVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={pageTransition}
-          className="will-change-[opacity,transform]"
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
-    );
-  }
-);
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+        className="will-change-[opacity,transform]"
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 PageTransition.displayName = 'PageTransition';
