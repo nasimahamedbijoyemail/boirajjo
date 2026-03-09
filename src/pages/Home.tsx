@@ -44,6 +44,14 @@ const categories = [
     colorClass: 'bg-category-nilkhet/10 text-category-nilkhet',
     hoverGlow: 'hover:shadow-[0_0_20px_-4px_hsl(var(--category-nilkhet)/0.25)]',
   },
+  {
+    title: 'Shop Portal',
+    description: 'Sign in to manage your shop',
+    icon: LogIn,
+    href: '/shop',
+    colorClass: 'bg-category-nilkhet/10 text-category-nilkhet',
+    hoverGlow: 'hover:shadow-[0_0_20px_-4px_hsl(var(--category-nilkhet)/0.25)]',
+  },
 ];
 
 const containerVariants = {
