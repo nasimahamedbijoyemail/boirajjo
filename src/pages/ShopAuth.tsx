@@ -113,6 +113,9 @@ const ShopAuthPage = () => {
 
     setIsLoading(true);
     try {
+      // Sign out current user first to avoid RLS conflicts
+      await supabase.auth.signOut();
+
       // Create auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: signupData.email,
