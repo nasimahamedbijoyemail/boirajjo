@@ -111,12 +111,20 @@ const AuthPage = () => {
   };
 
   const modeToggle = (
-    <p className="text-muted-foreground">
-      {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
-      <button type="button" onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')} className="text-primary hover:underline font-medium">
-        {mode === 'signin' ? 'Sign up' : 'Sign in'}
-      </button>
-    </p>
+    <div className="space-y-3">
+      <p className="text-muted-foreground">
+        {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
+        <button type="button" onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')} className="text-primary hover:underline font-medium">
+          {mode === 'signin' ? 'Sign up' : 'Sign in'}
+        </button>
+      </p>
+      <p className="text-sm text-muted-foreground border-t border-border pt-3">
+        Are you a shop owner?{' '}
+        <button type="button" onClick={() => navigate('/shop')} className="text-primary hover:underline font-medium">
+          Shop Portal →
+        </button>
+      </p>
+    </div>
   );
 
   const forgotToggle = (

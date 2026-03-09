@@ -1082,6 +1082,7 @@ export type Database = {
           phone_number: string
           rating_average: number | null
           rating_count: number | null
+          shop_type: Database["public"]["Enums"]["shop_type"]
           updated_at: string
           user_id: string
           whatsapp_number: string | null
@@ -1098,6 +1099,7 @@ export type Database = {
           phone_number: string
           rating_average?: number | null
           rating_count?: number | null
+          shop_type?: Database["public"]["Enums"]["shop_type"]
           updated_at?: string
           user_id: string
           whatsapp_number?: string | null
@@ -1114,6 +1116,7 @@ export type Database = {
           phone_number?: string
           rating_average?: number | null
           rating_count?: number | null
+          shop_type?: Database["public"]["Enums"]["shop_type"]
           updated_at?: string
           user_id?: string
           whatsapp_number?: string | null
@@ -1226,6 +1229,7 @@ export type Database = {
         | "out_for_delivery"
         | "delivered"
         | "cancelled"
+      shop_type: "bookstore" | "library" | "individual_seller"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1377,6 +1381,7 @@ export const Constants = {
         "delivered",
         "cancelled",
       ],
+      shop_type: ["bookstore", "library", "individual_seller"],
     },
   },
 } as const

@@ -31,6 +31,7 @@ const MyOrdersPage = lazy(() => import("./pages/MyOrders"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const DepartmentRequestsPage = lazy(() => import("./pages/DepartmentRequests"));
 const ShopAuthPage = lazy(() => import("./pages/ShopAuth"));
+const ShopOnboarding = lazy(() => import("./pages/ShopOnboarding"));
 const ShopDashboard = lazy(() => import("./pages/ShopDashboard"));
 const ShopDetailsPage = lazy(() => import("./pages/ShopDetails"));
 const ShopBookDetailsPage = lazy(() => import("./pages/ShopBookDetails"));
@@ -101,7 +102,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Onboarding route
+// Onboarding route for students
 const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useAuth();
 
@@ -111,6 +112,19 @@ const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (!user) return <Navigate to="/auth" replace />;
   if (profile?.institution_id) return <Navigate to="/home" replace />;
+
+  return <>{children}</>;
+};
+
+// Shop Onboarding route
+const ShopOnboardingRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <PageSkeleton />;
+  }
+
+  if (!user) return <Navigate to="/shop" replace />;
 
   return <>{children}</>;
 };
@@ -148,6 +162,7 @@ const AppRoutes = () => {
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
             <Route path="/shop" element={<ShopAuthPage />} />
+            <Route path="/shop/onboarding" element={<ShopOnboardingRoute><ShopOnboarding /></ShopOnboardingRoute>} />
             <Route path="/shop/dashboard" element={<ShopDashboard />} />
             <Route path="/nilkhet/shop/:id" element={<ProtectedRoute><ShopDetailsPage /></ProtectedRoute>} />
             <Route path="/nilkhet/book/:id" element={<ProtectedRoute><ShopBookDetailsPage /></ProtectedRoute>} />
