@@ -278,7 +278,7 @@ const ShopDashboard = () => {
                 <h1 className="font-bold text-foreground text-lg">{shop.name}</h1>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
-                    <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                    <Star className="h-3 w-3 fill-warning text-warning" />
                     <span className="font-medium">{shop.rating_average?.toFixed(1) || '0.0'}</span>
                     <span>({shop.rating_count || 0})</span>
                   </div>
