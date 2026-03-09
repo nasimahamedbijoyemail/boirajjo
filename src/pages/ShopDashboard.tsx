@@ -186,7 +186,8 @@ const ShopDashboard = () => {
     try {
       await updateBook.mutateAsync({ id, is_available: isAvailable });
       toast.success(isAvailable ? 'Book published' : 'Book unpublished');
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to toggle availability:', err);
       toast.error('Failed to update book');
     }
   };
