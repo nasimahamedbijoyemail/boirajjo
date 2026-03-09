@@ -20,6 +20,10 @@ const passwordSchema = z.object({
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
+  // Detect if request came from shop portal
+  const fromShop = new URLSearchParams(window.location.search).get('from') === 'shop';
+  const successRedirect = fromShop ? '/shop/dashboard' : '/home';
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -79,7 +83,7 @@ const ResetPasswordPage = () => {
     } else {
       setSuccess(true);
       toast.success('Password updated successfully!');
-      setTimeout(() => navigate('/home'), 2500);
+      setTimeout(() => navigate(successRedirect), 2500);
     }
     setLoading(false);
   };
@@ -109,8 +113,8 @@ const ResetPasswordPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full" size="lg" onClick={() => navigate('/auth')}>
-              Back to Sign In
+            <Button className="w-full" size="lg" onClick={() => navigate(fromShop ? '/shop' : '/auth')}>
+              {fromShop ? 'Back to Shop Portal' : 'Back to Sign In'}
             </Button>
           </CardContent>
         </Card>
@@ -129,7 +133,7 @@ const ResetPasswordPage = () => {
             </div>
             <CardTitle className="text-2xl">Password Updated!</CardTitle>
             <CardDescription>
-              Your password has been reset successfully. Redirecting you now...
+              Your password has been reset successfully. {fromShop ? 'Redirecting to your shop…' : 'Redirecting you now…'}
             </CardDescription>
           </CardHeader>
         </Card>

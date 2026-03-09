@@ -205,7 +205,7 @@ export const ChangePasswordForm = () => {
             </div>
           </div>
           {resetSent ? (
-            <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+            <div className="flex items-center gap-2 text-sm text-success">
               <CheckCircle className="h-4 w-4" />
               Reset link sent! Check your inbox.
             </div>
