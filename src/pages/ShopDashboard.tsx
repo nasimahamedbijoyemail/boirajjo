@@ -938,6 +938,9 @@ const ShopDashboard = () => {
                 </form>
               </CardContent>
             </Card>
+
+            {/* Change Password */}
+            <ChangePasswordForm />
           </TabsContent>
         </Tabs>
       </main>
