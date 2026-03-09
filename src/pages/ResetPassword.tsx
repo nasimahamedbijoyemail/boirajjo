@@ -20,6 +20,10 @@ const passwordSchema = z.object({
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
+  // Detect if request came from shop portal
+  const fromShop = new URLSearchParams(window.location.search).get('from') === 'shop';
+  const successRedirect = fromShop ? '/shop/dashboard' : '/home';
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
