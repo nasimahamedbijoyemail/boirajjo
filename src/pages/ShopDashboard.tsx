@@ -211,7 +211,8 @@ const ShopDashboard = () => {
         ...shopSettingsForm,
       });
       toast.success('Shop settings updated!');
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to update shop settings:', err);
       toast.error('Failed to update shop settings');
     }
   };
