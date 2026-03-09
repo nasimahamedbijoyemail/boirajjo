@@ -162,6 +162,7 @@ const AppRoutes = () => {
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
             <Route path="/shop" element={<ShopAuthPage />} />
+            <Route path="/shop/onboarding" element={<ShopOnboardingRoute><ShopOnboarding /></ShopOnboardingRoute>} />
             <Route path="/shop/dashboard" element={<ShopDashboard />} />
             <Route path="/nilkhet/shop/:id" element={<ProtectedRoute><ShopDetailsPage /></ProtectedRoute>} />
             <Route path="/nilkhet/book/:id" element={<ProtectedRoute><ShopBookDetailsPage /></ProtectedRoute>} />
