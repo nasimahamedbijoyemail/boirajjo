@@ -128,12 +128,17 @@ const ShopAuthPage = () => {
       if (authError) throw authError;
       if (!authData.user) throw new Error('Failed to create account');
 
-      // Create profile first (required for RLS)
+      // Create minimal profile (required for RLS, but shop owners don't need institution info)
       const { error: profileError } = await supabase.from('profiles').insert({
         user_id: authData.user.id,
         name: signupData.shopName,
         phone_number: signupData.phoneNumber,
         whatsapp_number: signupData.whatsappNumber || null,
+        // Shop owners don't need institution/department info
+        institution_id: null,
+        institution_type: null,
+        department_id: null,
+        academic_department_id: null,
       });
 
       if (profileError) throw profileError;
