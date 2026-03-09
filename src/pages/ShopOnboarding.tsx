@@ -373,6 +373,7 @@ const ShopOnboarding = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </>
   );
