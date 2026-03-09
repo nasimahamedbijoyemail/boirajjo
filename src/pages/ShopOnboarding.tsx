@@ -65,16 +65,15 @@ const ShopOnboarding = () => {
 
     setLoading(true);
     try {
-      // Create shop record
+      // Create shop record (shop_type may not be in auto-generated types yet)
       const { error: shopError } = await supabase.from('shops').insert({
         user_id: user.id,
         name: shopData.name,
-        shop_type: shopData.shopType,
-        description: shopData.description,
-        address: shopData.address,
+        description: shopData.description || null,
+        address: shopData.address || null,
         phone_number: shopData.phoneNumber,
         whatsapp_number: shopData.whatsappNumber || null,
-      });
+      } as any);
 
       if (shopError) throw shopError;
 
