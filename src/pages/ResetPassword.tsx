@@ -83,7 +83,7 @@ const ResetPasswordPage = () => {
     } else {
       setSuccess(true);
       toast.success('Password updated successfully!');
-      setTimeout(() => navigate('/home'), 2500);
+      setTimeout(() => navigate(successRedirect), 2500);
     }
     setLoading(false);
   };
