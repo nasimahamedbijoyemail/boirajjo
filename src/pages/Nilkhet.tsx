@@ -57,21 +57,13 @@ const NilkhetPage = () => {
       <PullToRefresh onRefresh={handleRefresh}>
       <div className="container py-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              Nilkhet Book Market
-            </h1>
-            <p className="text-muted-foreground">
-              Browse shops and books from Nilkhet
-            </p>
-          </div>
-          <Link to="/shop">
-            <Button variant="outline">
-              <Store className="h-4 w-4 mr-2" />
-              Shop Login
-            </Button>
-          </Link>
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+            Nilkhet Book Market
+          </h1>
+          <p className="text-muted-foreground">
+            Browse shops and books from Nilkhet
+          </p>
         </div>
 
         {/* Search */}
