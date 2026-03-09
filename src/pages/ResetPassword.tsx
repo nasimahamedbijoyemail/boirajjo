@@ -133,7 +133,7 @@ const ResetPasswordPage = () => {
             </div>
             <CardTitle className="text-2xl">Password Updated!</CardTitle>
             <CardDescription>
-              Your password has been reset successfully. Redirecting you now...
+              Your password has been reset successfully. {fromShop ? 'Redirecting to your shop…' : 'Redirecting you now…'}
             </CardDescription>
           </CardHeader>
         </Card>
