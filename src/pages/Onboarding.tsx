@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInstitutions, useDepartments } from '@/hooks/useInstitutions';
 import { useAcademicDepartments } from '@/hooks/useAcademicDepartments';
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { BookOpen, GraduationCap, School, Building2, ArrowRight, University } from 'lucide-react';
+import { BookOpen, GraduationCap, School, Building2, ArrowRight, University, Store } from 'lucide-react';
 import { toast } from 'sonner';
 import { InstitutionType, COLLEGE_DIVISIONS, SCHOOL_CLASSES } from '@/types/database';
 
@@ -328,6 +328,20 @@ const OnboardingPage = () => {
               <ArrowRight className="h-4 w-4" />
             </Button>
           )}
+
+          {/* Shop Portal Link */}
+          <div className="pt-4 border-t border-border">
+            <Link to="/shop">
+              <Button
+                variant="outline"
+                className="w-full"
+                size="lg"
+              >
+                <Store className="h-4 w-4 mr-2" />
+                Are you a shop owner? Sign in here
+              </Button>
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
