@@ -102,7 +102,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Onboarding route
+// Onboarding route for students
 const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useAuth();
 
@@ -112,6 +112,19 @@ const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (!user) return <Navigate to="/auth" replace />;
   if (profile?.institution_id) return <Navigate to="/home" replace />;
+
+  return <>{children}</>;
+};
+
+// Shop Onboarding route
+const ShopOnboardingRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <PageSkeleton />;
+  }
+
+  if (!user) return <Navigate to="/shop" replace />;
 
   return <>{children}</>;
 };
