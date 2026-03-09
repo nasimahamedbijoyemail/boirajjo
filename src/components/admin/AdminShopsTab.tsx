@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dialog';
 import { 
   Search, Store, BookOpen, Eye, EyeOff, Star, Phone, CheckCircle, 
-  TrendingUp, Users, ShoppingCart, Edit, Package
+  TrendingUp, ShoppingCart, Edit, Package
 } from 'lucide-react';
 import { useAllShops, useShopBooksAdmin, useUpdateShop, useUpdateShopBookAvailability } from '@/hooks/useAdmin';
 import { useAllShopOrders } from '@/hooks/useAdmin';

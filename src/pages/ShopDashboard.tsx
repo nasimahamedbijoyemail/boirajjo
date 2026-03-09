@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Store, Package, ShoppingCart, Star, LogOut, Plus, Trash2, Edit, 
-  TrendingUp, DollarSign, Users, CheckCircle, Clock, XCircle,
+  TrendingUp, DollarSign, CheckCircle, Clock,
   Search, Filter, Eye, EyeOff, MessageSquare, BarChart3
 } from 'lucide-react';
 import { PhotoUpload } from '@/components/ui/photo-upload';
