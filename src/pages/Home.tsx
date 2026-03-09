@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
-import { GraduationCap, Globe, BookMarked, Store } from 'lucide-react';
+import { GraduationCap, Globe, BookMarked, Store, LogIn } from 'lucide-react';
 import { usePromoBanner } from '@/hooks/useAppSettings';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
