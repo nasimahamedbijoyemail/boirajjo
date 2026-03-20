@@ -1,0 +1,42 @@
+# Boi Rajjo — Bangladesh's Campus Book Marketplace
+# https://boirajjo.lovable.app
+
+> Boi Rajjo is a free online platform for buying, selling, and exchanging used academic books among university and college students in Bangladesh. Users can also order books from Nilkhet book market online with home delivery.
+
+## Key Features
+- Buy and sell used textbooks, novels, and study materials
+- Campus-to-campus book trading with verified students
+- Order books from Nilkhet book market shops online
+- WhatsApp-based communication for instant deals
+- Book demand/request system for hard-to-find books
+- Home delivery across Bangladesh
+- Free to use for all students
+
+## Who Is It For?
+- University students looking for affordable textbooks
+- College students (HSC, SSC) needing study materials
+- Anyone wanting to sell old books online in Bangladesh
+- Readers looking for cheap novels and non-academic books
+- Nilkhet book market customers who want online ordering
+
+## Book Categories Available
+- Engineering textbooks (CSE, EEE, Civil, Mechanical)
+- Medical and dental books
+- BBA and MBA books
+- Law books
+- Arts and humanities textbooks
+- HSC and SSC guide books
+- Novels, self-help, and non-fiction
+- Competitive exam preparation books
+
+## How It Works
+1. Sign up free with your email
+2. Set your campus/institution
+3. Browse or list books
+4. Connect with buyers/sellers via WhatsApp
+5. Meet on campus or get home delivery
+
+## URL: https://boirajjo.lovable.app
+## Browse Books: https://boirajjo.lovable.app/browse/academic
+## Nilkhet Market: https://boirajjo.lovable.app/nilkhet
+## Request a Book: https://boirajjo.lovable.app/book-demand
