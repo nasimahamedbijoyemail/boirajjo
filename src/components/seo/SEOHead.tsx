@@ -10,8 +10,8 @@ interface SEOHeadProps {
 }
 
 const BASE_URL = 'https://boirajjo.lovable.app';
-const DEFAULT_TITLE = 'Boi Rajjo | Campus Book Marketplace';
-const DEFAULT_DESC = 'Buy and sell used academic books with trusted campus students in Bangladesh. Browse Nilkhet shops, request books, and connect via WhatsApp.';
+const DEFAULT_TITLE = 'Boi Rajjo — Buy & Sell Used Books Online | Campus Book Marketplace';
+const DEFAULT_DESC = 'Buy, sell & exchange used academic books with trusted campus students in Bangladesh. Order from Nilkhet book market online. Browse textbooks, novels & study materials at affordable prices.';
 const DEFAULT_OG = `${BASE_URL}/og-image.png`;
 
 export const SEOHead = forwardRef<HTMLDivElement, SEOHeadProps>(({
@@ -34,6 +34,9 @@ export const SEOHead = forwardRef<HTMLDivElement, SEOHeadProps>(({
       <meta property="og:url" content={url} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:type" content={type} />
+      <meta property="og:site_name" content="Boi Rajjo" />
+      <meta property="og:locale" content="en_BD" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
