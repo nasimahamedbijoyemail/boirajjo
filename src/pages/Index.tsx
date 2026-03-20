@@ -47,8 +47,8 @@ const Index = () => {
   return (
     <div className="min-h-screen gradient-hero overflow-hidden">
       <SEOHead
-        title="Buy & Sell Used Books on Campus"
-        description="Boi Rajjo is Bangladesh's campus book marketplace. Buy and sell used academic books with trusted students via WhatsApp."
+        title="Buy & Sell Used Books Online — Campus Book Marketplace Bangladesh"
+        description="Boi Rajjo is Bangladesh's campus book marketplace. Buy, sell & exchange used academic books, textbooks and novels. Order from Nilkhet online. Trusted by 500+ students across 50+ campuses."
         path="/"
       />
       <div className="container px-4 py-6 sm:py-8">
