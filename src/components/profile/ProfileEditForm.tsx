@@ -49,7 +49,7 @@ export const ProfileEditForm = ({
   );
 
   const academicDepartmentOptions = useMemo(
-    () => academicDepartments?.map((d) => ({ value: d.id, label: d.name, group: d.category })) || [],
+    () => [{ value: 'none', label: 'None' }, ...(academicDepartments?.map((d) => ({ value: d.id, label: d.name, group: d.category })) || [])],
     [academicDepartments]
   );
 
