@@ -64,6 +64,8 @@ export default {
           global: "hsl(var(--category-global))",
           demand: "hsl(var(--category-demand))",
           nilkhet: "hsl(var(--category-nilkhet))",
+          eu: "hsl(var(--category-eu))",
+          "eu-request": "hsl(var(--category-eu-request))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
