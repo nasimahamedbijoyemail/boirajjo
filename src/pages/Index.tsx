@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { BookOpen, ArrowRight, Users, Shield, Zap, Star } from 'lucide-react';
+import { BookOpen, ArrowRight, Users, Shield, Zap, Star, Globe, Brain, Truck } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
