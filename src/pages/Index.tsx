@@ -16,9 +16,9 @@ const features = [
 ];
 
 const stats = [
+  { value: '10+', label: 'EU Cities' },
   { value: '1000+', label: 'Books Listed' },
-  { value: '500+', label: 'Students' },
-  { value: '50+', label: 'Campuses' },
+  { value: '50+', label: 'Institutions' },
 ];
 
 const Index = () => {
