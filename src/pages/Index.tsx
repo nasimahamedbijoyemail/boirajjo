@@ -181,7 +181,7 @@ const Index = () => {
         {/* Footer */}
         <footer className="text-center py-6 sm:py-8 border-t border-border mt-8 sm:mt-12">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Boi Rajjo. Made with ❤️ for students.
+            © {new Date().getFullYear()} Boi Rajjo. Bridging cultures through books.
           </p>
         </footer>
       </div>
