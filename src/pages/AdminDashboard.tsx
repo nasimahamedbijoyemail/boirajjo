@@ -10,7 +10,9 @@ import {
   CreditCard,
   Send,
   UserX,
-  Settings
+  Settings,
+  Plane,
+  MessageSquare,
 } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
 import { useIsAdmin, useAdminStats, useAdminNotifications } from '@/hooks/useAdmin';
@@ -22,6 +24,8 @@ import AdminPaymentsTab from '@/components/admin/AdminPaymentsTab';
 import AdminBroadcastTab from '@/components/admin/AdminBroadcastTab';
 import AdminDeletionRequestsTab from '@/components/admin/AdminDeletionRequestsTab';
 import AdminSettingsTab from '@/components/admin/AdminSettingsTab';
+import AdminEuProductsTab from '@/components/admin/AdminEuProductsTab';
+import AdminEuRequestsTab from '@/components/admin/AdminEuRequestsTab';
 
 const AdminDashboard = () => {
   const { data: isAdmin, isLoading: adminLoading } = useIsAdmin();
@@ -158,6 +162,14 @@ const AdminDashboard = () => {
               <Settings className="h-4 w-4 mr-1" />
               Settings
             </TabsTrigger>
+            <TabsTrigger value="eu-products">
+              <Plane className="h-4 w-4 mr-1" />
+              EU Products
+            </TabsTrigger>
+            <TabsTrigger value="eu-requests">
+              <MessageSquare className="h-4 w-4 mr-1" />
+              EU Requests
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
@@ -217,6 +229,14 @@ const AdminDashboard = () => {
 
           <TabsContent value="settings">
             <AdminSettingsTab />
+          </TabsContent>
+
+          <TabsContent value="eu-products">
+            <AdminEuProductsTab />
+          </TabsContent>
+
+          <TabsContent value="eu-requests">
+            <AdminEuRequestsTab />
           </TabsContent>
         </Tabs>
       </div>
