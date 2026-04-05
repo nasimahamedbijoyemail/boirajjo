@@ -117,6 +117,7 @@ export const ProfileEditForm = ({
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="none">None</SelectItem>
             <SelectItem value="national_university">National University</SelectItem>
             <SelectItem value="university">University</SelectItem>
             <SelectItem value="college">College</SelectItem>
