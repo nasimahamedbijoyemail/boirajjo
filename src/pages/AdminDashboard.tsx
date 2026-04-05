@@ -10,7 +10,9 @@ import {
   CreditCard,
   Send,
   UserX,
-  Settings
+  Settings,
+  Plane,
+  MessageSquare,
 } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
 import { useIsAdmin, useAdminStats, useAdminNotifications } from '@/hooks/useAdmin';
@@ -22,6 +24,8 @@ import AdminPaymentsTab from '@/components/admin/AdminPaymentsTab';
 import AdminBroadcastTab from '@/components/admin/AdminBroadcastTab';
 import AdminDeletionRequestsTab from '@/components/admin/AdminDeletionRequestsTab';
 import AdminSettingsTab from '@/components/admin/AdminSettingsTab';
+import AdminEuProductsTab from '@/components/admin/AdminEuProductsTab';
+import AdminEuRequestsTab from '@/components/admin/AdminEuRequestsTab';
 
 const AdminDashboard = () => {
   const { data: isAdmin, isLoading: adminLoading } = useIsAdmin();
