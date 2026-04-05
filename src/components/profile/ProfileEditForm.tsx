@@ -101,7 +101,7 @@ export const ProfileEditForm = ({
       <div className="space-y-2">
         <Label className="text-sm font-semibold">Institution Type</Label>
         <Select
-          value={editData.institution_type}
+          value={editData.institution_type || 'none'}
           onValueChange={(value) =>
             setEditData((prev) => ({
               ...prev,
