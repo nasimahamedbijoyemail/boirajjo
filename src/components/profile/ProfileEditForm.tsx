@@ -39,7 +39,7 @@ export const ProfileEditForm = ({
   academicDepartments,
 }: ProfileEditFormProps) => {
   const institutionOptions = useMemo(
-    () => institutions?.map((inst) => ({ value: inst.id, label: inst.name })) || [],
+    () => [{ value: 'none', label: 'None' }, ...(institutions?.map((inst) => ({ value: inst.id, label: inst.name })) || [])],
     [institutions]
   );
 
