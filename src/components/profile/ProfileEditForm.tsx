@@ -142,7 +142,7 @@ export const ProfileEditForm = ({
                 onValueChange={(value) =>
                   setEditData((prev) => ({
                     ...prev,
-                    institution_id: value,
+                    institution_id: value === 'none' ? '' : value,
                     subcategory: '',
                     department_id: '',
                     academic_department_id: '',
