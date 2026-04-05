@@ -40,6 +40,9 @@ const ResetPasswordPage = lazy(() => import("./pages/ResetPassword"));
 const EuBrowsePage = lazy(() => import("./pages/EuBrowse"));
 const EuProductDetailsPage = lazy(() => import("./pages/EuProductDetails"));
 const EuProductRequestPage = lazy(() => import("./pages/EuProductRequest"));
+const AboutPage = lazy(() => import("./pages/About"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfServicePage = lazy(() => import("./pages/TermsOfService"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
