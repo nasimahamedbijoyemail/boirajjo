@@ -162,6 +162,14 @@ const AdminDashboard = () => {
               <Settings className="h-4 w-4 mr-1" />
               Settings
             </TabsTrigger>
+            <TabsTrigger value="eu-products">
+              <Plane className="h-4 w-4 mr-1" />
+              EU Products
+            </TabsTrigger>
+            <TabsTrigger value="eu-requests">
+              <MessageSquare className="h-4 w-4 mr-1" />
+              EU Requests
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
