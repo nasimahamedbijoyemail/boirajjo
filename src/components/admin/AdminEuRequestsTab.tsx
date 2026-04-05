@@ -23,6 +23,22 @@ const AdminEuRequestsTab = () => {
     updateRequest.mutate({ id, status, admin_notes: notes[id] || undefined });
   };
 
+  const exportCsv = () => {
+    const headers = ['Title', 'Author', 'Description', 'Preferred City', 'Status', 'Admin Notes', 'Date'];
+    const rows = requests.map((r) => [
+      r.title, r.author_name || '', r.description || '', r.preferred_city || '',
+      r.status, r.admin_notes || '', new Date(r.created_at).toLocaleDateString(),
+    ]);
+    const csv = [headers, ...rows].map((row) => row.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `eu-demand-intelligence-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (isLoading) {
     return <div className="space-y-3">{[...Array(4)].map((_, i) => <Skeleton key={i} className="h-20 w-full rounded-xl" />)}</div>;
   }
