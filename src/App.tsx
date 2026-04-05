@@ -151,6 +151,9 @@ const AppRoutes = () => {
         <RouteErrorBoundary>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Index />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/onboarding" element={<OnboardingRoute><OnboardingPage /></OnboardingRoute>} />
