@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
+import { CookieConsent } from "@/components/gdpr/CookieConsent";
 import { RouteErrorBoundary } from "@/components/layout/RouteErrorBoundary";
 
 import { toast } from "sonner";
