@@ -39,17 +39,17 @@ export const ProfileEditForm = ({
   academicDepartments,
 }: ProfileEditFormProps) => {
   const institutionOptions = useMemo(
-    () => institutions?.map((inst) => ({ value: inst.id, label: inst.name })) || [],
+    () => [{ value: 'none', label: 'None' }, ...(institutions?.map((inst) => ({ value: inst.id, label: inst.name })) || [])],
     [institutions]
   );
 
   const nuCollegeOptions = useMemo(
-    () => nuColleges?.map((c) => ({ value: c.id, label: c.name })) || [],
+    () => [{ value: 'none', label: 'None' }, ...(nuColleges?.map((c) => ({ value: c.id, label: c.name })) || [])],
     [nuColleges]
   );
 
   const academicDepartmentOptions = useMemo(
-    () => academicDepartments?.map((d) => ({ value: d.id, label: d.name, group: d.category })) || [],
+    () => [{ value: 'none', label: 'None' }, ...(academicDepartments?.map((d) => ({ value: d.id, label: d.name, group: d.category })) || [])],
     [academicDepartments]
   );
 
@@ -101,11 +101,11 @@ export const ProfileEditForm = ({
       <div className="space-y-2">
         <Label className="text-sm font-semibold">Institution Type</Label>
         <Select
-          value={editData.institution_type}
+          value={editData.institution_type || 'none'}
           onValueChange={(value) =>
             setEditData((prev) => ({
               ...prev,
-              institution_type: value as InstitutionType,
+              institution_type: value === 'none' ? '' : value as InstitutionType,
               institution_id: '',
               subcategory: '',
               department_id: '',
@@ -117,6 +117,7 @@ export const ProfileEditForm = ({
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="none">None</SelectItem>
             <SelectItem value="national_university">National University</SelectItem>
             <SelectItem value="university">University</SelectItem>
             <SelectItem value="college">College</SelectItem>
@@ -141,7 +142,7 @@ export const ProfileEditForm = ({
                 onValueChange={(value) =>
                   setEditData((prev) => ({
                     ...prev,
-                    institution_id: value,
+                    institution_id: value === 'none' ? '' : value,
                     subcategory: '',
                     department_id: '',
                     academic_department_id: '',
@@ -157,7 +158,7 @@ export const ProfileEditForm = ({
                 <SearchableSelect
                   options={nuCollegeOptions}
                   value={editData.department_id}
-                  onValueChange={(value) => setEditData((prev) => ({ ...prev, department_id: value }))}
+                  onValueChange={(value) => setEditData((prev) => ({ ...prev, department_id: value === 'none' ? '' : value }))}
                   placeholder="Search college..."
                 />
               </motion.div>
@@ -170,7 +171,7 @@ export const ProfileEditForm = ({
                   <SearchableSelect
                     options={academicDepartmentOptions}
                     value={editData.academic_department_id}
-                    onValueChange={(value) => setEditData((prev) => ({ ...prev, academic_department_id: value }))}
+                    onValueChange={(value) => setEditData((prev) => ({ ...prev, academic_department_id: value === 'none' ? '' : value }))}
                     placeholder="Search department..."
                   />
                 </motion.div>
