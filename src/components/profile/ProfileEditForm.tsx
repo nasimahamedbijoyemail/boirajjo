@@ -184,8 +184,8 @@ export const ProfileEditForm = ({
                     {editData.institution_type === 'college' ? 'Division' : 'Class'}
                   </Label>
                   <Select
-                    value={editData.subcategory}
-                    onValueChange={(value) => setEditData((prev) => ({ ...prev, subcategory: value }))}
+                    value={editData.subcategory || 'none'}
+                    onValueChange={(value) => setEditData((prev) => ({ ...prev, subcategory: value === 'none' ? '' : value }))}
                   >
                     <SelectTrigger className="rounded-xl">
                       <SelectValue
