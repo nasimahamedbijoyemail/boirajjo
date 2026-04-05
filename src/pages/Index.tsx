@@ -154,6 +154,44 @@ const Index = () => {
           </motion.div>
         </div>
 
+        {/* How It Works — Supply Chain */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="py-10 sm:py-16"
+        >
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground text-center mb-2">How It Works</h2>
+          <p className="text-muted-foreground text-center mb-8 sm:mb-10">Our intelligent cross-border supply chain</p>
+
+          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 relative max-w-4xl mx-auto">
+            <div className="hidden sm:block absolute top-1/2 left-[33%] w-[34%] h-0.5 bg-gradient-to-r from-success via-primary to-category-eu -translate-y-1/2 z-0" />
+
+            {[
+              { icon: Globe, title: 'Origin', sub: 'Bangladesh', desc: 'Sourced from publishers, Nilkhet market, and campus networks.', color: 'text-success', bg: 'bg-success/10' },
+              { icon: Brain, title: 'Intelligence', sub: 'AI Layer', desc: 'Demand forecasting and smart inventory positioning across EU cities.', color: 'text-primary', bg: 'bg-primary/10' },
+              { icon: Truck, title: 'Delivery', sub: 'EU Network', desc: 'Fast 2–5 day delivery from distributed EU inventory. No customs delays.', color: 'text-category-eu', bg: 'bg-category-eu/10' },
+            ].map((step, i) => (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55 + i * 0.1 }}
+                className="relative z-10"
+              >
+                <div className="bg-card rounded-2xl p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 text-center h-full">
+                  <div className={`h-14 w-14 rounded-2xl ${step.bg} flex items-center justify-center mx-auto mb-4`}>
+                    <step.icon className={`h-7 w-7 ${step.color}`} />
+                  </div>
+                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">{step.sub}</p>
+                  <h3 className="text-lg font-bold text-foreground mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Features */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -179,7 +217,12 @@ const Index = () => {
         </motion.div>
 
         {/* Footer */}
-        <footer className="text-center py-6 sm:py-8 border-t border-border mt-8 sm:mt-12">
+        <footer className="text-center py-6 sm:py-8 border-t border-border mt-8 sm:mt-12 space-y-3">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
+            <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
+            <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
+          </div>
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Boi Rajjo. Bridging cultures through books.
           </p>
