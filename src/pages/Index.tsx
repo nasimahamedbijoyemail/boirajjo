@@ -10,15 +10,15 @@ import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { motion } from 'framer-motion';
 
 const features = [
-  { icon: Users, title: 'Campus Friendly', description: 'Trade books easily with students from your institution' },
-  { icon: Shield, title: 'Trusted Community', description: 'Verified campus members ensure safe and reliable trades' },
-  { icon: Zap, title: 'Quick & Easy', description: 'Connect via WhatsApp and meet on campus to complete deals' },
+  { icon: Users, title: 'Community-Powered', description: 'Connecting diaspora communities with verified, trusted book exchanges across borders' },
+  { icon: Shield, title: 'Secure & Compliant', description: 'EU-standard data protection with verified users and transparent transactions' },
+  { icon: Zap, title: 'AI-Driven Logistics', description: 'Intelligent demand forecasting and distributed inventory across European cities' },
 ];
 
 const stats = [
+  { value: '10+', label: 'EU Cities' },
   { value: '1000+', label: 'Books Listed' },
-  { value: '500+', label: 'Students' },
-  { value: '50+', label: 'Campuses' },
+  { value: '50+', label: 'Institutions' },
 ];
 
 const Index = () => {
@@ -95,25 +95,26 @@ const Index = () => {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/8 border border-primary/15 text-sm font-medium text-primary"
             >
               <Star className="h-4 w-4 fill-primary" />
-              #1 Campus Book Marketplace
+              Cross-Border Cultural Commerce Platform
             </motion.div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground text-balance leading-[1.1]">
-              Buy & Sell Used Books{' '}
+              Delivering Culture,{' '}
               <span className="text-primary relative">
-                Within Your Campus
+                Within Reach
                 <svg className="absolute -bottom-1 left-0 w-full h-2 text-primary/30" viewBox="0 0 200 8" preserveAspectRatio="none">
                   <path d="M0 7 C50 0, 150 0, 200 7" stroke="currentColor" strokeWidth="3" fill="none" />
                 </svg>
               </span>
+              {' '}— Across Europe
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 text-balance leading-relaxed">
-              Buy, sell & share campus books, order from Nilkhet, or browse beyond your campus — all in one place. Fast, affordable & trusted.
+              An AI-powered marketplace bridging South Asian literary heritage with European readers. Distributed inventory, demand-driven sourcing, and fast in-EU delivery — making cross-border book commerce seamless.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
               <Button variant="hero" size="xl" className="rounded-xl shadow-lg" asChild>
                 <Link to="/auth?mode=signup">
-                  Start Sharing Books
+                  Get Started
                   <ArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
@@ -180,7 +181,7 @@ const Index = () => {
         {/* Footer */}
         <footer className="text-center py-6 sm:py-8 border-t border-border mt-8 sm:mt-12">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Boi Rajjo. Made with ❤️ for students.
+            © {new Date().getFullYear()} Boi Rajjo. Bridging cultures through books.
           </p>
         </footer>
       </div>
