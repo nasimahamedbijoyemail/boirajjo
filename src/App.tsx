@@ -162,6 +162,9 @@ const AppRoutes = () => {
             <Route path="/book-demand" element={<ProtectedRoute><BookDemandPage /></ProtectedRoute>} />
             <Route path="/my-orders" element={<ProtectedRoute><MyOrdersPage /></ProtectedRoute>} />
             <Route path="/transaction-history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
+            <Route path="/eu" element={<ProtectedRoute><EuBrowsePage /></ProtectedRoute>} />
+            <Route path="/eu/product/:id" element={<ProtectedRoute><EuProductDetailsPage /></ProtectedRoute>} />
+            <Route path="/eu/request" element={<ProtectedRoute><EuProductRequestPage /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/department-requests" element={<ProtectedRoute><DepartmentRequestsPage /></ProtectedRoute>} />
             <Route path="/shop" element={<ShopAuthPage />} />
