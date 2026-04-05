@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
+import { CookieConsent } from "@/components/gdpr/CookieConsent";
 import { RouteErrorBoundary } from "@/components/layout/RouteErrorBoundary";
 
 import { toast } from "sonner";
@@ -40,6 +41,9 @@ const ResetPasswordPage = lazy(() => import("./pages/ResetPassword"));
 const EuBrowsePage = lazy(() => import("./pages/EuBrowse"));
 const EuProductDetailsPage = lazy(() => import("./pages/EuProductDetails"));
 const EuProductRequestPage = lazy(() => import("./pages/EuProductRequest"));
+const AboutPage = lazy(() => import("./pages/About"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfServicePage = lazy(() => import("./pages/TermsOfService"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -148,6 +152,9 @@ const AppRoutes = () => {
         <RouteErrorBoundary>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Index />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/onboarding" element={<OnboardingRoute><OnboardingPage /></OnboardingRoute>} />
@@ -191,6 +198,7 @@ const App = () => (
           <BrowserRouter>
             <AuthProvider>
               <AppRoutes />
+              <CookieConsent />
             </AuthProvider>
           </BrowserRouter>
         </TooltipProvider>

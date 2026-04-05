@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAllEuProductRequests, useUpdateEuProductRequest } from '@/hooks/useEuProducts';
-import { CheckCircle2, XCircle, Clock, MapPin } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, MapPin, Download } from 'lucide-react';
 import { useState } from 'react';
 
 const statusColors: Record<string, string> = {
@@ -23,13 +23,36 @@ const AdminEuRequestsTab = () => {
     updateRequest.mutate({ id, status, admin_notes: notes[id] || undefined });
   };
 
+  const exportCsv = () => {
+    const headers = ['Title', 'Author', 'Description', 'Preferred City', 'Status', 'Admin Notes', 'Date'];
+    const rows = requests.map((r) => [
+      r.title, r.author_name || '', r.description || '', r.preferred_city || '',
+      r.status, r.admin_notes || '', new Date(r.created_at).toLocaleDateString(),
+    ]);
+    const csv = [headers, ...rows].map((row) => row.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `eu-demand-intelligence-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (isLoading) {
     return <div className="space-y-3">{[...Array(4)].map((_, i) => <Skeleton key={i} className="h-20 w-full rounded-xl" />)}</div>;
   }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">EU Product Requests ({requests.length})</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">EU Product Requests ({requests.length})</h2>
+        {requests.length > 0 && (
+          <Button size="sm" variant="outline" onClick={exportCsv} className="rounded-xl">
+            <Download className="h-4 w-4 mr-1" /> Export CSV
+          </Button>
+        )}
+      </div>
 
       {requests.length === 0 ? (
         <Card><CardContent className="p-8 text-center text-muted-foreground">No requests yet</CardContent></Card>
