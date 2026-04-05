@@ -44,7 +44,7 @@ export const ProfileEditForm = ({
   );
 
   const nuCollegeOptions = useMemo(
-    () => nuColleges?.map((c) => ({ value: c.id, label: c.name })) || [],
+    () => [{ value: 'none', label: 'None' }, ...(nuColleges?.map((c) => ({ value: c.id, label: c.name })) || [])],
     [nuColleges]
   );
 
