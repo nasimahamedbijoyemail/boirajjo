@@ -230,6 +230,14 @@ const AdminDashboard = () => {
           <TabsContent value="settings">
             <AdminSettingsTab />
           </TabsContent>
+
+          <TabsContent value="eu-products">
+            <AdminEuProductsTab />
+          </TabsContent>
+
+          <TabsContent value="eu-requests">
+            <AdminEuRequestsTab />
+          </TabsContent>
         </Tabs>
       </div>
     </Layout>

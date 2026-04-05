@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 
 const navItems = [
   { to: '/home', icon: Home, label: 'Home' },
+  { to: '/eu', icon: Plane, label: 'Within Europe' },
   { to: '/browse/academic', icon: Search, label: 'In Your Campus' },
   { to: '/browse/non-academic', icon: Search, label: 'Outside Campus' },
   { to: '/nilkhet', icon: Store, label: 'Nilkhet' },
