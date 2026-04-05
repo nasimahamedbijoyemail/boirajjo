@@ -45,7 +45,14 @@ const AdminEuRequestsTab = () => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">EU Product Requests ({requests.length})</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">EU Product Requests ({requests.length})</h2>
+        {requests.length > 0 && (
+          <Button size="sm" variant="outline" onClick={exportCsv} className="rounded-xl">
+            <Download className="h-4 w-4 mr-1" /> Export CSV
+          </Button>
+        )}
+      </div>
 
       {requests.length === 0 ? (
         <Card><CardContent className="p-8 text-center text-muted-foreground">No requests yet</CardContent></Card>
