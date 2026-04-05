@@ -54,8 +54,8 @@ export const ProfileEditForm = ({
   );
 
   const getSubcategoryOptions = () => {
-    if (editData.institution_type === 'college') return COLLEGE_DIVISIONS.map((d) => ({ value: d, label: d }));
-    if (editData.institution_type === 'school') return SCHOOL_CLASSES.map((c) => ({ value: c, label: `Class ${c}` }));
+    if (editData.institution_type === 'college') return [{ value: 'none', label: 'None' }, ...COLLEGE_DIVISIONS.map((d) => ({ value: d, label: d }))];
+    if (editData.institution_type === 'school') return [{ value: 'none', label: 'None' }, ...SCHOOL_CLASSES.map((c) => ({ value: c, label: `Class ${c}` }))];
     return [];
   };
 
@@ -184,8 +184,8 @@ export const ProfileEditForm = ({
                     {editData.institution_type === 'college' ? 'Division' : 'Class'}
                   </Label>
                   <Select
-                    value={editData.subcategory}
-                    onValueChange={(value) => setEditData((prev) => ({ ...prev, subcategory: value }))}
+                    value={editData.subcategory || 'none'}
+                    onValueChange={(value) => setEditData((prev) => ({ ...prev, subcategory: value === 'none' ? '' : value }))}
                   >
                     <SelectTrigger className="rounded-xl">
                       <SelectValue
