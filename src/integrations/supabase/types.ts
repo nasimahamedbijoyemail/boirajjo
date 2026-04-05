@@ -646,6 +646,111 @@ export type Database = {
           },
         ]
       }
+      eu_product_requests: {
+        Row: {
+          admin_notes: string | null
+          author_name: string | null
+          created_at: string
+          description: string | null
+          id: string
+          preferred_city: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          author_name?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          preferred_city?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          author_name?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          preferred_city?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      eu_products: {
+        Row: {
+          author: string
+          category: string
+          city: string | null
+          condition: string
+          country: string | null
+          created_at: string
+          currency: string
+          delivery_days_max: number | null
+          delivery_days_min: number | null
+          description: string | null
+          featured: boolean
+          id: string
+          is_available: boolean
+          photo_url: string | null
+          price: number
+          stock: number
+          subcategory: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          category?: string
+          city?: string | null
+          condition?: string
+          country?: string | null
+          created_at?: string
+          currency?: string
+          delivery_days_max?: number | null
+          delivery_days_min?: number | null
+          description?: string | null
+          featured?: boolean
+          id?: string
+          is_available?: boolean
+          photo_url?: string | null
+          price: number
+          stock?: number
+          subcategory?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          category?: string
+          city?: string | null
+          condition?: string
+          country?: string | null
+          created_at?: string
+          currency?: string
+          delivery_days_max?: number | null
+          delivery_days_min?: number | null
+          description?: string | null
+          featured?: boolean
+          id?: string
+          is_available?: boolean
+          photo_url?: string | null
+          price?: number
+          stock?: number
+          subcategory?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       institutions: {
         Row: {
           created_at: string
