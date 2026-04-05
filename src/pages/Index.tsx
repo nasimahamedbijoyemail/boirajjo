@@ -10,9 +10,9 @@ import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { motion } from 'framer-motion';
 
 const features = [
-  { icon: Users, title: 'Campus Friendly', description: 'Trade books easily with students from your institution' },
-  { icon: Shield, title: 'Trusted Community', description: 'Verified campus members ensure safe and reliable trades' },
-  { icon: Zap, title: 'Quick & Easy', description: 'Connect via WhatsApp and meet on campus to complete deals' },
+  { icon: Users, title: 'Community-Powered', description: 'Connecting diaspora communities with verified, trusted book exchanges across borders' },
+  { icon: Shield, title: 'Secure & Compliant', description: 'EU-standard data protection with verified users and transparent transactions' },
+  { icon: Zap, title: 'AI-Driven Logistics', description: 'Intelligent demand forecasting and distributed inventory across European cities' },
 ];
 
 const stats = [
