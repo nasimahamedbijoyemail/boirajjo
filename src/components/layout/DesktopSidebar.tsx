@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import {
-  Home, Search, Plus, ShoppingBag, User, List, History, BookMarked, Store, Settings,
+  Home, Search, Plus, ShoppingBag, User, List, History, BookMarked, Store, Settings, Plane,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
