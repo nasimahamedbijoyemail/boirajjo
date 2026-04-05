@@ -158,7 +158,7 @@ export const ProfileEditForm = ({
                 <SearchableSelect
                   options={nuCollegeOptions}
                   value={editData.department_id}
-                  onValueChange={(value) => setEditData((prev) => ({ ...prev, department_id: value }))}
+                  onValueChange={(value) => setEditData((prev) => ({ ...prev, department_id: value === 'none' ? '' : value }))}
                   placeholder="Search college..."
                 />
               </motion.div>
